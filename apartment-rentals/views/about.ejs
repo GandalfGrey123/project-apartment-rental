@@ -5,20 +5,20 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-  	<h1>Team 9 <%= title %> Page</h1>
-  	<p>Team members</p>
-  	<ul>
-    	<li><a href="Marcus">Marcus Wong</a></li>
-    	<li><a href="Alexey">Alexey Sergeev</a></li>
-    	<li><a href="Hang">Hang Li</a></li>
-    	<li><a href="Inez">Inez Wibowo</a></li>
-    	<li><a href="Ismael">Ismael San Juan</a></li>
-    	<li><a href="Romeel">Romeel</a></li>
-    	<li><a href="Jia">Jia</a></li>
-    	
-    	<li><a href="about">Team</a></li>
-    	<li><a href="/">Home</a></li>
-	</ul>
+    <h1>Team 9 <%= title %> </h1>
+    <p>Team member Pages</p>
+    <ul>
+      <li><a href="Marcus">Marcus Wong</a></li>
+      <li><a href="Alexey">Alexey Sergeev</a></li>
+      <li><a href="Hang">Hang Li</a></li>
+      <li><a href="Inez">Inez Wibowo</a></li>
+      <li><a href="Ismael">Ismael San Juan</a></li>
+      <li><a href="Romeel">Romeel</a></li>
+      <li><a href="Jia">Jia</a></li>
+      
+      <li><a href="team">Team</a></li>
+      <li><a href="/">Home</a></li>
+  </ul>
 
 
     <%if (showTeam == 'true') { %>
@@ -26,16 +26,20 @@
        <div align="center">
           <h1 align="center">Welcome to <%= name %>'s About Page</h1>
            <br> 
-          <p>My name is <%= name %>.</p>
+          <p>Hello my name is <%= name %>.</p>
+          <p>I am a student at SFSU</p>
+          <p>I am studying computer science.</p>
+          <p>goodbye</p>
        </div>
-	
-	 <% } else{ %>
-	 	<div align="center">
+  
+   <% } else{ %>
+    <div align="center">
           <h1 align="center">Team 9's About Page</h1>
            <br> 
           <p>This is team 9's about page</p>
+          <p>For this project we are using NodeJS framworks React and Express</p>
        </div>
-	 <% } %>
+   <% } %>
 
   </body>
 </html>
