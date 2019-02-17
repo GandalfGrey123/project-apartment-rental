@@ -45,13 +45,17 @@ class AboutPage extends Component{
                                 to={'/'}
                             />
                             
-                                 
-                            <AboutBtn
-                                classes={classes}
-                                avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
-                                name={'Marcus Wong'}
-                                to={'/marcus'} 
-                            />                                 
+                                {
+
+                                <AboutBtn
+                                    classes={classes}
+                                    avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                    name={'Marcus Wong'}
+                                    to={'/marcus'} 
+                                />  
+
+                                }
+                                                          
                             
                         </Grid>    
                     </Grid>
@@ -62,13 +66,14 @@ class AboutPage extends Component{
                             alignItems={'center'}
                             className={classes.pageContent}
                         >
-                            <Switch>                                                             
+                            <Switch>
+                                {
+                                    <Route path={'/marcus'} component={AboutMarcus} />
+                                }                                                           
                                 <Route path={'/'} component={AboutAliaksei} /> {}                                
                             </Switch>
                             
-                            <Switch>                                                             
-                                <Route path={'/marcus'} component={AboutMarcus} />{}                                
-                            </Switch>
+                   
                              
                         </Grid>
                     </Grid>
