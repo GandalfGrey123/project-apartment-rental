@@ -9,6 +9,7 @@ import styles from './styles/about-page';
 import { Switch, Route } from 'react-router-dom';
 
 import AboutAliaksei from './pages/about-aliaksei';
+import AboutMarcus from './pages/about-marcus';
 
 class AboutPage extends Component{
 
@@ -43,17 +44,15 @@ class AboutPage extends Component{
                                 name={'Aliaksei Siarheyeu'}
                                 to={'/'}
                             />
-                            {
-                                /*
-                                 * Example 
-                                    <AboutBtn
-                                        classes={classes}
-                                        avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
-                                        name={'Student #2'}
-                                        to={'/student'} - value should match to the on in the route path
-                                    />
-                                 */
-                            }
+                            
+                                 
+                            <AboutBtn
+                                classes={classes}
+                                avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                name={'Marcus Wong'}
+                                to={'/marcus'} 
+                            />                                 
+                            
                         </Grid>    
                     </Grid>
                     <Grid xs={8} item> 
@@ -63,15 +62,14 @@ class AboutPage extends Component{
                             alignItems={'center'}
                             className={classes.pageContent}
                         >
-                            <Switch>
-                                {
-                                    /*
-                                    * Example 
-                                        <Route path={'/student'} component={AboutAliaksei} />
-                                    */
-                                }
-                                <Route path={'/'} component={AboutAliaksei} /> { /* <- This should stay the last in the list */ }
+                            <Switch>                                                             
+                                <Route path={'/'} component={AboutAliaksei} /> {}                                
                             </Switch>
+                            
+                            <Switch>                                                             
+                                <Route path={'/marcus'} component={AboutMarcus} />{}                                
+                            </Switch>
+                             
                         </Grid>
                     </Grid>
                 </Grid>      
