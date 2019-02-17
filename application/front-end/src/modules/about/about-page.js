@@ -57,24 +57,26 @@ class AboutPage extends Component{
                                         />
                                   */
 
-                                <AboutBtn
-                                    classes={classes}
-                                    avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
-                                    name={'Marcus Wong'}
-                                    to={'/marcus'} 
-                                />  
-
                             }
+
+
+                             <AboutBtn
+                                classes={classes}
+                                avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                name={'Marcus Wong'}
+                                to={'/marcus'} 
+                             />  
                                                           
                             
                         </Grid>    
                     </Grid>
                     <Grid xs={8} item> 
+
                         <Grid 
                             container
                             justify={'center'}
                             alignItems={'center'}
-                            className={classes.pageContent}
+                            className={classes.pageContent} 
                         >
                             <Switch>
                                 {
@@ -83,10 +85,11 @@ class AboutPage extends Component{
                                         * Example 
                                             <Route path={'/student'} component={AboutAliaksei} />
                                         */
-
-                                    <Route path={'/marcus'} component={AboutMarcus} />
-                                }                                                           
-                                <Route path={'/'} component={AboutAliaksei} /> {}                                
+                                                                            
+                                }
+                                <Route path={'/marcus'} component={AboutMarcus} />
+                                <Route path={'/'} component={AboutAliaksei} /> {/* <- This should stay the last in the list */}                                
+                                 
                             </Switch>                                            
                              
                         </Grid>
