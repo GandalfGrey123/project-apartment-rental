@@ -45,7 +45,17 @@ class AboutPage extends Component{
                                 to={'/'}
                             />
                             
-                                {
+                            {
+
+                                  /*
+                                     * Example 
+                                        <AboutBtn
+                                            classes={classes}
+                                            avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                            name={'Student #2'}
+                                            to={'/student'} - value should match to the on in the route path
+                                        />
+                                  */
 
                                 <AboutBtn
                                     classes={classes}
@@ -54,7 +64,7 @@ class AboutPage extends Component{
                                     to={'/marcus'} 
                                 />  
 
-                                }
+                            }
                                                           
                             
                         </Grid>    
@@ -68,12 +78,16 @@ class AboutPage extends Component{
                         >
                             <Switch>
                                 {
+                                
+                                       /*
+                                        * Example 
+                                            <Route path={'/student'} component={AboutAliaksei} />
+                                        */
+
                                     <Route path={'/marcus'} component={AboutMarcus} />
                                 }                                                           
                                 <Route path={'/'} component={AboutAliaksei} /> {}                                
-                            </Switch>
-                            
-                   
+                            </Switch>                                            
                              
                         </Grid>
                     </Grid>
