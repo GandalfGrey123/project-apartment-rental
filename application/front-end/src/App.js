@@ -38,7 +38,7 @@ class App extends Component {
               <MenuIcon />
             </IconButton> */}
               <Typography variant="h6" color="inherit" className={classes.grow}>
-                SFSU - CSC 648 Team #9 Project
+                SFSU - CSC 648 Team #9 Project test
             </Typography>
             </Toolbar>
           </AppBar>
