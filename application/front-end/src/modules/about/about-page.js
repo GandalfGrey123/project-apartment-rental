@@ -11,6 +11,8 @@ import { Switch, Route } from 'react-router-dom';
 import AboutAliaksei from './pages/about-aliaksei';
 import AboutMarcus from './pages/about-marcus';
 import AboutInez from './pages/about-inez';
+import AboutHang from './pages/about-hang'
+
 
 class AboutPage extends Component{
 
@@ -45,11 +47,11 @@ class AboutPage extends Component{
                                 name={'Aliaksei Siarheyeu'}
                                 to={'/'}
                             />
-                            
+
                             {
 
                                   /*
-                                     * Example 
+                                     * Example
                                         <AboutBtn
                                             classes={classes}
                                             avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
@@ -64,41 +66,45 @@ class AboutPage extends Component{
                              <AboutBtn
                                 classes={classes}
                                 avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
-                                name={'Marcus Wong'}
-                                to={'/marcus'} 
-                             />  
-                                                          
-                            
-                        </Grid>    
-                    </Grid>
-                    <Grid xs={8} item> 
+                                name={'Hang Li'}
+                                to={'/hang'}
+                             />
 
-                        <Grid 
+
+                        </Grid>
+                    </Grid>
+                    <Grid xs={8} item>
+
+                        <Grid
                             container
                             justify={'center'}
                             alignItems={'center'}
-                            className={classes.pageContent} 
+                            className={classes.pageContent}
                         >
                             <Switch>
                                 {
-                                
+
                                        /*
-                                        * Example 
+                                        * Example
                                             <Route path={'/student'} component={AboutAliaksei} />
                                         */
-                                                                            
+
                                 }
+ 
+
+                                <Route path={'/marcus'} component={AboutMarcus} />
                                 <Route path={'/inez'} component={AboutInez} />
 
-                                 <Route path={'/marcus'} component={AboutMarcus} />
-                                <Route path={'/'} component={AboutAliaksei} /> {/* <- This should stay the last in the list */}                                
-                                 
-                            </Switch>                                            
-                             
+                                <Route path={'/hang'} component={AboutHang} />
+                                <Route path={'/'} component={AboutAliaksei} /> {/* <- This should stay the last in the list */}
+
+                            </Switch>
+
+
                         </Grid>
                     </Grid>
-                </Grid>      
-            </Paper>   
+                </Grid>
+            </Paper>
         )
     }
 }
