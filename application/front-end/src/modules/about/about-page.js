@@ -10,7 +10,13 @@ import { Switch, Route } from 'react-router-dom';
 
 import AboutAliaksei from './pages/about-aliaksei';
 import AboutMarcus from './pages/about-marcus';
+<<<<<<< HEAD
 import AboutRomeel from './pages/about-romeel';
+=======
+import AboutInez from './pages/about-inez';
+import AboutHang from './pages/about-hang'
+
+>>>>>>> master
 
 class AboutPage extends Component{
 
@@ -45,11 +51,11 @@ class AboutPage extends Component{
                                 name={'Aliaksei Siarheyeu'}
                                 to={'/'}
                             />
-                            
+
                             {
 
                                   /*
-                                     * Example 
+                                     * Example
                                         <AboutBtn
                                             classes={classes}
                                             avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
@@ -64,6 +70,7 @@ class AboutPage extends Component{
                              <AboutBtn
                                 classes={classes}
                                 avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+<<<<<<< HEAD
                                 name={'Marcus Wong'}
                                 to={'/marcus'} 
                              />  
@@ -77,34 +84,51 @@ class AboutPage extends Component{
                                                           
                             
                         </Grid>    
-                    </Grid>
-                    <Grid xs={8} item> 
+=======
+                                name={'Hang Li'}
+                                to={'/hang'}
+                             />
 
-                        <Grid 
+
+                        </Grid>
+>>>>>>> master
+                    </Grid>
+                    <Grid xs={8} item>
+
+                        <Grid
                             container
                             justify={'center'}
                             alignItems={'center'}
-                            className={classes.pageContent} 
+                            className={classes.pageContent}
                         >
                             <Switch>
                                 {
-                                
+
                                        /*
-                                        * Example 
+                                        * Example
                                             <Route path={'/student'} component={AboutAliaksei} />
                                         */
-                                                                            
+
                                 }
+<<<<<<< HEAD
                                 <Route path={'/romeel'} component={AboutRomeel} />
+=======
+ 
+
+>>>>>>> master
                                 <Route path={'/marcus'} component={AboutMarcus} />
-                                <Route path={'/'} component={AboutAliaksei} /> {/* <- This should stay the last in the list */}                                
-                                 
-                            </Switch>                                            
-                             
+                                <Route path={'/inez'} component={AboutInez} />
+
+                                <Route path={'/hang'} component={AboutHang} />
+                                <Route path={'/'} component={AboutAliaksei} /> {/* <- This should stay the last in the list */}
+
+                            </Switch>
+
+
                         </Grid>
                     </Grid>
-                </Grid>      
-            </Paper>   
+                </Grid>
+            </Paper>
         )
     }
 }
