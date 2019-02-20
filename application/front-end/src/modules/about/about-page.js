@@ -11,6 +11,7 @@ import { Switch, Route } from 'react-router-dom';
 import AboutAliaksei from './pages/about-aliaksei';
 import AboutMarcus from './pages/about-marcus';
 import AboutRomeel from './pages/about-romeel';
+import AboutJiaNan from './pages/about-jianan';
 class AboutPage extends Component{
 
     render(){
@@ -72,7 +73,14 @@ class AboutPage extends Component{
                                 avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
                                 name={'Romeel Chaudhari'}
                                 to={'/romeel'} 
-                             />                      
+                             />   
+
+									<AboutBtn
+                                            classes={classes}
+                                            avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                            name={'Jia Nan Mai'}
+                                            to={'/jianan'} 
+                                        />							 
                             
                         </Grid>    
                     </Grid>
@@ -95,6 +103,7 @@ class AboutPage extends Component{
                                 }
                                 <Route path={'/romeel'} component={AboutRomeel} />
                                 <Route path={'/marcus'} component={AboutMarcus} />
+								<Route path={'/jianan'} component={AboutJiaNan} />
                                 <Route path={'/'} component={AboutAliaksei} /> {/* <- This should stay the last in the list */}                                
                                  
                             </Switch>                                            
