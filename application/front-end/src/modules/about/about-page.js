@@ -10,7 +10,9 @@ import { Switch, Route } from 'react-router-dom';
 
 import AboutAliaksei from './pages/about-aliaksei';
 import AboutMarcus from './pages/about-marcus';
+import AboutInez from './pages/about-inez';
 import AboutHang from './pages/about-hang'
+
 
 class AboutPage extends Component{
 
@@ -88,12 +90,16 @@ class AboutPage extends Component{
                                         */
 
                                 }
+ 
+
                                 <Route path={'/marcus'} component={AboutMarcus} />
+                                <Route path={'/inez'} component={AboutInez} />
 
                                 <Route path={'/hang'} component={AboutHang} />
                                 <Route path={'/'} component={AboutAliaksei} /> {/* <- This should stay the last in the list */}
 
                             </Switch>
+
 
                         </Grid>
                     </Grid>
