@@ -10,6 +10,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import AboutAliaksei from './pages/about-aliaksei';
 import AboutMarcus from './pages/about-marcus';
+import AboutIsmael from './pages/about-ismael';
 
 class AboutPage extends Component{
 
@@ -66,6 +67,13 @@ class AboutPage extends Component{
                                 name={'Marcus Wong'}
                                 to={'/marcus'} 
                              />  
+
+                              <AboutBtn
+                                classes={classes}
+                                avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                name={'Ismael San Juan'}
+                                to={'/ismael'} 
+                             />  
                                                           
                             
                         </Grid>    
@@ -87,7 +95,9 @@ class AboutPage extends Component{
                                         */
                                                                             
                                 }
+                                
                                 <Route path={'/marcus'} component={AboutMarcus} />
+                                <Route path={'/ismael'} component={AboutIsmael} />
                                 <Route path={'/'} component={AboutAliaksei} /> {/* <- This should stay the last in the list */}                                
                                  
                             </Switch>                                            
