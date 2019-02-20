@@ -96,7 +96,7 @@ class AboutPage extends Component{
                                                                             
                                 }
                                 <Route path={'/romeel'} component={AboutRomeel} />
-                                <Route path={'/romeel'} component={AboutRomeel} />
+                                <Route path={'/marcus'} component={AboutMarcus} />
                                 <Route path={'/'} component={AboutAliaksei} /> {/* <- This should stay the last in the list */}                                
                                  
                             </Switch>                                            
