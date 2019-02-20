@@ -3,23 +3,23 @@ import {
     withStyles,
 } from '@material-ui/core'
 
-class AboutRomeel extends Component{
+class AboutJiaNan extends Component{
     render(){
 
         return (
             <ul>
                 <li>
-                    Expected Graduation Date: Fall 2019
+                    Expected Graduation Date: May 2019
                 </li>
                 <li>
-                    Programming Languages: Java, C, C++ , RDBMS
+                    Programming Languages: Java, JavaScript, C++, C
                 </li>
                 <li>
-                    Frameworks: Angular
+                    Frameworks: React, Spring
                 </li>
             </ul>
         )
     }
 }
 
-export default withStyles({})(AboutRomeel);
+export default withStyles({})(AboutJiaNan);

@@ -10,13 +10,10 @@ import { Switch, Route } from 'react-router-dom';
 
 import AboutAliaksei from './pages/about-aliaksei';
 import AboutMarcus from './pages/about-marcus';
-<<<<<<< HEAD
 import AboutRomeel from './pages/about-romeel';
-=======
+import AboutJiaNan from './pages/about-jianan';
 import AboutInez from './pages/about-inez';
 import AboutHang from './pages/about-hang'
-
->>>>>>> master
 
 class AboutPage extends Component{
 
@@ -70,28 +67,31 @@ class AboutPage extends Component{
                              <AboutBtn
                                 classes={classes}
                                 avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
-<<<<<<< HEAD
+
                                 name={'Marcus Wong'}
                                 to={'/marcus'} 
                              />  
-
-                                 <AboutBtn
+          
+                              <AboutBtn
                                 classes={classes}
                                 avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
                                 name={'Romeel Chaudhari'}
                                 to={'/romeel'} 
-                             />
-                                                          
-                            
-                        </Grid>    
-=======
-                                name={'Hang Li'}
-                                to={'/hang'}
-                             />
 
-
+                             />   
+                              <AboutBtn
+                                 classes={classes}
+                                  avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                  name={'Jia Nan Mai'}
+                                  to={'/jianan'} 
+                              />
+                              <AboutBtn
+                                 classes={classes}
+                                  avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                  name={'Hang Li'}
+                                  to={'/hang'} 
+                              />	
                         </Grid>
->>>>>>> master
                     </Grid>
                     <Grid xs={8} item>
 
@@ -105,26 +105,18 @@ class AboutPage extends Component{
                                 {
 
                                        /*
-                                        * Example
-                                            <Route path={'/student'} component={AboutAliaksei} />
+                                          Example
+                                          <Route path={'/student'} component={AboutAliaksei} />
                                         */
-
                                 }
-<<<<<<< HEAD
+                                <Route path={'/jianan'} component={AboutJiaNan} />
                                 <Route path={'/romeel'} component={AboutRomeel} />
-=======
- 
-
->>>>>>> master
                                 <Route path={'/marcus'} component={AboutMarcus} />
                                 <Route path={'/inez'} component={AboutInez} />
-
                                 <Route path={'/hang'} component={AboutHang} />
                                 <Route path={'/'} component={AboutAliaksei} /> {/* <- This should stay the last in the list */}
 
                             </Switch>
-
-
                         </Grid>
                     </Grid>
                 </Grid>
