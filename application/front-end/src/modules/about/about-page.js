@@ -6,19 +6,43 @@ import {
 } from '@material-ui/core'
 import AboutBtn from './component/about-btn';
 import styles from './styles/about-page';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 
 import AboutAliaksei from './pages/about-aliaksei';
 import AboutMarcus from './pages/about-marcus';
 import AboutRomeel from './pages/about-romeel';
 import AboutJiaNan from './pages/about-jianan';
 import AboutInez from './pages/about-inez';
-import AboutHang from './pages/about-hang'
+import AboutHang from './pages/about-hang';
+import AboutIsmael from './pages/about-ismael';
+
 
 class AboutPage extends Component{
 
+    constructor(props){
+        super(props);
+        this.state = {
+            currentLocation: ''
+        };
+    }
+
+    componentDidUpdate(prevProps){
+        if (this.props.location !== prevProps.location) {
+            this.onRouteChanged();
+        }
+    }
+
+    onRouteChanged() {
+        if(this.props.location){
+            let loc = this.props.location.pathname.replace('/', '').trim();
+            console.log('Loc:', loc);
+            this.setState({ currentLocation: loc});
+        }
+    }
+
     render(){
 
+        const { currentLocation } = this.state;
         const { classes } = this.props;
 
         return (
@@ -41,60 +65,67 @@ class AboutPage extends Component{
                         <Grid
                             container
                             direction={'column'}
+                            justify={'center'}
                         >
                             <AboutBtn
                                 classes={classes}
-                                avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
-                                name={'Aliaksei Siarheyeu'}
+                                avatarUrl={'https://cdn3.iconfinder.com/data/icons/avatar-set/512/Avatar01-512.png'}
+                                name={'Inez Wibowo'}
+                                role={'Team Lead'}
                                 to={'/'}
+                                selected={currentLocation === ''}
                             />
-
-                            {
-
-                                  /*
-                                     * Example
-                                        <AboutBtn
-                                            classes={classes}
-                                            avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
-                                            name={'Student #2'}
-                                            to={'/student'} - value should match to the on in the route path
-                                        />
-                                  */
-
-                            }
-
-
-                             <AboutBtn
+                            <AboutBtn
+                                classes={classes}
+                                avatarUrl={'https://www.clipartmax.com/png/middle/319-3191274_male-avatar-admin-profile.png'}
+                                name={'Aliaksei Siarheyeu'}
+                                role={'Lead'}
+                                to={'/alex'}
+                                selected={currentLocation === 'alex'}
+                            />
+                            <AboutBtn
                                 classes={classes}
                                 avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
-
+                                role={'Lead'}
                                 name={'Marcus Wong'}
-                                to={'/marcus'} 
-                             />  
-          
-                              <AboutBtn
+                                to={'/marcus'}
+                                selected={currentLocation === 'marcus'}
+                            />
+                            <AboutBtn
                                 classes={classes}
                                 avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
                                 name={'Romeel Chaudhari'}
-                                to={'/romeel'} 
-
-                             />   
-                              <AboutBtn
-                                 classes={classes}
-                                  avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
-                                  name={'Jia Nan Mai'}
-                                  to={'/jianan'} 
-                              />
-                              <AboutBtn
-                                 classes={classes}
-                                  avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
-                                  name={'Hang Li'}
-                                  to={'/hang'} 
-                              />	
-                        </Grid>
+                                role={'Engineer'}
+                                to={'/romeel'}
+                                selected={currentLocation === 'romeel'}
+                            />
+                            <AboutBtn
+                                classes={classes}
+                                avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                name={'Jia Nan Mai'}
+                                role={'Engineer'}
+                                to={'/jianan'}
+                                selected={currentLocation === 'jianan'}
+                            />
+                            <AboutBtn
+                                classes={classes}
+                                avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                name={'Hang Li'}
+                                role={'Engineer'}
+                                to={'/hang'}
+                                selected={currentLocation === 'hang'}
+                            />
+                            <AboutBtn
+                                classes={classes}
+                                avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                name={'Ismael San Juan'}
+                                role={'Engineer'}
+                                to={'/ismael'}
+                                selected={currentLocation === 'ismael'}
+                            />
+                        </Grid>    
                     </Grid>
                     <Grid xs={8} item>
-
                         <Grid
                             container
                             justify={'center'}
@@ -102,20 +133,13 @@ class AboutPage extends Component{
                             className={classes.pageContent}
                         >
                             <Switch>
-                                {
-
-                                       /*
-                                          Example
-                                          <Route path={'/student'} component={AboutAliaksei} />
-                                        */
-                                }
                                 <Route path={'/jianan'} component={AboutJiaNan} />
                                 <Route path={'/romeel'} component={AboutRomeel} />
                                 <Route path={'/marcus'} component={AboutMarcus} />
-                                <Route path={'/inez'} component={AboutInez} />
                                 <Route path={'/hang'} component={AboutHang} />
-                                <Route path={'/'} component={AboutAliaksei} /> {/* <- This should stay the last in the list */}
-
+                                <Route path={'/ismael'} component={AboutIsmael} />
+                                <Route path={'/alex'} component={AboutAliaksei} /> 
+                                <Route path={'/'} component={AboutInez} /> {/* <- This should stay the last in the list */}
                             </Switch>
                         </Grid>
                     </Grid>
@@ -125,4 +149,4 @@ class AboutPage extends Component{
     }
 }
 
-export default withStyles(styles, { withTheme: true })(AboutPage);
+export default withRouter(withStyles(styles, { withTheme: true })(AboutPage));
