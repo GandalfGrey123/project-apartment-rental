@@ -69,7 +69,11 @@ class AboutPage extends Component{
                         >
                             <AboutBtn
                                 classes={classes}
+<<<<<<< HEAD
                                 avatarUrl={'https://cdn3.iconfinder.com/data/icons/avatar-set/512/Avatar01-512.png'}                                
+=======
+                                avatarUrl={'https://cdn3.iconfinder.com/data/icons/avatar-set/512/Avatar01-512.png' }
+>>>>>>> master
                                 name={'Inez Wibowo'}
                                 role={'Team Lead'}
                                 to={'/'}
@@ -85,7 +89,7 @@ class AboutPage extends Component{
                             />
                             <AboutBtn
                                 classes={classes}
-                                avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                avatarUrl={'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/spider_insect_bug_avatar-512.png'}
                                 role={'Lead'}
                                 name={'Marcus Wong'}
                                 to={'/marcus'}
