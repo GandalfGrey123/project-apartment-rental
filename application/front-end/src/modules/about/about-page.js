@@ -68,12 +68,8 @@ class AboutPage extends Component{
                             justify={'center'}
                         >
                             <AboutBtn
-                                classes={classes}
-<<<<<<< HEAD
-                                avatarUrl={'https://cdn3.iconfinder.com/data/icons/avatar-set/512/Avatar01-512.png'}                                
-=======
-                                avatarUrl={'https://cdn3.iconfinder.com/data/icons/avatar-set/512/Avatar01-512.png' }
->>>>>>> master
+                                classes={classes}                             
+                                avatarUrl={'https://cdn3.iconfinder.com/data/icons/avatar-set/512/Avatar01-512.png'}
                                 name={'Inez Wibowo'}
                                 role={'Team Lead'}
                                 to={'/'}
