@@ -26,7 +26,7 @@ const styles = theme => ({
         height: 60,
     },
     pageContent: {
-        height: theme.spacing.unit*10
+        height: '100%'
     }
 });
 
