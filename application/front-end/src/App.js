@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar, Toolbar, Typography,
-  IconButton,
+ // IconButton,
 } from '@material-ui/core';
-import {
-  Menu as MenuIcon
-} from '@material-ui/icons';
+//import {Menu as MenuIcon} from '@material-ui/icons';
 import AboutPage from './modules/about/about-page';
 import { BrowserRouter } from 'react-router-dom';
 
