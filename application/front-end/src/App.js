@@ -11,7 +11,6 @@ import {
 //import {Menu as MenuIcon} from '@material-ui/icons';
 import { BrowserRouter } from 'react-router-dom';
 
-import AboutPage from './modules/about/about-page';
 import NewListing from './modules/listing/new-listing';
 
 const styles = {
