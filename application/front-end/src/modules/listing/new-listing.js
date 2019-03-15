@@ -34,13 +34,17 @@ class NewListing extends Component{
   handleSubmit = event => {
 	event.preventDefault();
 
- 	axios.post('http://localhost:5000/newlisting', {
-  		title: this.state.post.title,
-		  price: this.state.post.price,
-		  address: this.state.post.address,
-		  zip: this.state.post.zip,
-		  description: this.state.post.description
-    })
+
+ 	    axios.post('http://localhost:5000/newlisting', 
+        {
+          
+           title: this.state.post.title,
+           price: this.state.post.price,
+           address: this.state.post.address,
+           zip: this.state.post.zip,
+           description: this.state.post.description
+          
+        })
   }
 
   render(){
