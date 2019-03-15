@@ -1,8 +1,8 @@
 var express = require('express');
 var app = express();
 
-app.get('/', function(req, res){
-  res.send('hello world');
-});
+const listingRouter = require('./routes/listingrouter');
 
-app.listen(3001);
+app.use('/newlisting',listingRouter);
+
+app.listen(5000);

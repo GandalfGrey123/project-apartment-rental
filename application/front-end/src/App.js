@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 //import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
+
 import {
   AppBar, Toolbar, Typography,
  // IconButton,
 } from '@material-ui/core';
+
 //import {Menu as MenuIcon} from '@material-ui/icons';
-import AboutPage from './modules/about/about-page';
 import { BrowserRouter } from 'react-router-dom';
+
+import AboutPage from './modules/about/about-page';
+import NewListing from './modules/listing/new-listing';
 
 const styles = {
   root: {
@@ -28,6 +33,8 @@ class App extends Component {
     const { classes } = this.props;
 
     return (
+
+
       <BrowserRouter>
         <div className={classes.root}>
           <AppBar position="static">
@@ -40,9 +47,15 @@ class App extends Component {
             </Typography>
             </Toolbar>
           </AppBar>
-          <AboutPage />
+          
+          <NewListing />
+
         </div>
       </BrowserRouter>
+
+
+
+
     );
   }
 }

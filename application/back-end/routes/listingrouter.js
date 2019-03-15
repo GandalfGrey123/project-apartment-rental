@@ -1,0 +1,7 @@
+const express = require('express');
+const router = express.Router();
+var listingController = require('../controller/ListingController');
+
+router.route('/').post(listingController.create);
+
+module.exports = router;
