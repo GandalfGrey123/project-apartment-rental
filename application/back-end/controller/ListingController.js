@@ -1,10 +1,10 @@
-//var Listing = require('../model/Listing');
+var Listing = require('../model/Listing');
 
 exports.create = function(req,res){
-	console.log("HELLO WORLD");
+	console.log(req.body);
 	
-	/*
 	var newListing = new Listing(req.body);
+
 	if(!newListing.status){
 	  res.status(400).send({ error:true, message: 'bad request' });
 	}
@@ -14,5 +14,4 @@ exports.create = function(req,res){
     	 res.json(listing);
   	   });
 	}
-	*/
 };
