@@ -2,9 +2,12 @@ const express = require('express');
 var models = require('../models');
 
 const router = express.Router();
-router.post('/', function(req,res){
 
+//permanently save a listing 
+router.post('/', function(req,res){
+	
 	models.listing.create({
+
 		title: req.body.title,
 		price: req.body.price,
 		address: req.body.address,
