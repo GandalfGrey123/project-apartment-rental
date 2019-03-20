@@ -5,18 +5,12 @@ import {
   Paper, withStyles,
 } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import styles from './styles/new-listing';
+
+//use axios for posting 
 import axios from 'axios';
 
-const styles = theme => ({
-  root: {
-      flexGrow: 1,
-      padding: 10,
-      margin: 20
-  },
-  formGroup: {
-    width: 500
-  }
-});
+
 
 class NewListing extends Component{
 
@@ -36,7 +30,6 @@ class NewListing extends Component{
   
 
   addFile = event => {
-  console.log("sfs")
     this.setState({
       imageFiles: this.state.imageFiles.concat(Array.from((event.target.files)))
     })
@@ -148,38 +141,15 @@ export default withStyles(styles, { withTheme: true })(NewListing);
 
 /*
 
-<div>
+  temporary , use for notes then delete.
 
-      	<h1> Post </h1>
-    		
-    		<form onSubmit={this.handleSubmit}>
-
-      		   <br />
-
-        		 <br />
 
               <input 
                 multiple
                 accept="image/png, image/jpeg"
                 type = "file"
                 onChange={this.addFile}              
-              />
-
-
-        		 <div style={{padding: 8}}>
-        			<Button variant="contained" size="small" color="primary" type="reset">
-                 RESET
-              </Button>
-         
-              <Button variant="contained" size="small" color="primary" type="submit">
-                 SUBMIT
-              </Button>
-       		   </div>  
-    
-              {imagePreviews}
-            
-        	</form>     		 
-        </div>
+              />        
 
 */
 
