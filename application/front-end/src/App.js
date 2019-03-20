@@ -16,6 +16,7 @@ import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 
 import NewListing from './modules/listing/new-listing';
 import AboutPage from './modules/about/about-page';
+import HomePage from './modules/homepage/home-page';
 
 const styles = {
   root: {
@@ -57,7 +58,7 @@ class App extends Component {
 
           <Switch>
             <Route path={'/about'} component={AboutPage} />
-            <Route path={'/'} component={NewListing} />
+            <Route path={'/'} component={HomePage} />
           </Switch>
 
         </div>
