@@ -72,56 +72,56 @@ class AboutPage extends Component{
                                 avatarUrl={'https://cdn3.iconfinder.com/data/icons/avatar-set/512/Avatar01-512.png'}
                                 name={'Inez Wibowo'}
                                 role={'Team Lead'}
-                                to={'/'}
-                                selected={currentLocation === ''}
+                                to={'/about'}
+                                selected={currentLocation === 'about'}
                             />
                             <AboutBtn
                                 classes={classes}
                                 avatarUrl={'https://www.clipartmax.com/png/middle/319-3191274_male-avatar-admin-profile.png'}
                                 name={'Aliaksei Siarheyeu'}
                                 role={'Lead'}
-                                to={'/alex'}
-                                selected={currentLocation === 'alex'}
+                                to={'/about/alex'}
+                                selected={currentLocation === 'about/alex'}
                             />
                             <AboutBtn
                                 classes={classes}
                                 avatarUrl={'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/spider_insect_bug_avatar-512.png'}
                                 role={'Lead'}
                                 name={'Marcus Wong'}
-                                to={'/marcus'}
-                                selected={currentLocation === 'marcus'}
+                                to={'/about/marcus'}
+                                selected={currentLocation === 'about/marcus'}
                             />
                             <AboutBtn
                                 classes={classes}
-                                avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                avatarUrl={'https://cdn0.iconfinder.com/data/icons/avatar-vol-4/512/2-512.png'}
                                 name={'Romeel Chaudhari'}
                                 role={'Engineer'}
-                                to={'/romeel'}
-                                selected={currentLocation === 'romeel'}
+                                to={'/about/romeel'}
+                                selected={currentLocation === 'about/romeel'}
                             />
                             <AboutBtn
                                 classes={classes}
-                                avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                avatarUrl={'https://cdn0.iconfinder.com/data/icons/handsome-man-avatars/283/stock_man_avatar-17-512.png'}
                                 name={'Jia Nan Mai'}
                                 role={'Engineer'}
-                                to={'/jianan'}
-                                selected={currentLocation === 'jianan'}
+                                to={'/about/jianan'}
+                                selected={currentLocation === 'about/jianan'}
                             />
                             <AboutBtn
                                 classes={classes}
-                                avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                avatarUrl={'https://cdn4.iconfinder.com/data/icons/user-avatar-flat-icons/512/User_Avatar-04-512.png'}
                                 name={'Hang Li'}
                                 role={'Engineer'}
-                                to={'/hang'}
-                                selected={currentLocation === 'hang'}
+                                to={'/about/hang'}
+                                selected={currentLocation === 'about/hang'}
                             />
                             <AboutBtn
                                 classes={classes}
-                                avatarUrl={'https://pngimage.net/wp-content/uploads/2018/05/avatar-icon-png-6.png'}
+                                avatarUrl={'https://cdn1.iconfinder.com/data/icons/user-avatars-2/300/10-512.png'}
                                 name={'Ismael San Juan'}
                                 role={'Engineer'}
-                                to={'/ismael'}
-                                selected={currentLocation === 'ismael'}
+                                to={'/about/ismael'}
+                                selected={currentLocation === 'about/ismael'}
                             />
                         </Grid>    
                     </Grid>
@@ -133,13 +133,13 @@ class AboutPage extends Component{
                             className={classes.pageContent}
                         >
                             <Switch>
-                                <Route path={'/jianan'} component={AboutJiaNan} />
-                                <Route path={'/romeel'} component={AboutRomeel} />
-                                <Route path={'/marcus'} component={AboutMarcus} />
-                                <Route path={'/hang'} component={AboutHang} />
-                                <Route path={'/ismael'} component={AboutIsmael} />
-                                <Route path={'/alex'} component={AboutAliaksei} /> 
-                                <Route path={'/'} component={AboutInez} /> {/* <- This should stay the last in the list */}
+                                <Route path={'/about/jianan'} component={AboutJiaNan} />
+                                <Route path={'/about/romeel'} component={AboutRomeel} />
+                                <Route path={'/about/marcus'} component={AboutMarcus} />
+                                <Route path={'/about/hang'} component={AboutHang} />
+                                <Route path={'/about/ismael'} component={AboutIsmael} />
+                                <Route path={'/about/alex'} component={AboutAliaksei} /> 
+                                <Route path={'/about'} component={AboutInez} /> {/* <- This should stay the last in the list */}
                             </Switch>
                         </Grid>
                     </Grid>

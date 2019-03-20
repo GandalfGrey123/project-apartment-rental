@@ -5,13 +5,17 @@ import { withStyles } from '@material-ui/core/styles';
 
 import {
   AppBar, Toolbar, Typography,
- // IconButton,
+  IconButton,
 } from '@material-ui/core';
 
-//import {Menu as MenuIcon} from '@material-ui/icons';
-import { BrowserRouter } from 'react-router-dom';
+import { 
+  Menu as MenuIcon,
+  Info as InfoIcon
+} from '@material-ui/icons';
+import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 
 import NewListing from './modules/listing/new-listing';
+import AboutPage from './modules/about/about-page';
 
 const styles = {
   root: {
@@ -32,29 +36,32 @@ class App extends Component {
     const { classes } = this.props;
 
     return (
-
-
       <BrowserRouter>
         <div className={classes.root}>
           <AppBar position="static">
             <Toolbar>
-              {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-              <MenuIcon />
-            </IconButton> */}
-              <Typography variant="h6" color="inherit" className={classes.grow}>
+              <IconButton 
+                className={classes.menuButton} 
+                color="inherit"
+                aria-label="Menu"
+                component={Link}
+                to={'/about'}
+              >
+                <InfoIcon />
+              </IconButton>
+              <Typography variant="h6" color="inherit" className={classes.grow} component={Link} to={'/'} >
                 SFSU - CSC 648 Team #9 Project
-            </Typography>
+              </Typography>
             </Toolbar>
           </AppBar>
-          
-          <NewListing />
+
+          <Switch>
+            <Route path={'/about'} component={AboutPage} />
+            <Route path={'/'} component={NewListing} />
+          </Switch>
 
         </div>
       </BrowserRouter>
-
-
-
-
     );
   }
 }

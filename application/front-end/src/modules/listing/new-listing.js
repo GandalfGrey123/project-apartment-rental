@@ -1,8 +1,22 @@
 import React, { Component } from 'react';
 
-import TextField from '@material-ui/core/TextField';
+import {
+  TextField, FormGroup, FormControl,
+  Paper, withStyles,
+} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
+
+const styles = theme => ({
+  root: {
+      flexGrow: 1,
+      padding: 10,
+      margin: 20
+  },
+  formGroup: {
+    width: 500
+  }
+});
 
 class NewListing extends Component{
 
@@ -68,51 +82,81 @@ class NewListing extends Component{
     );
   });
 
+   const { classes } = this.props; 
 
    return(
-   
-   	<div>
+     <Paper className={classes.root}>
+       <FormGroup className={classes.formGroup} >
+         <FormControl>
+           <TextField
+             label="Title"
+             value={title}
+             onChange={this.handleChange('title')}
+             margin="normal"
+           />
+         </FormControl>
+         <FormControl>
+           <TextField
+             label="Price"
+             value={price}
+             onChange={this.handleChange('price')}
+             margin="normal"
+           />
+         </FormControl>
+         <FormControl>
+           <TextField
+             label="Address"
+             value={address}
+             onChange={this.handleChange('address')}
+             margin="normal"
+           />
+         </FormControl>
+         <FormControl>
+           <TextField
+             label="Zip"
+             value={zip}
+             onChange={this.handleChange('zip')}
+             margin="normal"
+           />
+         </FormControl>
+         <FormControl>
+           <TextField
+             multiline
+             rows="6"
+             label="Description"
+             value={description}
+             onChange={this.handleChange('description')}
+             margin="normal"
+           />
+         </FormControl>
+         <div>
+           <Button variant="contained" size="small" color="primary" type="reset">
+             RESET
+           </Button>
+           <Button variant="contained" size="small" color="primary" type="submit">
+             SUBMIT
+            </Button>
+         </div>
+       </FormGroup>
+     </Paper>
+   );
+  }
+}
+
+
+export default withStyles(styles, { withTheme: true })(NewListing);
+
+/*
+
+<div>
 
       	<h1> Post </h1>
     		
     		<form onSubmit={this.handleSubmit}>
 
-      		   <TextField
-         		   label="Title"
-         		   value ={title}
-         		   onChange={this.handleChange('title')}
-         		   margin="normal"
-        		 /><br />
+      		   <br />
 
-        		 <TextField
-               label="Price"
-               value ={price}
-               onChange={this.handleChange('price')}
-               margin="normal"
-        		 /><br />   
-
-        		 <TextField
-               label="Address"
-               value ={address}
-               onChange={this.handleChange('address')}
-               margin="normal"
-        		 /><br />   
-
-        		 <TextField
-               label="Zip"
-               value ={zip}
-               onChange={this.handleChange('zip')}
-               margin="normal"
-        		 /><br />
-       		          
-        		 <TextField
-        		 	 multiline
-               rows="6"
-               label="Description"
-               value ={description}          	
-               onChange={this.handleChange('description')}
-               margin="normal"
-        		  /><br />
+        		 <br />
 
               <input 
                 multiple
@@ -136,10 +180,6 @@ class NewListing extends Component{
             
         	</form>     		 
         </div>
-   );
-  }
-}
 
-
-export default NewListing;
+*/
 
