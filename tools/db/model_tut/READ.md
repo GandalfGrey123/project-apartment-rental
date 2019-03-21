@@ -18,15 +18,13 @@ tool details:
 requirements:
  * must install Sequelize module
  * must have MySQL installed
- * must have MySql service running
+ * must have MySQL service running
  * must be able to login as root 
 
 
 
 Sequelize CLI (helps build/run SQL queries and models with your MySQL database)
-CLI docs for Sequelize can be found here:
-
---> http://docs.sequelizejs.com/manual/migrations.html
+CLI docs for Sequelize can be found here --> http://docs.sequelizejs.com/manual/migrations.html
 
 
 
