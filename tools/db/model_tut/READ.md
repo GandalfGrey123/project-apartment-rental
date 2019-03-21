@@ -5,7 +5,8 @@
 what you will do: tut using sequelize to Model database tables
 
 
-### first setup the dev tools
+## First, the Dev tools ... 
+-------------
 
 tool:
  * npm module Sequelize
@@ -29,7 +30,7 @@ CLI docs for Sequelize can be found here:
 
 
 
-## Getting started:
+## Now, Getting started:
 
 ### Setup a MySQL Database
 -------------
