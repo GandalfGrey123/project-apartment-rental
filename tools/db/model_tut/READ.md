@@ -1,6 +1,12 @@
 
 # BackEnd Database Work Flow
 
+
+what you will do: tut using sequelize to Model database tables
+
+
+### first setup the dev tools
+
 tool:
  * npm module Sequelize
 
@@ -9,6 +15,7 @@ tool details:
  * Sequelize is a promise-based ORM for Node.js
 
 requirements:
+ * must install Sequelize module
  * must have MySQL installed
  * must have MySql service running
  * must be able to login as root 
@@ -24,7 +31,7 @@ CLI docs for Sequelize can be found here:
 
 ## Getting started:
 
-Setup a MySQL Database
+### Setup a MySQL Database
 -------------
 
 make sure you can sign in to MySQL
@@ -36,7 +43,7 @@ to create a new database for the application to use.
 next steps you will setup Sequelize to use MySQL...
 
 
-SETUP THE CONFIG
+### SETUP THE CONFIG
 -------------
 
 generate the config file to edit
@@ -55,7 +62,7 @@ step II.
 
 
 
-CREATING MODELS
+### CREATING MODELS
 ---------------
 
 Step I.
