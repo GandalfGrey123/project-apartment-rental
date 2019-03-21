@@ -1,16 +1,17 @@
 
 # BackEnd Database Work Flow
 
-tools:
-* npm module Sequelize
+tool:
+ * npm module Sequelize
 
-details:
+tool details:
 
-*Sequelize is a promise-based ORM for Node.js
+ * Sequelize is a promise-based ORM for Node.js
 
 requirements:
  * must have MySQL installed
  * must have MySql service running
+ * must be able to login as root 
 
 
 
@@ -21,18 +22,21 @@ CLI docs for Sequelize can be found here:
 
 
 
-##Getting started:
+## Getting started:
 
 Setup a MySQL Database
+-------------
 
-use the MySql command line prompt or database visual tool i.e. MySQL Workbench
+make sure you can sign in to MySQL
+
+Use the MySql command line prompt or database visual tool i.e. MySQL Workbench
 to create a new database for the application to use.
 
 
-next steps...
+next steps you will setup Sequelize to use MySQL...
 
 
-SETUP CONFIG
+SETUP THE CONFIG
 -------------
 
 generate the config file to edit
@@ -47,7 +51,7 @@ step II.
 
  edit config.json to use your database
 
-
+ add your database info , credentials and etc.
 
 
 
