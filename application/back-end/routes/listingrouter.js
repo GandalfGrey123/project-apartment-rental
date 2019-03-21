@@ -7,12 +7,7 @@ const router = express.Router();
 router.post('/', function(req,res){
 	
 	models.listing.create({
-
-		title: req.body.title,
-		price: req.body.price,
-		address: req.body.address,
-		zip: req.body.zip,
-		description: req.body.description
+		// add data to database
 
 	}).then(function(){
 		res.redirect('/');
