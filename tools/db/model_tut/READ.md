@@ -1,11 +1,12 @@
 
-BackEnd Database Work Flow
+# BackEnd Database Work Flow
 
 tools:
- npm module Sequelize
+* npm module Sequelize
 
 details:
- Sequelize is a promise-based ORM for Node.js
+
+*Sequelize is a promise-based ORM for Node.js
 
 requirements:
  * must have MySQL installed
@@ -14,12 +15,13 @@ requirements:
 
 
 Sequelize CLI (helps build/run SQL queries and models with your MySQL database)
-CLI docs for Sequelize can be found here 
+CLI docs for Sequelize can be found here:
+
 --> http://docs.sequelizejs.com/manual/migrations.html
 
 
 
-Getting started:
+##Getting started:
 
 Setup a MySQL Database
 
@@ -53,6 +55,7 @@ CREATING MODELS
 ---------------
 
 Step I.
+
 creating a simple Model
 
  run command ->
@@ -60,6 +63,7 @@ creating a simple Model
 
 
 Step II.
+
 migrate database queries
 
  run command ->
