@@ -1,39 +1,39 @@
-## Back-End App
+# Back-End App
 
 
 ***
 
-### Stack
+## Stack
 
     NodeJS
     Express
     MySql
 
-### Tools
+## Tools
 
     Sequelize
 ***
 
 Database ORM Models
 
- * User
+ ### User
  
-   Users create and own many posts 
+   * Users create and own many posts 
  
- * ListingPost
+ ### ListingPost
  
-   ListingPost belongs to users 
+   * ListingPost belongs to users 
    
-   A ListingPost has many images
+   * A ListingPost has many images
    
-   A ListingPost has only one housing type 
+   * A ListingPost has only one housing type 
    
- * ListingImage
+ ### ListingImage
  
-   A ListingImage belongs to ListingPost
+   * A ListingImage belongs to ListingPost
  
- * HousingType
+ ### HousingType
  
-   A HousingType is owned by a ListingPost
+   * A HousingType is owned by a ListingPost
    
  
