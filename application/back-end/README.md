@@ -14,7 +14,10 @@
     Sequelize
 ***
 
-Database ORM Models
+
+
+
+## Database ORM Models
 
 A summary of the Database models and their roles.
 
