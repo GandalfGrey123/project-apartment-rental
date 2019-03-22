@@ -1,16 +1,16 @@
 ## Back-End App
 
-### Stack
 
+-------
 ***
+
+### Stack
     NodeJS
     Express
    
-***
-
 
 ### Tools
 
-***
+
     Sequelize
 ***
