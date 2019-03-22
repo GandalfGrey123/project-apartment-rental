@@ -16,6 +16,8 @@
 
 Database ORM Models
 
+A summary of the Database models and their roles.
+
  ### User
  
    * Users create and own many posts 
