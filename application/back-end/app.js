@@ -5,11 +5,12 @@ var bodyParser = require('body-parser')
 
 
 //mvc routers
-const listingRouter = require('./routes/listingrouter');
-app.use('/newlisting',listingRouter);
+const newListingRouter = require('./routes/newlistingrouter');
+const serachListingRouter = require('./routes/listingsearchrouter');
 
 
-const ListingsModel = require('./models').ListingPost
+app.use('/newlisting',newListingRouter);
+app.use('/search',serachListingRouter);
 
 
 app.use(bodyParser.urlencoded({ extended: false }))
