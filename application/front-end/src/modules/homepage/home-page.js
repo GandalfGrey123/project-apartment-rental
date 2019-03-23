@@ -17,8 +17,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import Button from '@material-ui/core/Button';
 
+
+import Button from '@material-ui/core/Button';
 
 class HomePage extends Component{
 	
@@ -86,6 +87,8 @@ class HomePage extends Component{
             }}
             anchor="left"
            >
+
+
        
             <List subheader={<ListSubheader> Housing Types</ListSubheader>} className={classes.subList}>
             
@@ -117,6 +120,7 @@ class HomePage extends Component{
           </Drawer>
        </div>
 
+  
 	 );
 	}
 
