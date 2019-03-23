@@ -4,12 +4,17 @@ import {
   TextField, FormGroup, FormControl,
   Paper, withStyles,
 } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+
 import styles from './styles/new-listing';
+import Button from '@material-ui/core/Button';
 
 //use axios for posting 
 import axios from 'axios';
 
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
+import InputLabel from '@material-ui/core/InputLabel';
 
 
 class NewListing extends Component{
@@ -22,7 +27,13 @@ class NewListing extends Component{
       price:'',
       address:'',
       zip:'',
-      description: '',           
+      description: '',
+    },
+
+    housingInfo: {
+      housingType: '',
+      bedrooms:0,
+      bathrooms:0,
     },
     
     imageFiles:[]
@@ -35,7 +46,7 @@ class NewListing extends Component{
     })
   }; 
 
-  handleChange = name => ({target: {value}}) => {
+  handlePostChange = name => ({target: {value}}) => {
     this.setState({ 
       post:{
     	  ...this.state.post,
@@ -44,7 +55,17 @@ class NewListing extends Component{
     });
   };
 
+   handleHousingChange = name => ({target: {value}}) => {
+    this.setState({ 
+      housingInfo:{
+        ...this.state.housingInfo,
+        [name]: value 
+      } 
+    });
+  };
+
   handleSubmit = event => {
+
 	    event.preventDefault();
  	    axios.post('http://localhost:5000/newlisting', 
         {          
@@ -53,6 +74,9 @@ class NewListing extends Component{
            address: this.state.post.address,
            zip: this.state.post.zip,
            description: this.state.post.description,
+           housingType:this.state.housingInfo.housingType,
+           bedrooms:this.state.housingInfo.bedrooms,
+           bathrooms:this.state.housingInfo.bathrooms,
            images: this.state.imageFiles          
         })
   };
@@ -66,7 +90,13 @@ class NewListing extends Component{
         address,
         zip,
         description
-      } 
+      },
+
+      housingInfo:{
+        housingType,
+        bedrooms,
+        bathrooms,
+      }
   } = this.state;
 
   var imagePreviews = this.state.imageFiles.map(function(image) {
@@ -79,12 +109,13 @@ class NewListing extends Component{
 
    return(
      <Paper className={classes.root}>
+     <form onSubmit={this.handleSubmit}>
        <FormGroup className={classes.formGroup} >
-         <FormControl>
+          <FormControl>
            <TextField
              label="Title"
              value={title}
-             onChange={this.handleChange('title')}
+             onChange={this.handlePostChange('title')}
              margin="normal"
            />
          </FormControl>
@@ -92,7 +123,7 @@ class NewListing extends Component{
            <TextField
              label="Price"
              value={price}
-             onChange={this.handleChange('price')}
+             onChange={this.handlePostChange('price')}
              margin="normal"
            />
          </FormControl>
@@ -100,7 +131,7 @@ class NewListing extends Component{
            <TextField
              label="Address"
              value={address}
-             onChange={this.handleChange('address')}
+             onChange={this.handlePostChange('address')}
              margin="normal"
            />
          </FormControl>
@@ -108,7 +139,7 @@ class NewListing extends Component{
            <TextField
              label="Zip"
              value={zip}
-             onChange={this.handleChange('zip')}
+             onChange={this.handlePostChange('zip')}
              margin="normal"
            />
          </FormControl>
@@ -118,10 +149,110 @@ class NewListing extends Component{
              rows="6"
              label="Description"
              value={description}
-             onChange={this.handleChange('description')}
+             onChange={this.handlePostChange('description')}
              margin="normal"
            />
          </FormControl>
+
+
+          <br /> 
+          <FormControl variant="outlined">
+             <InputLabel
+               ref={ref => {
+                 this.InputLabelRef = ref;
+               }}
+               htmlFor="outlined-age-native-simple"
+             >
+               Housing Type
+             </InputLabel>
+             <Select
+               native
+               value={housingType}
+               onChange={this.handleHousingChange('housingType')}
+               input={
+                 <OutlinedInput
+                   name="Housing Type"              
+                   id="outlined-age-native-simple"
+                 />
+               }
+             >
+               <option value="" />
+               <option value={"Apartment"}>Apartment</option>
+               <option value={"House"}>House</option>
+               <option value={"Room"}>Room</option>
+             </Select>  
+          </FormControl>
+
+
+          <br />
+          <FormControl variant="outlined">
+             <InputLabel
+               ref={ref => {
+                 this.InputLabelRef = ref;
+               }}
+               htmlFor="outlined-age-native-simple"
+             >
+              Bed rooms
+             </InputLabel>
+             <Select
+               native
+               value={bedrooms}
+               onChange={this.handleHousingChange('bedrooms')}
+               input={
+                 <OutlinedInput
+                   name="bedrooms"              
+                   id="outlined-age-native-simple"
+                 />
+               }
+             >
+               <option value="" />
+               <option value={1}>1</option>
+               <option value={2}>2</option>
+               <option value={3}>3</option>
+             </Select>  
+          </FormControl>
+
+          <br />
+          <FormControl variant="outlined">
+             <InputLabel
+               ref={ref => {
+                 this.InputLabelRef = ref;
+               }}
+               htmlFor="outlined-age-native-simple"
+             >
+               Bathrooms
+             </InputLabel>
+             <Select
+               native
+               value={bathrooms}
+               onChange={this.handleHousingChange('bathrooms')}
+               input={
+                 <OutlinedInput
+                   name="bathrooms"              
+                   id="outlined-age-native-simple"
+                 />
+               }
+             >
+               <option value="" />
+               <option value={1}>1</option>
+               <option value={2}>2</option>
+               <option value={3}>3</option>
+             </Select>  
+          </FormControl>
+
+
+        
+         <FormControl>
+              <input 
+                multiple
+                accept="image/png, image/jpeg"
+                type = "file"
+                onChange={this.addFile}              
+              />  
+         </FormControl>
+
+         {imagePreviews}
+
          <div>
            <Button variant="contained" size="small" color="primary" type="reset">
              RESET
@@ -131,6 +262,7 @@ class NewListing extends Component{
             </Button>
          </div>
        </FormGroup>
+        </form>
      </Paper>
    );
   }
@@ -139,17 +271,5 @@ class NewListing extends Component{
 
 export default withStyles(styles, { withTheme: true })(NewListing);
 
-/*
 
-  temporary , use for notes then delete.
-
-
-              <input 
-                multiple
-                accept="image/png, image/jpeg"
-                type = "file"
-                onChange={this.addFile}              
-              />        
-
-*/
 
