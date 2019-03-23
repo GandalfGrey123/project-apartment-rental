@@ -17,11 +17,21 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import Button from '@material-ui/core/Button';
+
 
 class HomePage extends Component{
 	
 	state = {
-     //housingTypeChecked {} , use hashmap?     
+
+	  listings:[],
+
+	    housingTypeChecks:{
+	    	 All: true,
+       	 Apartment: false,
+       	 House: false,
+       	 Room: false,  
+	    }	
     };
 
 
@@ -29,12 +39,36 @@ class HomePage extends Component{
         super(props);
     }
 
+    updateView(){
+      const types = "";
+      
+        for(var key in this.state.housingTypeChecks){
+     	  if(this.state.housingTypeChecks[key] == true){
+     	  	types = types +"+"+ key;
+     	  }
+        }
 
-    selectHousingType = type =>({target: {checked}}) => {
-     
-    };
+       	axios.get('http://localhost:5000/search').then(res => {
+        	 const listings = res.data;
+       		 this.setState({ listings });
+      	})
+    }
+  
 
 
+    selectHousingType = type => event => {
+
+      console.log(this.state.housingTypeChecks[type]);
+    	 this.setState({ 
+      	  housingTypeChecks:{
+    	    ...this.state.housingTypeChecks,
+    	    [type]: event.target.checked
+      	  }
+    	});    
+     };
+
+
+ 
 	render(){
 	
 	const classes = this.props.classes;
@@ -56,15 +90,29 @@ class HomePage extends Component{
             <List subheader={<ListSubheader> Housing Types</ListSubheader>} className={classes.subList}>
             
                 
-              {['All types','Apartment', 'House', 'Room'].map((text, index) => (
+              {['All','Apartment', 'House', 'Room'].map((text, index) => (
                 <ListItem button key={text}>
-                    <Checkbox
-                	  onChange={this.selectHousingType(text)}        
+                    <Checkbox             
+                      checked={this.state.housingTypeChecks[text]}
+                	  onChange={this.selectHousingType(text)}               
                     />
+
                   <ListItemText primary={text} />
                 </ListItem>
               ))}
             </List>
+
+
+             <Button color="primary" 
+            	onClick={
+            	  () => {
+            	  	this.updateView();
+            	  }
+            	}
+             >
+    			Update
+			</Button>
+
             <Divider />
           </Drawer>
        </div>
