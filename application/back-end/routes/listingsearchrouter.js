@@ -4,7 +4,7 @@ var models = require('../models');
 const router = express.Router();
 
 router.get('/', function(req,res){
-  //models.ListingPost.findAll().then((result) => res.json(result))
+  
   models.ListingPost.findAll({
   	include: [models.HousingType,models.ListingImage]
   }).then(listings =>{
