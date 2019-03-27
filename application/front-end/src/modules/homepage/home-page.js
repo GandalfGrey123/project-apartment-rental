@@ -25,7 +25,7 @@ class HomePage extends Component{
 	
 	state = {
 
-	  listings:[],
+	    listings:[],
 
 	    housingTypeChecks:{
 	    	 All: true,
@@ -36,23 +36,14 @@ class HomePage extends Component{
     };
 
 
-	constructor(props){
+	  constructor(props){
         super(props);
     }
 
-    updateView(){
-      const types = "";
-      
-        for(var key in this.state.housingTypeChecks){
-     	  if(this.state.housingTypeChecks[key] == true){
-     	  	types = types +"+"+ key;
-     	  }
-        }
-
-       	axios.get('http://localhost:5000/search').then(res => {
-        	 const listings = res.data;
-       		 this.setState({ listings });
-      	})
+    updateView(){      
+      // 	axios.get('http://localhost:5000/search').then(res => {
+      //  	 const listings = res.data; 		 
+      //	})
     }
   
 
@@ -74,56 +65,45 @@ class HomePage extends Component{
 	
 	const classes = this.props.classes;
 	
-	 return(
+	 return (
 	  
-	   <div className={classes.root}>
+	  <div className={classes.root}>
          <CssBaseline />
     
-          <Drawer
-            className={classes.drawer}
-            variant="permanent"
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            anchor="left"
-           >
-
+            <Drawer
+              className={classes.drawer}
+              variant="permanent"
+              classes={{ paper: classes.drawerPaper }}
+              anchor="left"
+            >
 
        
             <List subheader={<ListSubheader> Housing Types</ListSubheader>} className={classes.subList}>
-            
-                
-              {['All','Apartment', 'House', 'Room'].map((text, index) => (
-                <ListItem button key={text}>
-                    <Checkbox             
-                      checked={this.state.housingTypeChecks[text]}
-                	  onChange={this.selectHousingType(text)}               
-                    />
+                          
+               {['All','Apartment', 'House', 'Room'].map((text, index) => (
+                 <ListItem button key={text}>
+                     <Checkbox             
+                       checked={this.state.housingTypeChecks[text]}
+                 	    onChange={this.selectHousingType(text)}               
+                     />
+                     <ListItemText primary={text} />
+                 </ListItem>
+               ))}
 
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
             </List>
 
 
-             <Button color="primary" 
-            	onClick={
-            	  () => {
-            	  	this.updateView();
-            	  }
-            	}
-             >
-    			Update
-			</Button>
+            <Button color="primary" onClick={ () => { this.updateView();}}>
+    			   Update
+			      </Button>
 
             <Divider />
           </Drawer>
-       </div>
 
-  
-	 );
-	}
-
+     </div>
+ 
+	);
+ }
 }
 
 
