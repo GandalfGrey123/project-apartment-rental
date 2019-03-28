@@ -2,19 +2,19 @@
 module.exports = (sequelize, DataTypes) => {
   const ListingPost = sequelize.define('ListingPost', {
     title: DataTypes.STRING,
-    price: DataTypes.FLOAT,
     description: DataTypes.TEXT,
-    city: DataTypes.STRING,
+    price: DataTypes.FLOAT,
     address: DataTypes.STRING,
-    zip: DataTypes.INTEGER
+    city: DataTypes.STRING,
+    state: DataTypes.STRING,
+    zipCode: DataTypes.INTEGER,
+    isApproved: DataTypes.BOOLEAN
   }, {});
   ListingPost.associate = function(models) {
     
     ListingPost.belongsTo(models.User);
     
-    ListingPost.hasOne( models.HousingType, {
-      onDelete: 'CASCADE'
-    });
+    ListingPost.belongsTo(models.HousingType);
 
     ListingPost.hasMany(models.ListingImage, {
       onDelete: 'CASCADE'

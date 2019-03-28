@@ -1,12 +1,13 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const HousingType = sequelize.define('HousingType', {
-    type: DataTypes.STRING,
-    roomCount: DataTypes.INTEGER,
-    bathroomCount: DataTypes.INTEGER
-  }, {});
+    type: DataTypes.STRING
+  }, {
+    createdAt: false,
+    updatedAt: false
+  });
   HousingType.associate = function(models) {
-    HousingType.belongsTo(models.ListingPost);
+    HousingType.hasMany(models.ListingPost);
   };
   return HousingType;
 };

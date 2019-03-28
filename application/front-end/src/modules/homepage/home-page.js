@@ -17,27 +17,29 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Checkbox from '@material-ui/core/Checkbox';
 
-
+import _ from 'lodash';
 
 import Button from '@material-ui/core/Button';
 
 class HomePage extends Component{
 	
-	state = {
-
-	    listings:[],
-
-	    housingTypeChecks:{
-	    	 All: true,
-       	 Apartment: false,
-       	 House: false,
-       	 Room: false,  
-	    }	
-    };
-
-
 	  constructor(props){
         super(props);
+        this.state = {
+          listings:[],
+          types: [],
+          housingTypeChecks:{
+             All: true,
+            Apartment: false,
+            House: false,
+            Room: false,  
+          }	
+        };
+        this.getHousingTypes = this.getHousingTypes.bind(this);
+    }
+
+    componentWillMount(){
+      this.getHousingTypes();
     }
 
     updateView(){      
@@ -46,7 +48,12 @@ class HomePage extends Component{
       //	})
     }
   
-
+    getHousingTypes = () => {
+      axios.get('http://localhost:5000/listings/types')
+        .then((res) => {
+          this.setState({ types: res.data })
+        });
+    }
 
     selectHousingType = type => event => {
 
@@ -63,7 +70,9 @@ class HomePage extends Component{
  
 	render(){
 	
-	const classes = this.props.classes;
+  const classes = this.props.classes;
+  
+  const { types } = this.state;
 	
 	 return (
 	  
@@ -80,13 +89,13 @@ class HomePage extends Component{
        
             <List subheader={<ListSubheader> Housing Types</ListSubheader>} className={classes.subList}>
                           
-               {['All','Apartment', 'House', 'Room'].map((text, index) => (
-                 <ListItem button key={text}>
+               {[ 'All' ].concat(types.map((value) => value.type)).map((text, index) => (
+                 <ListItem button key={`item-${index}`}>
                      <Checkbox             
-                       checked={this.state.housingTypeChecks[text]}
-                 	    onChange={this.selectHousingType(text)}               
+                       checked={this.state.housingTypeChecks[_.capitalize(text)]}
+                 	    onChange={this.selectHousingType(_.capitalize(text))}               
                      />
-                     <ListItemText primary={text} />
+                     <ListItemText primary={_.capitalize(text)} />
                  </ListItem>
                ))}
 
