@@ -72,11 +72,13 @@ class App extends Component {
             </Toolbar>
           </AppBar>
 
-          <Switch>
-            <Route path={'/about'} component={AboutPage} />
-            <Route path={'/new'} component={NewListing} />
-            <Route path={'/'} component={HomePage} />
-          </Switch>
+          <div className={classes.content} >
+            <Switch>
+              <Route path={'/about'} component={AboutPage} />
+              <Route path={'/new'} component={NewListing} />
+              <Route path={'/'} component={HomePage} />
+            </Switch>
+          </div>  
 
         </div>
       </BrowserRouter>

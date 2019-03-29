@@ -20,7 +20,10 @@ router.get('/all',function(req,res){
 //route for custom HousingTypes serach 
 router.get('/', function(req,res){
   //req.query.housingTypes => returns array of selected housing types
-  console.log(req.query.housingTypes);
+  console.log(req.query.type); // returns [ 'Apartment', 'Room' ]
+
+  res.status = 204;
+  res.send();
   
   //models.HousingType.findAll({
   //  where: {

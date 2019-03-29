@@ -4,7 +4,6 @@ const styles = theme => ({
   root: {
     display: 'flex',
   },
-
   drawer: {
     width: drawerWidth,
     flexShrink: 0,     
@@ -18,7 +17,6 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
   },
-
   subList: {
     width: '100%',
     maxWidth: 360,
@@ -26,8 +24,13 @@ const styles = theme => ({
     position: 'relative',
     overflow: 'auto',
     maxHeight: 400,
+  },
+  gridContainer: {
+    padding: theme.spacing.unit * 5,
+    flexGrow: 1,
+    minWidth: 0, // So the Typography noWrap works
+    overflow: 'auto'   
   }
-
 });
 
 export default styles;
