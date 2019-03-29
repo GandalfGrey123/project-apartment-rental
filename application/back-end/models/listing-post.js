@@ -1,6 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const ListingPost = sequelize.define('ListingPost', {
+    
     title: DataTypes.STRING,
     description: DataTypes.TEXT,
     price: DataTypes.FLOAT,
@@ -8,14 +9,15 @@ module.exports = (sequelize, DataTypes) => {
     city: DataTypes.STRING,
     state: DataTypes.STRING,
     zipCode: DataTypes.INTEGER,
-    isApproved: DataTypes.BOOLEAN
+    bedrooms: DataTypes.INTEGER,
+    bathrooms: DataTypes.INTEGER,
+    isApproved: DataTypes.BOOLEAN,
+
   }, {});
   ListingPost.associate = function(models) {
-    
-    ListingPost.belongsTo(models.User);
-    
+  
+    ListingPost.belongsTo(models.User);  
     ListingPost.belongsTo(models.HousingType);
-
     ListingPost.hasMany(models.ListingImage, {
       onDelete: 'CASCADE'
     });
