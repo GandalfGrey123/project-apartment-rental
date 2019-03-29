@@ -10,10 +10,8 @@ import Button from '@material-ui/core/Button';
 
 //use axios for posting 
 import axios from 'axios';
-
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
 import InputLabel from '@material-ui/core/InputLabel';
 
 
@@ -26,17 +24,18 @@ class NewListing extends Component{
       title: '',
       price:'',
       address:'',
+      city:'',
+      state:'',
       zip:'',
       description: '',
-    },
-
-    housingInfo: {
-      housingType: '',
       bedrooms:0,
       bathrooms:0,
+      housingType: '',
     },
-    
-    imageFiles:[]
+
+    imageFiles:[],
+    form:'',
+
   };
   
 
@@ -55,31 +54,31 @@ class NewListing extends Component{
     });
   };
 
-   handleHousingChange = name => ({target: {value}}) => {
-    this.setState({ 
-      housingInfo:{
-        ...this.state.housingInfo,
-        [name]: value 
-      } 
-    });
-  };
-
   handleSubmit = event => {
 
-	    event.preventDefault();
- 	    axios.post('http://localhost:5000/newlisting', 
-        {          
-           title: this.state.post.title,
-           price: this.state.post.price,
-           address: this.state.post.address,
-           zip: this.state.post.zip,
-           description: this.state.post.description,
-           housingType:this.state.housingInfo.housingType,
-           bedrooms:this.state.housingInfo.bedrooms,
-           bathrooms:this.state.housingInfo.bathrooms,
-           images: this.state.imageFiles          
-        })
+      this.state.form = new FormData();
+      this.state.form.append('title',this.state.post.title);
+      this.state.form.append('price',this.state.post.price);
+      this.state.form.append('address',this.state.post.address);
+      this.state.form.append('city',this.state.post.city);
+      this.state.form.append('state',this.state.post.state);
+      this.state.form.append('zip',this.state.post.zip);
+      this.state.form.append('description',this.state.post.description);
+      this.state.form.append('bedrooms',this.state.post.bedrooms);
+      this.state.form.append('bathrooms',this.state.post.bathrooms);
+      this.state.form.append('housingType',this.state.post.housingType);
+
+      axios({
+        method: 'post',
+        url: 'http://localhost:5000/listings/new',
+        data: this.state.form,
+        config: { headers: {'Content-Type': 'multipart/form-data' }}
+      }).then(function (response) {
+          //handle success
+          console.log(response);
+      });
   };
+
 
   render(){
 
@@ -88,15 +87,17 @@ class NewListing extends Component{
         title,
         price,
         address,
+        city,
+        state,
         zip,
-        description
-      },
-
-      housingInfo:{
-        housingType,
+        description,       
         bedrooms,
         bathrooms,
-      }
+        housingType,
+      },
+      imageFiles,
+      form
+      
   } = this.state;
 
   var imagePreviews = this.state.imageFiles.map(function(image) {
@@ -108,7 +109,7 @@ class NewListing extends Component{
    const { classes } = this.props; 
 
    return(
-     <Paper className={classes.root}>
+    <Paper className={classes.root}>
      <form onSubmit={this.handleSubmit}>
        <FormGroup className={classes.formGroup} >
           <FormControl>
@@ -127,6 +128,7 @@ class NewListing extends Component{
              margin="normal"
            />
          </FormControl>
+
          <FormControl>
            <TextField
              label="Address"
@@ -135,6 +137,29 @@ class NewListing extends Component{
              margin="normal"
            />
          </FormControl>
+
+
+         <FormControl>
+           <TextField
+             label="City"
+             value={city}
+             onChange={this.handlePostChange('city')}
+             margin="normal"
+           />
+         </FormControl>
+
+
+         <FormControl>
+           <TextField
+             label="State"
+             value={state}
+             onChange={this.handlePostChange('state')}
+             margin="normal"
+           />
+         </FormControl>
+
+
+
          <FormControl>
            <TextField
              label="Zip"
@@ -161,14 +186,14 @@ class NewListing extends Component{
                ref={ref => {
                  this.InputLabelRef = ref;
                }}
-               htmlFor="outlined-age-native-simple"
+              
              >
                Housing Type
              </InputLabel>
              <Select
                native
                value={housingType}
-               onChange={this.handleHousingChange('housingType')}
+               onChange={this.handlePostChange('housingType')}
                input={
                  <OutlinedInput
                    name="Housing Type"              
@@ -180,6 +205,9 @@ class NewListing extends Component{
                <option value={"Apartment"}>Apartment</option>
                <option value={"House"}>House</option>
                <option value={"Room"}>Room</option>
+               <option value={"Studio"}>Studio</option>
+               <option value={"Townhome"}>Townhome</option>
+
              </Select>  
           </FormControl>
 
@@ -197,7 +225,7 @@ class NewListing extends Component{
              <Select
                native
                value={bedrooms}
-               onChange={this.handleHousingChange('bedrooms')}
+               onChange={this.handlePostChange('bedrooms')}
                input={
                  <OutlinedInput
                    name="bedrooms"              
@@ -225,7 +253,7 @@ class NewListing extends Component{
              <Select
                native
                value={bathrooms}
-               onChange={this.handleHousingChange('bathrooms')}
+               onChange={this.handlePostChange('bathrooms')}
                input={
                  <OutlinedInput
                    name="bathrooms"              
@@ -267,9 +295,17 @@ class NewListing extends Component{
    );
   }
 }
-
+       
 
 export default withStyles(styles, { withTheme: true })(NewListing);
 
 
 
+
+
+
+
+
+
+
+  
