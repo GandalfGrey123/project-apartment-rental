@@ -21,6 +21,8 @@ import _ from 'lodash';
 
 import Button from '@material-ui/core/Button';
 
+
+
 class HomePage extends Component{
 	
 	  constructor(props){
@@ -28,24 +30,47 @@ class HomePage extends Component{
         this.state = {
           listings:[],
           types: [],
-          housingTypeChecks:{
-             All: true,
-            Apartment: false,
-            House: false,
-            Room: false,  
-          }	
+          All: true,
+          housingTypeChecks:{}	
         };
-        this.getHousingTypes = this.getHousingTypes.bind(this);
+     this.getHousingTypes = this.getHousingTypes.bind(this);
     }
 
     componentWillMount(){
       this.getHousingTypes();
     }
 
-    updateView(){      
-      // 	axios.get('http://localhost:5000/search').then(res => {
-      //  	 const listings = res.data; 		 
-      //	})
+
+    updateView(){  
+
+        //if all make a specific request
+        if(this.state.All == true){
+          axios.get('http://localhost:5000/listings/all')
+          .then(res => {
+            const listings = res.data;   
+            console.log(listings);
+          })
+        }
+
+        //else build query string and then request
+        else{
+
+           let selectedTypes = []
+           
+           //create an array of all checkbox fields that == true    
+           for (const [type, isSelected] of Object.entries(this.state.housingTypeChecks)) {       
+             if(isSelected){
+               selectedTypes.push(type)
+             }
+           }
+     
+           axios.get('http://localhost:5000/listings',{
+             params:{housingTypes: selectedTypes}
+           }).then(res => {
+              const listings = res.data;   
+              console.log(listings);
+           });
+        }        
     }
   
     getHousingTypes = () => {
@@ -55,19 +80,22 @@ class HomePage extends Component{
         });
     }
 
-    selectHousingType = type => event => {
-
-      console.log(this.state.housingTypeChecks[type]);
-    	 this.setState({ 
+  
+    selectHousingType = type => event => {      
+      this.setState({ 
       	  housingTypeChecks:{
     	    ...this.state.housingTypeChecks,
     	    [type]: event.target.checked
-      	  }
+      	  }      
     	});    
      };
 
+    selectAllTypes = types => event =>{
+       this.setState({
+         All: event.target.checked
+       });         
+    };
 
- 
 	render(){
 	
   const classes = this.props.classes;
@@ -88,19 +116,28 @@ class HomePage extends Component{
 
        
             <List subheader={<ListSubheader> Housing Types</ListSubheader>} className={classes.subList}>
-                          
-               {[ 'All' ].concat(types.map((value) => value.type)).map((text, index) => (
+                       
+               <ListItem button key={"All"}>
+                     <Checkbox             
+                       checked={this.state.All}
+                       onChange={this.selectAllTypes(["All"]
+                          .concat(types.map((value) => 
+                            _.capitalize(value.type))))}               
+                     />
+                     <ListItemText primary={"All"} />
+                </ListItem>
+
+               {[].concat(types.map((value) => value.type)).map((text, index) => (
                  <ListItem button key={`item-${index}`}>
                      <Checkbox             
                        checked={this.state.housingTypeChecks[_.capitalize(text)]}
-                 	    onChange={this.selectHousingType(_.capitalize(text))}               
+                 	     onChange={this.selectHousingType(_.capitalize(text))}               
                      />
                      <ListItemText primary={_.capitalize(text)} />
                  </ListItem>
                ))}
 
             </List>
-
 
             <Button color="primary" onClick={ () => { this.updateView();}}>
     			   Update
