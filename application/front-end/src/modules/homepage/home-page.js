@@ -98,47 +98,53 @@ class HomePage extends Component {
     return (
       <div className={classes.root}>
 
-      <Grid container spacing={24}>
-        
-        <Grid item xs={3}> 
-         <CssBaseline />      
-           <Drawer
-             className={classes.drawer}
-             variant='permanent'
-             classes={{ paper: classes.drawerPaper }}
-             anchor="left"
-           >
-           <List subheader={<ListSubheader> Housing Types</ListSubheader>} className={classes.subList}>
-             {types.map((text, index) => (
-               <ListItem button key={`item-${index}`}>
-                 <Checkbox
-                   checked={this.isChecked(text)}
-                   onChange={this.selectHousingType(text)}
-                 />
-                 <ListItemText primary={text} />
-               </ListItem>
-             ))}
-          </List>
-          <Button color="primary" onClick={() => { this.updateView(); }}>
-            Update
-          </Button>
-          <Divider />
-          </Drawer> 
-        </Grid>
+      
 
-        <Grid item xs={9}> 
-          <Grid container item xs={12} spacing={24}>
-            <FormRow classes={classes} />
+       
+
+          <Grid container spacing={8}>
+
+             <Grid item>
+                 <CssBaseline />      
+                 <Drawer
+                   className={classes.drawer}
+                   variant='permanent'
+                   classes={{ paper: classes.drawerPaper }}
+                   anchor="left"
+                 >
+                 <List subheader={<ListSubheader> Housing Types</ListSubheader>} className={classes.subList}>
+                   {types.map((text, index) => (
+                     <ListItem button key={`item-${index}`}>
+                       <Checkbox
+                         checked={this.isChecked(text)}
+                         onChange={this.selectHousingType(text)}
+                       />
+                       <ListItemText primary={text} />
+                     </ListItem>
+                   ))}
+                   </List>
+                 <Button color="primary" onClick={() => { this.updateView(); }}>
+                   Update
+                 </Button>
+                 <Divider />
+                 </Drawer> 
+              </Grid>
+
+
+            <Grid item>
+               <Grid container item xs={12} spacing={24}>
+                 <FormRow classes={classes} />
+               </Grid>
+               <Grid container item xs={12} spacing={24}>
+                 <FormRow classes={classes} />
+               </Grid>
+               <Grid container item xs={12} spacing={24}>
+                 <FormRow classes={classes} />
+               </Grid>
+             </Grid>
           </Grid>
-          <Grid container item xs={12} spacing={24}>
-            <FormRow classes={classes} />
-          </Grid>
-          <Grid container item xs={12} spacing={24}>
-            <FormRow classes={classes} />
-          </Grid>
-         </Grid>  
-  
-        </Grid>       
+        
+               
       </div>
     );
   }
