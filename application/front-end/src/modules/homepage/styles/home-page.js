@@ -1,9 +1,7 @@
 const drawerWidth = 240;
 
 const styles = theme => ({
-  root: {
-    display: 'flex',
-  },
+
   drawer: {
     width: drawerWidth,
     flexShrink: 0,     
@@ -21,11 +19,6 @@ const styles = theme => ({
     overflow: 'auto',
     maxHeight: 400,
   },
-  gridContainer: {   
-    flexGrow: 1,
-    minWidth: 0, 
-    overflow: 'auto'   
-  }
 });
 
 export default styles;
