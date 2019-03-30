@@ -10,12 +10,8 @@ const styles = theme => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    marginTop: 64
-  },
-  content: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3,
+    position:'relative',
+    height: '100%',
   },
   subList: {
     width: '100%',
@@ -25,10 +21,9 @@ const styles = theme => ({
     overflow: 'auto',
     maxHeight: 400,
   },
-  gridContainer: {
-    padding: theme.spacing.unit * 5,
+  gridContainer: {   
     flexGrow: 1,
-    minWidth: 0, // So the Typography noWrap works
+    minWidth: 0, 
     overflow: 'auto'   
   }
 });
