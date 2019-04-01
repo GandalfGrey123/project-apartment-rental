@@ -55,7 +55,7 @@ class HomePage extends Component {
       selectedTypes.forEach((value) => params.append("type", value));
     }
     
-    axios.get('http://localhost:5000/listings', {
+    axios.get('http://localhost:5000/listings/all', {
       params: params
     }).then(res => {
       const listings = res.data;
@@ -104,7 +104,7 @@ class HomePage extends Component {
 
           <Grid container spacing={8}>
 
-             <Grid item>
+             <Grid item  xs={3}>
                  <CssBaseline />      
                  <Drawer
                    className={classes.drawer}
@@ -131,7 +131,7 @@ class HomePage extends Component {
               </Grid>
 
 
-            <Grid item>
+            <Grid item xs={9}>
                <Grid container item xs={12} spacing={24}>
                  <FormRow classes={classes} />
                </Grid>
