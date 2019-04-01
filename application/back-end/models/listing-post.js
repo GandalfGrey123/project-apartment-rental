@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     description: DataTypes.TEXT,
     price: DataTypes.FLOAT,
-    address: DataTypes.STRING,
+    line1: DataTypes.STRING,
+    line2: DataTypes.STRING,
     city: DataTypes.STRING,
     state: DataTypes.STRING,
     zipCode: DataTypes.INTEGER,
@@ -13,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     bathrooms: DataTypes.INTEGER,
     isApproved: DataTypes.BOOLEAN,
 
-  }, {});
+  }, {
+    createdAt: false,
+    updatedAt: false
+  });
   ListingPost.associate = function(models) {
   
     ListingPost.belongsTo(models.User);  

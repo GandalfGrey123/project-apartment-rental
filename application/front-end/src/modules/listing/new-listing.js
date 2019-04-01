@@ -14,6 +14,7 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 
+// https://stackoverflow.com/questions/36280818/how-to-convert-file-to-base64-in-javascript
 
 class NewListing extends Component{
 
@@ -32,7 +33,6 @@ class NewListing extends Component{
       bathrooms:0,
       housingType: '',
     },
-
     imageFiles:[],
     form:'',
 
@@ -40,9 +40,18 @@ class NewListing extends Component{
   
 
   addFile = event => {
-    this.setState({
-      imageFiles: this.state.imageFiles.concat(Array.from((event.target.files)))
-    })
+    // console.log("Files: ", event.target.files.item(0));
+    // this.getBase64(event.target.files.item(0))
+    //   .then((data) => console.log('Data: ', data));
+    // let encoded = reader.result.replace(/^data:(.*;base64,)?/, '');
+    let files = Array.from(event.target.files);
+    for(let i = 0; i < files.length; i++){
+         this.getBase64(files[i])
+          .then((data) => console.log('Data: ', i, ' - ', data));
+    }
+    // this.setState({
+    //   imageFiles: this.state.imageFiles.concat(Array.from((event.target.files)))
+    // })
   }; 
 
   handlePostChange = name => ({target: {value}}) => {
@@ -53,6 +62,15 @@ class NewListing extends Component{
       }	
     });
   };
+
+  getBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
 
   handleSubmit = event => {
 

@@ -144,7 +144,9 @@ class HomePage extends Component {
              </Grid>
           </Grid>
         
-               
+          {/* <img
+            src={"data:image/png;base64, "}
+          /> */}
       </div>
     );
   }
