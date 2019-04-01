@@ -2,40 +2,29 @@ const express = require('express');
 var models = require('../models');
 const _ = require('lodash');
 
-let multer = require('multer');
-let fileUploads = multer();
-
 const router = express.Router();
 const Op = require('sequelize').Op;
 
-// sequelize returns a json that needs to be cleaned up a bit
-function clearListings(listings){
-
-  console.log(' .>>>>>>>>. clearing the listings....');
-  for(let i = 0; i < listings.length; i++){
-    console.log(' .>>>>>>>>. clearing the listings.... >>>>> - for each');
-    console.log(delete listings[i]['HousingTypeId']);
-    listings[i]['housingType'] = listings[i]['HousingType'] ? listings[i]['HousingType'].type : null;
-    delete listings[i]['HousingType'];
-    if(listings[i]['ListingImages'] && _.isArray(listings[i]['ListingImages'])){
-      let images = listings[i]['ListingImages']
-        .map((value) => value.imageFile);
-      delete listings[i]['ListingImages'];
-      listings[i]['images'] = images;
-    }else{
-      delete listings[i]['ListingImages'];
-      listings[i]['images'] = [];
-    }
-    console.log(listings);
-  }
-  return listings;
-}
 
 
 router.get('/all',function(req,res){
   models.ListingPost.findAll({
-    include: [models.HousingType,models.ListingImage]
+    include: [models.HousingType,models.ListingImage],
+    attributes: [
+      'title',
+      'description',
+      'price',
+      'line1',
+      'line2',
+      'city',
+      'state',
+      'zipCode',
+      'bedrooms',
+      'bathrooms',
+      'isApproved',
+      ]
   }).then(listings =>{
+    console.log(listings);
     res.json(listings);
   });
 });
@@ -51,29 +40,12 @@ router.get('/', function(req,res){
     models
       .ListingPost
       .findAll({
-        include: [models.HousingType,models.ListingImage],
-        // raw: true
+        include: [models.HousingType,models.ListingImage],    
       })
       .then((listings) => res.json(listings));
       // listings = clearListings(listings.dataValues); // need to make it work
       // res.json(listings);
   }
-
-  // res.status = 204;
-  // res.send();
-  
-  //models.HousingType.findAll({
-  //  where: {
-  //    type:[
-  //      {
-  //        [Op.or]: req.query.housingTypes
-  //      }
-  //    ]
-  //  }
-  //	//include: [models.HousingType,models.ListingImage]
-  //}).then(listings =>{
-  //	res.json(listings);
-  //});
 });
 
 
@@ -124,3 +96,36 @@ router.post('/new', (req, res) =>{
 });
 
 module.exports = router;
+
+
+
+// sequelize returns a json that needs to be cleaned up a bit
+//function clearListings(listings){
+//
+//  console.log(' .>>>>>>>>. clearing the listings....');
+//  for(let i = 0; i < listings.length; i++){
+//    
+//    console.log(' .>>>>>>>>. clearing the listings.... >>>>> - for each');
+//    console.log(delete listings[i]['HousingTypeId']);
+//
+//    listings[i]['housingType'] = listings[i]['HousingType'] ? listings[i]['HousingType'].type : null;
+//    delete listings[i]['HousingType'];
+//
+//
+//    if(listings[i]['ListingImages'] && _.isArray(listings[i]['ListingImages'])){
+//      let images = listings[i]['ListingImages']
+//        .map((value) => value.imageFile);
+//      delete listings[i]['ListingImages'];
+//      listings[i]['images'] = images;
+//    }
+//
+//
+//    else{
+//      delete listings[i]['ListingImages'];
+//      listings[i]['images'] = [];
+//    }
+//    console.log(listings);
+//  }
+//  return listings;
+//}
+//
