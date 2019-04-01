@@ -3,10 +3,8 @@ var models = require('../models');
 const router = express.Router();
 
 const _ = require('lodash');
-//const Op = require('sequelize').Op;
 
-
-
+ 
 //get listings route
 router.get('/', function(req,res){
 
@@ -15,7 +13,31 @@ router.get('/', function(req,res){
      models.HousingType.findAll({
       where:{
         type: req.query.type
-      }, include:[models.ListingPost]
+      }, 
+
+      //fix associated attributes    
+      include:[{ 
+        model: models.ListingPost,
+        attributes:[
+         'title',
+         'description',
+         'price',
+         'line1',
+         'line2',
+         'city',
+         'state',
+         'zipCode',
+         'bedrooms',
+         'bathrooms',
+         'isApproved',
+         ]
+      }],
+
+
+       //housing type attributes
+       attributes: [
+         'type'
+       ]
 
      }).then(listings =>{
        console.log(listings);
@@ -128,4 +150,3 @@ module.exports = router;
 //  }
 //  return listings;
 //}
-//
