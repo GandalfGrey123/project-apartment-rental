@@ -1,50 +1,50 @@
 const express = require('express');
 var models = require('../models');
-const _ = require('lodash');
-
 const router = express.Router();
-const Op = require('sequelize').Op;
+
+const _ = require('lodash');
+//const Op = require('sequelize').Op;
 
 
 
-router.get('/all',function(req,res){
-  models.ListingPost.findAll({
-    include: [models.HousingType,models.ListingImage],
-    attributes: [
-      'title',
-      'description',
-      'price',
-      'line1',
-      'line2',
-      'city',
-      'state',
-      'zipCode',
-      'bedrooms',
-      'bathrooms',
-      'isApproved',
-      ]
-  }).then(listings =>{
-    console.log(listings);
-    res.json(listings);
-  });
-});
-
-
-//route for custom HousingTypes serach 
+//get listings route
 router.get('/', function(req,res){
 
-  if(req.query.type && _.isArray(req.query.type)){
-    // parameters where provided
-    console.log('paramters: ', req.query.type) // returns [ 'Apartment', 'Room' ]
-  }else{
-    models
-      .ListingPost
-      .findAll({
-        include: [models.HousingType,models.ListingImage],    
-      })
-      .then((listings) => res.json(listings));
-      // listings = clearListings(listings.dataValues); // need to make it work
-      // res.json(listings);
+  //if search parameters
+  if(req.query.type ){ 
+     models.HousingType.findAll({
+      where:{
+        type: req.query.type
+      }, include:[models.ListingPost]
+
+     }).then(listings =>{
+       console.log(listings);
+       res.json(listings);
+     });
+  }
+
+  //else return all
+  else{
+
+     models.ListingPost.findAll({
+       include: [models.HousingType,models.ListingImage],
+       attributes: [
+         'title',
+         'description',
+         'price',
+         'line1',
+         'line2',
+         'city',
+         'state',
+         'zipCode',
+         'bedrooms',
+         'bathrooms',
+         'isApproved',
+         ]
+     }).then(listings =>{
+       console.log(listings);
+       res.json(listings);
+     });
   }
 });
 
@@ -57,7 +57,7 @@ router.get('/types', (req, res) => {
 });
 
 
-//new listing
+//create new listing
 router.post('/new', (req, res) =>{
 
   models.HousingType
