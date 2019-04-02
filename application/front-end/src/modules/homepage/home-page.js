@@ -10,19 +10,19 @@ import ListingCard from './component/listing-card';
 import styles from './styles/home-page';
 import _ from 'lodash';
 
-const FormRow = (props) => {
+const FormRow = ({ listings, props }) => {
   const { classes } = props;
   return (
     <React.Fragment>
-      <Grid item xs={4}>
-        <ListingCard />
-      </Grid>
-      <Grid item xs={4}>
-        <ListingCard />
-      </Grid>
-      <Grid item xs={4}>
-        <ListingCard />
-      </Grid>
+      {
+        listings.map((value, index) => (
+          <Grid item xs={4}>
+            <ListingCard
+              listing={value}
+            />
+          </Grid>
+        ))
+      }  
     </React.Fragment>
   );
 }
@@ -37,29 +37,28 @@ class HomePage extends Component {
       selectedTypes: [] // Empty means all
     };
     this.isChecked = this.isChecked.bind(this);
+    this.getListings = this.getListings.bind(this);
     this.getHousingTypes = this.getHousingTypes.bind(this);
     this.selectHousingType = this.selectHousingType.bind(this);
   }
 
   componentWillMount() {
     this.getHousingTypes();
+    this.getListings();
   }
 
-  updateView = () => {
-
+  getListings = () => {
     const { selectedTypes } = this.state;
     let params = {};
-
     if(!_.isEmpty(selectedTypes)){
       params = new URLSearchParams();
       selectedTypes.forEach((value) => params.append("type", value));
     }
-    
-    axios.get('http://localhost:5000/listings/all', {
+    axios.get('http://localhost:5000/listings', {
       params: params
     }).then(res => {
       const listings = res.data;
-      console.log(listings);
+      this.setState({ listings: listings || [] })
     });
   }
 
@@ -90,20 +89,29 @@ class HomePage extends Component {
       || this.state.selectedTypes.includes(text);
   }
 
+  displayListings = (listings) => {
+    let rows = [];
+    for(let i = 0; i < listings.length/3; i += 3){
+      rows.push(
+        <Grid container item xs={12} spacing={24}>
+          <FormRow
+            listings={listings.slice(i, i + 3)}
+            props={this.props}
+          />
+        </Grid>
+      );
+    }
+    return rows;
+  } 
+
   render() {
 
     const classes = this.props.classes;
-    const { types } = this.state;
+    const { types, listings } = this.state;
 
     return (
       <div className={classes.root}>
-
-      
-
-       
-
           <Grid container spacing={8}>
-
              <Grid item  xs={3}>
                  <CssBaseline />      
                  <Drawer
@@ -123,30 +131,17 @@ class HomePage extends Component {
                      </ListItem>
                    ))}
                    </List>
-                 <Button color="primary" onClick={() => { this.updateView(); }}>
+                 <Button color="primary" onClick={() => { this.getListings(); }}>
                    Update
                  </Button>
                  <Divider />
                  </Drawer> 
               </Grid>
 
-
             <Grid item xs={9}>
-               <Grid container item xs={12} spacing={24}>
-                 <FormRow classes={classes} />
-               </Grid>
-               <Grid container item xs={12} spacing={24}>
-                 <FormRow classes={classes} />
-               </Grid>
-               <Grid container item xs={12} spacing={24}>
-                 <FormRow classes={classes} />
-               </Grid>
-             </Grid>
+               {this.displayListings(listings)}
+            </Grid>
           </Grid>
-        
-          {/* <img
-            src={"data:image/png;base64, "}
-          /> */}
       </div>
     );
   }

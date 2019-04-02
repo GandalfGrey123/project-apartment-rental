@@ -8,6 +8,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import _ from 'lodash';
 
 const styles = {
   card: {
@@ -20,32 +21,34 @@ const styles = {
 };
 
 const ListingCard = (props) => {
-  const { classes } = props;
+  const { classes, listing } = props;
+  const image = _.isArray(listing.images) && listing.images.length > 0 ? 
+      "data:image/png;base64," + listing.images[0] :
+      null;
   return (
     <Card className={classes.card}>
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image="https://material-ui.com/static/images/cards/contemplative-reptile.jpg"
-          title="Contemplative Reptile"
+          image={image}
+          title={"Listing Image"}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            Lizard
+            {listing.title}
           </Typography>
           <Typography component="p">
-            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-            across all continents except Antarctica
+            {listing.description}
           </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
+        {/* <Button size="small" color="primary">
           Share
         </Button>
         <Button size="small" color="primary">
           Learn More
-        </Button>
+        </Button> */}
       </CardActions>
     </Card>
   );
@@ -53,6 +56,11 @@ const ListingCard = (props) => {
 
 ListingCard.propTypes = {
   classes: PropTypes.object.isRequired,
+  listing: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(ListingCard);
+
+// {/* <img
+//             src={"data:image/png;base64, "}
+//           /> */}
