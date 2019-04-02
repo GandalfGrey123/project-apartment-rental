@@ -60,7 +60,3 @@ ListingCard.propTypes = {
 };
 
 export default withStyles(styles)(ListingCard);
-
-// {/* <img
-//             src={"data:image/png;base64, "}
-//           /> */}

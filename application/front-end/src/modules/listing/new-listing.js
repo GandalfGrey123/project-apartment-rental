@@ -7,7 +7,7 @@ import {
 
 import styles from './styles/new-listing';
 import Button from '@material-ui/core/Button';
-
+import { Redirect } from 'react-router-dom';
 //use axios for posting 
 import axios from 'axios';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
@@ -17,50 +17,50 @@ import InputLabel from '@material-ui/core/InputLabel';
 // https://stackoverflow.com/questions/36280818/how-to-convert-file-to-base64-in-javascript
 
 class NewListing extends Component{
-
-  state = {
-    open: false,
-    
-    post: {
-      title: '',
-      price:'',
-      address:'',
-      city:'',
-      state:'',
-      zip:'',
-      description: '',
-      bedrooms:0,
-      bathrooms:0,
-      housingType: '',
-    },
-    imageFiles:[],
-    form:'',
-
-  };
   
+  constructor(props){
+    super(props);
+    this.state = {
+      form: {
+        images: [],
+        address: {}
+      },
+      submitSuccess: false
+    }
+    this.addFile = this.addFile.bind(this);
+    this.onResetClick = this.onResetClick.bind(this);
+    this.onSubmitClick = this.onSubmitClick.bind(this);
+    this.handleFormChange = this.handleFormChange.bind(this);
+    this.handleAddressChange = this.handleAddressChange.bind(this);
+  }
 
   addFile = event => {
-    // console.log("Files: ", event.target.files.item(0));
-    // this.getBase64(event.target.files.item(0))
-    //   .then((data) => console.log('Data: ', data));
-    // let encoded = reader.result.replace(/^data:(.*;base64,)?/, '');
+    let { form } = this.state;
     let files = Array.from(event.target.files);
     for(let i = 0; i < files.length; i++){
          this.getBase64(files[i])
-          .then((data) => console.log('Data: ', i, ' - ', data));
+          .then((data) => {
+            let encoded = data.replace(/^data:(.*;base64,)?/, '');
+            console.log('Data: ', encoded);
+            form.images.push(encoded);
+          });
     }
-    // this.setState({
-    //   imageFiles: this.state.imageFiles.concat(Array.from((event.target.files)))
-    // })
+    this.setState({ form: form });
   }; 
 
-  handlePostChange = name => ({target: {value}}) => {
+  handleFormChange = name => ({target: {value}}) => {
     this.setState({ 
-      post:{
-    	  ...this.state.post,
+      form:{
+    	  ...this.state.form,
     	  [name]: value 
       }	
     });
+  };
+
+  handleAddressChange = name => ({target: {value}}) => {
+    const { form } = this.state
+    form.address[name] = value;
+    this.setState({ form: form });
   };
 
   getBase64 = (file) => {
@@ -72,59 +72,45 @@ class NewListing extends Component{
     });
   }
 
-  handleSubmit = event => {
-
-      this.state.form = new FormData();
-      this.state.form.append('title',this.state.post.title);
-      this.state.form.append('price',this.state.post.price);
-      this.state.form.append('address',this.state.post.address);
-      this.state.form.append('city',this.state.post.city);
-      this.state.form.append('state',this.state.post.state);
-      this.state.form.append('zip',this.state.post.zip);
-      this.state.form.append('description',this.state.post.description);
-      this.state.form.append('bedrooms',this.state.post.bedrooms);
-      this.state.form.append('bathrooms',this.state.post.bathrooms);
-      this.state.form.append('housingType',this.state.post.housingType);
-
+  onSubmitClick = () => {
+      const { form } = this.state;
+      console.log('Form: ', form);
       axios({
         method: 'post',
         url: 'http://localhost:5000/listings/new',
-        data: this.state.form,
-        config: { headers: {'Content-Type': 'multipart/form-data' }}
-      }).then(function (response) {
+        data: form
+      }).then(() => {
           //handle success
-          console.log(response);
+          this.setState({ submitSuccess: true })
       });
   };
+
+  onResetClick = () => {
+    this.setState({
+      form: {
+        address: {},
+        images: []
+      }
+    })
+  }
 
 
   render(){
 
-  const { 
-      post: { 
-        title,
-        price,
-        address,
-        city,
-        state,
-        zip,
-        description,       
-        bedrooms,
-        bathrooms,
-        housingType,
-      },
-      imageFiles,
-      form
-      
-  } = this.state;
+  const { form, submitSuccess } = this.state;
 
-  var imagePreviews = this.state.imageFiles.map(function(image) {
-    return (            
-     <img src={URL.createObjectURL(image)} rounded height="200px"/>
-    );
-  });
+  // var imagePreviews = form.images.map(function(image) {
+  //   return (            
+  //    <img src={URL.createObjectURL(image)} rounded height="200px"/>
+  //   );
+  // });
 
    const { classes } = this.props; 
+
+   if(submitSuccess){
+     return <Redirect to={'/'} />
+   }
+   
 
    return(
     <Paper className={classes.root}>
@@ -133,16 +119,16 @@ class NewListing extends Component{
           <FormControl>
            <TextField
              label="Title"
-             value={title}
-             onChange={this.handlePostChange('title')}
+             value={form.title}
+             onChange={this.handleFormChange('title')}
              margin="normal"
            />
          </FormControl>
          <FormControl>
            <TextField
              label="Price"
-             value={price}
-             onChange={this.handlePostChange('price')}
+             value={form.price}
+             onChange={this.handleFormChange('price')}
              margin="normal"
            />
          </FormControl>
@@ -150,8 +136,8 @@ class NewListing extends Component{
          <FormControl>
            <TextField
              label="Address"
-             value={address}
-             onChange={this.handlePostChange('address')}
+             value={form.address.line1}
+             onChange={this.handleAddressChange('line1')}
              margin="normal"
            />
          </FormControl>
@@ -160,8 +146,8 @@ class NewListing extends Component{
          <FormControl>
            <TextField
              label="City"
-             value={city}
-             onChange={this.handlePostChange('city')}
+             value={form.address.city}
+             onChange={this.handleAddressChange('city')}
              margin="normal"
            />
          </FormControl>
@@ -170,8 +156,8 @@ class NewListing extends Component{
          <FormControl>
            <TextField
              label="State"
-             value={state}
-             onChange={this.handlePostChange('state')}
+             value={form.address.state}
+             onChange={this.handleAddressChange('state')}
              margin="normal"
            />
          </FormControl>
@@ -181,8 +167,8 @@ class NewListing extends Component{
          <FormControl>
            <TextField
              label="Zip"
-             value={zip}
-             onChange={this.handlePostChange('zip')}
+             value={form.address.zipCode}
+             onChange={this.handleAddressChange('zipCode')}
              margin="normal"
            />
          </FormControl>
@@ -191,8 +177,8 @@ class NewListing extends Component{
              multiline
              rows="6"
              label="Description"
-             value={description}
-             onChange={this.handlePostChange('description')}
+             value={form.description}
+             onChange={this.handleFormChange('description')}
              margin="normal"
            />
          </FormControl>
@@ -204,18 +190,18 @@ class NewListing extends Component{
                ref={ref => {
                  this.InputLabelRef = ref;
                }}
-              
              >
                Housing Type
              </InputLabel>
              <Select
                native
-               value={housingType}
-               onChange={this.handlePostChange('housingType')}
+               value={form.housingType}
+               onChange={this.handleFormChange('housingType')}
                input={
                  <OutlinedInput
                    name="Housing Type"              
                    id="outlined-age-native-simple"
+                   labelWidth={'Housing Type'.length}
                  />
                }
              >
@@ -242,12 +228,13 @@ class NewListing extends Component{
              </InputLabel>
              <Select
                native
-               value={bedrooms}
-               onChange={this.handlePostChange('bedrooms')}
+               value={form.bedrooms}
+               onChange={this.handleFormChange('bedrooms')}
                input={
                  <OutlinedInput
                    name="bedrooms"              
                    id="outlined-age-native-simple"
+                   labelWidth={'bedrooms'.length}
                  />
                }
              >
@@ -270,12 +257,13 @@ class NewListing extends Component{
              </InputLabel>
              <Select
                native
-               value={bathrooms}
-               onChange={this.handlePostChange('bathrooms')}
+               value={form.bathrooms}
+               onChange={this.handleFormChange('bathrooms')}
                input={
                  <OutlinedInput
                    name="bathrooms"              
                    id="outlined-age-native-simple"
+                   labelWidth={'bathrooms'.length}
                  />
                }
              >
@@ -297,13 +285,24 @@ class NewListing extends Component{
               />  
          </FormControl>
 
-         {imagePreviews}
+         {/* {imagePreviews} */}
 
          <div>
-           <Button variant="contained" size="small" color="primary" type="reset">
+           <Button 
+              variant="contained"
+              size="small"
+              color="primary"
+              type="reset"
+              onClick={this.onResetClick}
+           >
              RESET
            </Button>
-           <Button variant="contained" size="small" color="primary" type="submit">
+           <Button
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={this.onSubmitClick}
+            >
              SUBMIT
             </Button>
          </div>

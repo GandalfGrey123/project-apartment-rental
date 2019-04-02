@@ -91,7 +91,7 @@ class HomePage extends Component {
 
   displayListings = (listings) => {
     let rows = [];
-    for(let i = 0; i < listings.length/3; i += 3){
+    for(let i = 0; i < listings.length; i += 3){
       rows.push(
         <Grid container item xs={12} spacing={24}>
           <FormRow
