@@ -1,75 +1,69 @@
 const express = require('express');
 var models = require('../models');
 const router = express.Router();
-
 const _ = require('lodash');
+const app = express();
 
- 
+// sequelize returns a json that needs to be cleaned up a bit
+function clearListing(listings){
+ for(let i = 0; i < listings.length; i += 1){
+   delete listings[i]['HousingTypeId']
+   listings[i]['housingType'] = listings[i]['HousingType'] ? listings[i]['HousingType'].type : null;
+   delete listings[i]['HousingType'];
+   if(listings[i]['ListingImages'] && _.isArray(listings[i]['ListingImages'])){
+     let images = listings[i]['ListingImages']
+       .map((value) => value.imageFile);
+     delete listings[i]['ListingImages'];
+     listings[i]['images'] = images;
+   }
+   else{
+     delete listings[i]['ListingImages'];
+     listings[i]['images'] = [];
+   }
+ }
+ return listings;
+}
+
+function convertSequilizeToObject(sequelizeResp){
+  var replacer = app.get('json replacer');
+  var spaces = app.get('json spaces');
+  var body = JSON.stringify(sequelizeResp, replacer, spaces);
+  return JSON.parse(body);
+}
+
 //get listings route
 router.get('/', function(req,res){
-
   //if search parameters
   if(req.query.type ){ 
-     models.HousingType.findAll({
+    models.HousingType.findAll({
       where:{
         type: req.query.type
-      }, 
-
-      //fix associated attributes    
-      include:[{ 
-        model: models.ListingPost,
-        attributes:[
-         'title',
-         'description',
-         'price',
-         'line1',
-         'line2',
-         'city',
-         'state',
-         'zipCode',
-         'bedrooms',
-         'bathrooms',
-         'isApproved',
-         ]
-      }],
-
-
-       //housing type attributes
-       attributes: [
-         'type'
-       ]
-
-     }).then(listings =>{
-       console.log(listings);
-       res.json(listings);
-     });
-  }
-
-  //else return all
-  else{
-
+      },
+      attributes: [
+        'id'
+      ]
+    }).then((types) => {
+      types = convertSequilizeToObject(types);
+      types = types
+        .map((value) => value.id);
+      models.ListingPost.findAll({
+        include: [models.HousingType,models.ListingImage],
+        where: { 'HousingTypeId': types }
+      }).then(listings =>{
+        var body = convertSequilizeToObject(listings);
+        res.json(clearListing(body));
+      });
+    });    
+  }else{
+     //else return all
      models.ListingPost.findAll({
        include: [models.HousingType,models.ListingImage],
-       attributes: [
-         'title',
-         'description',
-         'price',
-         'line1',
-         'line2',
-         'city',
-         'state',
-         'zipCode',
-         'bedrooms',
-         'bathrooms',
-         'isApproved',
-         ]
      }).then(listings =>{
-       console.log(listings);
-       res.json(listings);
+       var body = convertSequilizeToObject(listings);
+       res.json(clearListing(body));
      });
   }
 });
-
 
 //return all housing types that website provides
 router.get('/types', (req, res) => {
@@ -78,14 +72,12 @@ router.get('/types', (req, res) => {
     .then((types) => res.json(types));
 });
 
-
 //create new listing
 router.post('/new', (req, res) =>{
 
   models.HousingType
     .findOne({ where: { type: req.body.housingType } })
     .then((housingType) => {
-
       // Insert Listing
       models.ListingPost.create({
         title: req.body.title,
@@ -110,43 +102,9 @@ router.post('/new', (req, res) =>{
           models.ListingImage.bulkCreate(imagesToInsert)
         }
       });
-
     })
-
   res.status = 204;
   res.send();
 });
 
 module.exports = router;
-
-
-
-// sequelize returns a json that needs to be cleaned up a bit
-//function clearListings(listings){
-//
-//  console.log(' .>>>>>>>>. clearing the listings....');
-//  for(let i = 0; i < listings.length; i++){
-//    
-//    console.log(' .>>>>>>>>. clearing the listings.... >>>>> - for each');
-//    console.log(delete listings[i]['HousingTypeId']);
-//
-//    listings[i]['housingType'] = listings[i]['HousingType'] ? listings[i]['HousingType'].type : null;
-//    delete listings[i]['HousingType'];
-//
-//
-//    if(listings[i]['ListingImages'] && _.isArray(listings[i]['ListingImages'])){
-//      let images = listings[i]['ListingImages']
-//        .map((value) => value.imageFile);
-//      delete listings[i]['ListingImages'];
-//      listings[i]['images'] = images;
-//    }
-//
-//
-//    else{
-//      delete listings[i]['ListingImages'];
-//      listings[i]['images'] = [];
-//    }
-//    console.log(listings);
-//  }
-//  return listings;
-//}
