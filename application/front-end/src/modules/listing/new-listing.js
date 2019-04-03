@@ -4,12 +4,11 @@ import {
   TextField, FormGroup, FormControl,
   Paper, withStyles,
 } from '@material-ui/core';
-
 import styles from './styles/new-listing';
 import Button from '@material-ui/core/Button';
 import { Redirect } from 'react-router-dom';
 //use axios for posting 
-import axios from 'axios';
+import { createPosting } from '../../api/listings.actions';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -74,15 +73,9 @@ class NewListing extends Component{
 
   onSubmitClick = () => {
       const { form } = this.state;
-      console.log('Form: ', form);
-      axios({
-        method: 'post',
-        url: 'http://localhost:5000/listings/new',
-        data: form
-      }).then(() => {
-          //handle success
-          this.setState({ submitSuccess: true })
-      });
+      createPosting(form, () => {
+        this.setState({ submitSuccess: true })
+      })
   };
 
   onResetClick = () => {

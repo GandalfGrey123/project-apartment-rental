@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import {
   Drawer, withStyles, CssBaseline,
   Divider, Checkbox, Button,
@@ -9,13 +8,13 @@ import {
 import ListingCard from './component/listing-card';
 import styles from './styles/home-page';
 import _ from 'lodash';
+import { getHouseTypes, getListings } from '../../api/listings.actions';
 
 const FormRow = ({ listings, props }) => {
-  const { classes } = props;
   return (
     <React.Fragment>
       {
-        listings.map((value, index) => (
+        listings.map((value) => (
           <Grid item xs={4}>
             <ListingCard
               listing={value}
@@ -54,23 +53,19 @@ class HomePage extends Component {
       params = new URLSearchParams();
       selectedTypes.forEach((value) => params.append("type", value));
     }
-    axios.get('http://localhost:5000/listings', {
-      params: params
-    }).then(res => {
-      const listings = res.data;
-      this.setState({ listings: listings || [] })
-    });
+    getListings(params, (data) => {
+      this.setState({ listings: data || [] })
+    })
   }
 
   getHousingTypes = () => {
     let { types } = this.state;
-    axios.get('http://localhost:5000/listings/types')
-      .then((res) => {
-        types = types.concat(
-          res.data.map((value) => _.capitalize(value.type))
-        );
-        this.setState({ types: types })
-      });
+    getHouseTypes((data) => {
+      types = types.concat(
+        data.map((value) => _.capitalize(value.type))
+      );
+      this.setState({ types: types })
+    })
   }
 
   selectHousingType = type => event => {
