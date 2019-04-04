@@ -16,8 +16,11 @@ const styles = {
     margin: 10
   },
   media: {
-    height: 140,
+    height: 200,
   },
+  cardcontent: {
+    height: 140,
+  }
 };
 
 const ListingCard = (props) => {
@@ -25,6 +28,8 @@ const ListingCard = (props) => {
   const image = _.isArray(listing.images) && listing.images.length > 0 ? 
       "data:image/png;base64," + listing.images[0] :
       null;
+
+  const date = new Date();
   return (
     <Card className={classes.card}>
       <CardActionArea>
@@ -33,10 +38,15 @@ const ListingCard = (props) => {
           image={image}
           title={"Listing Image"}
         />
-        <CardContent>
+        <CardContent className={classes.cardcontent}>
           <Typography gutterBottom variant="h5" component="h2">
             {listing.title}
           </Typography>
+
+          <Typography component="p">
+            {listing.datePosted}
+          </Typography>
+
           <Typography component="p">
             {listing.description}
           </Typography>
