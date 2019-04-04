@@ -6,6 +6,7 @@ const app = express();
 
 // sequelize returns a json that needs to be cleaned up a bit
 function clearListing(listings){
+
  for(let i = 0; i < listings.length; i += 1){
    delete listings[i]['HousingTypeId']
    listings[i]['housingType'] = listings[i]['HousingType'] ? listings[i]['HousingType'].type : null;
@@ -20,6 +21,8 @@ function clearListing(listings){
      delete listings[i]['ListingImages'];
      listings[i]['images'] = [];
    }
+
+  listings[i]['datePosted'] = (new Date(listings[i]['datePosted'])).toLocaleString('en-us', { month: 'long' ,day:'numeric' });   
  }
  return listings;
 }
@@ -58,8 +61,8 @@ router.get('/', function(req,res){
      //else return all
      models.ListingPost.findAll({
        include: [models.HousingType,models.ListingImage],
-     }).then(listings =>{
-       var body = convertSequilizeToObject(listings);
+     }).then(listings =>{     
+       var body = convertSequilizeToObject(listings);       
        res.json(clearListing(body));
      });
   }

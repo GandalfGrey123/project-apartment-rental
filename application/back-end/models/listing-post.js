@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     isApproved: DataTypes.BOOLEAN,
 
   }, {
-    createdAt: false,
+    createdAt: 'datePosted',
     updatedAt: false
   });
   ListingPost.associate = function(models) {
