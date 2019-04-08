@@ -2,13 +2,21 @@ import React, { Component } from 'react';
 import {
   Drawer, withStyles, CssBaseline,
   Divider, Checkbox, Button,
-  List, ListItem, ListItemText, ListSubheader,
-  Grid,
+  List, ListItem, ListItemText, ListSubheader, 
+  TextField, InputAdornment,
+  Grid,Paper,
+  Hidden,IconButton
 } from '@material-ui/core';
+
+import SearchIcon from '@material-ui/icons/Search';
+import MenuIcon from '@material-ui/icons/Menu';
 import ListingCard from './component/listing-card';
+
 import styles from './styles/home-page';
+
 import _ from 'lodash';
 import { getHouseTypes, getListings } from '../../api/listings.actions';
+import { Link, Route  } from 'react-router-dom';
 
 const FormRow = ({ listings, props }) => {
   return (
@@ -33,7 +41,8 @@ class HomePage extends Component {
     this.state = {
       listings: [],
       types: ['All'], // All by default, other types will come from DB.
-      selectedTypes: [] // Empty means all
+      selectedTypes: [], // Empty means all
+      mobileOpen: false,
     };
     this.isChecked = this.isChecked.bind(this);
     this.getListings = this.getListings.bind(this);
@@ -88,7 +97,7 @@ class HomePage extends Component {
     let rows = [];
     for(let i = 0; i < listings.length; i += 3){
       rows.push(
-        <Grid container item xs={12} spacing={24}>
+        <Grid container spacing={8}>
           <FormRow
             listings={listings.slice(i, i + 3)}
             props={this.props}
@@ -97,47 +106,111 @@ class HomePage extends Component {
       );
     }
     return rows;
-  } 
+  }
 
+  handleDrawerToggle = () => {
+    this.setState(state => ({ mobileOpen: !state.mobileOpen }));
+  };
+ 
   render() {
-
     const classes = this.props.classes;
     const { types, listings } = this.state;
 
     return (
-      <div className={classes.root}>
-          <Grid container spacing={8}>
-             <Grid item  xs={3}>
-                 <CssBaseline />      
-                 <Drawer
-                   className={classes.drawer}
-                   variant='permanent'
-                   classes={{ paper: classes.drawerPaper }}
-                   anchor="left"
-                 >
-                 <List subheader={<ListSubheader> Housing Types</ListSubheader>} className={classes.subList}>
-                   {types.map((text, index) => (
-                     <ListItem button key={`item-${index}`}>
-                       <Checkbox
-                         checked={this.isChecked(text)}
-                         onChange={this.selectHousingType(text)}
-                       />
-                       <ListItemText primary={text} />
-                     </ListItem>
-                   ))}
-                   </List>
-                 <Button color="primary" onClick={() => { this.getListings(); }}>
-                   Update
-                 </Button>
-                 <Divider />
-                 </Drawer> 
+      <Paper className={classes.main} elevation={1}>                
+        <Grid container spacing={8}>
+             <Grid item xs={3}>
+                 <CssBaseline />  
+                  
+                  <IconButton
+                    color="inherit"
+                    aria-label="Open drawer"
+                    onClick={this.handleDrawerToggle}
+                    className={classes.menuButton}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+
+                  <Hidden smUp implementation="css">
+                    <Drawer
+                      container={this.props.container}
+                      variant="temporary"                      
+                      open={this.state.mobileOpen}
+                      onClose={this.handleDrawerToggle}
+                      classes={{
+                        paper: classes.drawerMobilePaper,
+                      }}
+                    >
+                        <List subheader={<ListSubheader> Housing Types</ListSubheader>} className={classes.subList}>
+                          {types.map((text, index) => (
+                            <ListItem button key={`item-${index}`}>
+                              <Checkbox
+                                checked={this.isChecked(text)}
+                                onChange={this.selectHousingType(text)}
+                              />
+                              <ListItemText primary={text} />
+                            </ListItem>
+                          ))}
+                          </List>
+                        <Button color="primary" onClick={() => { this.getListings(); }}>
+                          Update
+                        </Button>
+                        <Divider />                    
+                    </Drawer>  
+                  </Hidden>
+
+                <Hidden xsDown implementation="css">
+                   <Drawer
+                     className={classes.drawer}
+                     variant='permanent'
+                     classes={{ paper: classes.drawerPaper }}
+                     anchor="left"
+                     open
+                   >
+                      <List subheader={<ListSubheader> Housing Types</ListSubheader>} className={classes.subList}>
+                        {types.map((text, index) => (
+                          <ListItem button key={`item-${index}`}>
+                            <Checkbox
+                              checked={this.isChecked(text)}
+                              onChange={this.selectHousingType(text)}
+                            />
+                            <ListItemText primary={text} />
+                          </ListItem>
+                        ))}
+                      </List>
+                      <Button color="primary" onClick={() => { this.getListings(); }}>
+                        Update
+                      </Button>
+                      <Divider />
+                   </Drawer>
+                </Hidden>
               </Grid>
 
-            <Grid item xs={9}>
-               {this.displayListings(listings)}
-            </Grid>
-          </Grid>
-      </div>
+              <Grid item xs={9}>  
+                  <Grid item xs={11}>
+                    <Paper className={classes.searchSection}>
+                        <TextField
+                           label="Listing Search"
+                           className={classes.searchTextField}
+                           name="listingSearch"                                                
+                            InputProps={{
+                             startAdornment: (
+                                <InputAdornment position="start"> 
+                                    <SearchIcon /> 
+                                </InputAdornment>
+                             ),
+                           }}
+                         />
+                    </Paper>                
+                  </Grid>           
+                              
+                  <Grid item xs={12}>                  
+                     {this.displayListings(listings)}                  
+                  </Grid> 
+               </Grid>
+          </Grid>      
+      </Paper>
+
     );
   }
 }
