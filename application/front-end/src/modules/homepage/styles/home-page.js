@@ -16,7 +16,6 @@ const styles = theme => ({
   searchSection:{
     padding: 15,
     margin:15,
-    flexGrow: 1,
   },
    menuButton: {
     marginRight: 20,

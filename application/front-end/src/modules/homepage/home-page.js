@@ -23,7 +23,13 @@ const FormRow = ({ listings, props }) => {
     <React.Fragment>
       {
         listings.map((value) => (
-          <Grid item xs={4}>
+          <Grid
+            item
+            lg={4}
+            md={6}
+            sm={12}
+            style={{ width: '100%' }}
+          >
             <ListingCard
               listing={value}
             />
@@ -97,7 +103,9 @@ class HomePage extends Component {
     let rows = [];
     for(let i = 0; i < listings.length; i += 3){
       rows.push(
-        <Grid container spacing={8}>
+        <Grid 
+          container
+        >
           <FormRow
             listings={listings.slice(i, i + 3)}
             props={this.props}
@@ -118,8 +126,8 @@ class HomePage extends Component {
 
     return (
       <Paper className={classes.main} elevation={1}>                
-        <Grid container spacing={8}>
-             <Grid item xs={3}>
+        <Grid container style={{ width: '100%' }} > 
+             <Grid item lg={3} md={3} sm={3} >
                  <CssBaseline />  
                   
                   <IconButton
@@ -186,8 +194,8 @@ class HomePage extends Component {
                 </Hidden>
               </Grid>
 
-              <Grid item xs={9}>  
-                  <Grid item xs={11}>
+              <Grid item lg={9} md={9} sm={9} >  
+                  <Grid item lg={11}>
                     <Paper className={classes.searchSection}>
                         <TextField
                            label="Listing Search"
@@ -204,10 +212,8 @@ class HomePage extends Component {
                     </Paper>                
                   </Grid>           
                               
-                  <Grid item xs={12}>                  
-                     {this.displayListings(listings)}                  
-                  </Grid> 
-               </Grid>
+                  {this.displayListings(listings)}
+              </Grid>
           </Grid>      
       </Paper>
 

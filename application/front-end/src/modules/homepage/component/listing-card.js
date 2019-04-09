@@ -12,7 +12,6 @@ import _ from 'lodash';
 
 const styles = {
   card: {
-    maxWidth: 345,
     margin: 10
   },
   media: {
