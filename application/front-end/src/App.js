@@ -64,7 +64,7 @@ class App extends Component {
                     component={Link}
                     to={'/new'}
                 >
-                   New Posting
+                   New Listing
                    <AddIcon />
                 </Button>
 
