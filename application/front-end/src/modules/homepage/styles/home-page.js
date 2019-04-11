@@ -47,6 +47,9 @@ const styles = theme => ({
     overflow: 'auto',
     maxHeight: 280,
   },
+  iconButton: {
+    margin: theme.spacing.unit,
+  },
 });
 
 export default styles;

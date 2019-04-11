@@ -4,12 +4,16 @@ import {
   Divider, Checkbox, Button,
   List, ListItem, ListItemText, ListSubheader, 
   TextField, InputAdornment,
-  Grid,Paper,
+  Grid,Paper, Toolbar,
   Hidden,IconButton
 } from '@material-ui/core';
 
-import SearchIcon from '@material-ui/icons/Search';
-import MenuIcon from '@material-ui/icons/Menu';
+import { 
+  Search as SearchIcon,
+  ViewListOutlined as ViewListIcon,
+  ViewColumnOutlined as ViewColumnIcon,
+  Menu as MenuIcon
+} from '@material-ui/icons';
 import ListingCard from './component/listing-card';
 
 import styles from './styles/home-page';
@@ -18,14 +22,14 @@ import _ from 'lodash';
 import { getHouseTypes, getListings } from '../../api/listings.actions';
 import { Link, Route  } from 'react-router-dom';
 
-const FormRow = ({ listings, props }) => {
+const FormRow = ({ listings, props, columnView = true }) => {
   return (
     <React.Fragment>
       {
         listings.map((value) => (
           <Grid
             item
-            lg={4}
+            lg={columnView ? 4 : 11}
             md={6}
             sm={12}
             style={{ width: '100%' }}
@@ -49,6 +53,7 @@ class HomePage extends Component {
       types: ['All'], // All by default, other types will come from DB.
       selectedTypes: [], // Empty means all
       mobileOpen: false,
+      columnView: true
     };
     this.isChecked = this.isChecked.bind(this);
     this.getListings = this.getListings.bind(this);
@@ -99,7 +104,7 @@ class HomePage extends Component {
       || this.state.selectedTypes.includes(text);
   }
 
-  displayListings = (listings) => {
+  displayListings = (listings, columnView) => {
     let rows = [];
     for(let i = 0; i < listings.length; i += 3){
       rows.push(
@@ -109,6 +114,7 @@ class HomePage extends Component {
           <FormRow
             listings={listings.slice(i, i + 3)}
             props={this.props}
+            columnView={columnView}
           />
         </Grid>
       );
@@ -122,7 +128,7 @@ class HomePage extends Component {
  
   render() {
     const classes = this.props.classes;
-    const { types, listings } = this.state;
+    const { types, listings, columnView } = this.state;
 
     return (
       <Paper className={classes.main} elevation={1}>                
@@ -196,23 +202,32 @@ class HomePage extends Component {
 
               <Grid item lg={9} md={9} sm={9} >  
                   <Grid item lg={11}>
-                    <Paper className={classes.searchSection}>
-                        <TextField
-                           label="Listing Search"
-                           className={classes.searchTextField}
-                           name="listingSearch"                                                
-                            InputProps={{
-                             startAdornment: (
-                                <InputAdornment position="start"> 
-                                    <SearchIcon /> 
-                                </InputAdornment>
-                             ),
-                           }}
-                         />
-                    </Paper>                
+                    <Toolbar className={classes.searchSection}>
+                          <TextField
+                            label="Listing Search"
+                            className={classes.searchTextField}
+                            name="listingSearch"                                                
+                              InputProps={{
+                              startAdornment: (
+                                  <InputAdornment position="start"> 
+                                      <SearchIcon /> 
+                                  </InputAdornment>
+                              )
+                            }}
+                          />
+                          <IconButton 
+                            aria-label="Grid-View"
+                            className={classes.iconButton}
+                            onClick={() => this.setState({ columnView: !columnView })}
+                          >
+                             { columnView ?
+                                <ViewColumnIcon fontSize="large" /> :
+                                <ViewListIcon fontSize="large" />
+                             }
+                          </IconButton>
+                      </Toolbar>
                   </Grid>           
-                              
-                  {this.displayListings(listings)}
+                  {this.displayListings(listings, columnView)}
               </Grid>
           </Grid>      
       </Paper>
