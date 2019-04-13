@@ -1,12 +1,39 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React, { Component } from 'react';
+//import PropTypes from 'prop-types';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import { withStyles } from '@material-ui/core/styles';
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import {
+  AppBar, Toolbar, Typography,
+  IconButton,
+} from '@material-ui/core';
+
+import { 
+  Menu as MenuIcon,
+  Info as InfoIcon
+} from '@material-ui/icons';
+import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
+
+import AboutPage from './modules/about/about-page';
+import HomePage from './modules/homepage/home-page';
+import NewListing from './modules/listing/new-listing';
+import LoginForm from './modules/Login/LoginForm';
+
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  card: {
+    flexGrow: 1,
+    [theme.breakpoints.up('sm')]: {
+      flexBasis: '25rem',
+      flexGrow: 0
+    }
+  }
+});
