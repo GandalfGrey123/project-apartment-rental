@@ -147,7 +147,6 @@ class HomePage extends Component {
 
                   <Hidden smUp implementation="css">
                     <Drawer
-                      container={this.props.container}
                       variant="temporary"                      
                       open={this.state.mobileOpen}
                       onClose={this.handleDrawerToggle}
