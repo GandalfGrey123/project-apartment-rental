@@ -22,17 +22,18 @@ import _ from 'lodash';
 import { getHouseTypes, getListings } from '../../api/listings.actions';
 import { Link, Route  } from 'react-router-dom';
 
-const FormRow = ({ listings, props, columnView = true }) => {
+const FormRow = ({ listings, columnView = true }) => {
   return (
     <React.Fragment>
       {
-        listings.map((value) => (
+        listings.map((value, index) => (
           <Grid
             item
             lg={columnView ? 4 : 11}
             md={6}
             sm={12}
             style={{ width: '100%' }}
+            key={`grid-index-${index}`}
           >
             <ListingCard
               listing={value}
@@ -110,6 +111,7 @@ class HomePage extends Component {
       rows.push(
         <Grid 
           container
+          key={`grid-container-${i+1}`}
         >
           <FormRow
             listings={listings.slice(i, i + 3)}
