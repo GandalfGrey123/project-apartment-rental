@@ -61,12 +61,7 @@ class App extends Component {
           </AppBar>
 
           <div className={classes.content} >
-            <Switch>
-              <Route path={'/about'} component={AboutPage} />
-              <Route path={'/new'} component={NewListing} />
-              <Route path={'/'} component={HomePage} />
-               <Route path={'/'} component={LoginForm} />
-            </Switch>
+            
           </div>  
 
         </div>
