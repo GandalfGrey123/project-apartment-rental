@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import {
   TextField, FormGroup, FormControl,
-  Paper, withStyles,
+  Paper, withStyles,Typography,
 } from '@material-ui/core';
 import styles from './styles/new-listing';
 import Button from '@material-ui/core/Button';
@@ -13,6 +13,23 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 
+
+
+//image preview stuff
+import Card from '@material-ui/core/Card';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteForeverSharpIcon from '@material-ui/icons/DeleteForeverSharp';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
+
+
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+
+
+
 // https://stackoverflow.com/questions/36280818/how-to-convert-file-to-base64-in-javascript
 
 class NewListing extends Component{
@@ -21,9 +38,10 @@ class NewListing extends Component{
     super(props);
     this.state = {
       form: {
-        images: [],
+        images: [],        
         address: {}
       },
+      imagesPreviews:[],
       submitSuccess: false
     }
     this.addFile = this.addFile.bind(this);
@@ -31,23 +49,33 @@ class NewListing extends Component{
     this.onSubmitClick = this.onSubmitClick.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
     this.handleAddressChange = this.handleAddressChange.bind(this);
+    this.formValidate = this.formValidate.bind(this);
+    this.removeImage = this.removeImage.bind(this);
   }
 
   addFile = event => {
     let { form } = this.state;
     let files = Array.from(event.target.files);
+
+  
     for(let i = 0; i < files.length; i++){
+         this.state.imagesPreviews.push(URL.createObjectURL(files[i]));
          this.getBase64(files[i])
           .then((data) => {
-            let encoded = data.replace(/^data:(.*;base64,)?/, '');
-            console.log('Data: ', encoded);
+            let encoded = data.replace(/^data:(.*;base64,)?/, '');     
             form.images.push(encoded);
           });
     }
     this.setState({ form: form });
   }; 
 
+   formValidate=(name,value)=>{
+   
+   }
+
+
   handleFormChange = name => ({target: {value}}) => {
+    this.formValidate(name,value);
     this.setState({ 
       form:{
     	  ...this.state.form,
@@ -71,11 +99,18 @@ class NewListing extends Component{
     });
   }
 
+
+
+
   onSubmitClick = () => {
       const { form } = this.state;
-      createPosting(form, () => {
-        this.setState({ submitSuccess: true })
-      })
+      if(Object.keys(form).length != 8){
+        alert('you must fill out all form fields');
+      }else{
+        createPosting(form, () => {
+          this.setState({ submitSuccess: true })
+        })
+      }
   };
 
   onResetClick = () => {
@@ -83,40 +118,79 @@ class NewListing extends Component{
       form: {
         address: {},
         images: []
-      }
+      },
+      imagesPreviews:[],
     })
   }
 
+removeImage =(imageIndex) => {
+  
+  this.state.imagesPreviews.splice(imageIndex,1);
+  console.log(this.state.imagesPreviews)
+  this.forceUpdate();
+}
 
   render(){
 
   const { form, submitSuccess } = this.state;
+  const { classes } = this.props;
+  
+  let previews = this.state.imagesPreviews.map((image,imageIndex) => {
+    let index=parseInt(imageIndex);
+     return (
+        <GridListTile 
+           key={"preview image " + index} 
+           cols={1} 
+           style={{ height: 'auto' }}
+        >
+           <Card className={classes.card}>         
+             <CardMedia
+               className={classes.media}
+               image= {image}
+               alt= {"previewImage" + index}  
+               title={"Uploaded Image " + index} 
+             />              
+           </Card>
 
-  // var imagePreviews = form.images.map(function(image) {
-  //   return (            
-  //    <img src={URL.createObjectURL(image)} rounded height="200px"/>
-  //   );
-  // });
+           <GridListTileBar
+              actionIcon={
+                 <IconButton className={classes.deletePreview} onClick={() => this.removeImage(imageIndex)}>
+                    <DeleteForeverSharpIcon className={classes.icon} />
+                 </IconButton>
+              }
+           />
+        </GridListTile>
 
-   const { classes } = this.props; 
+     );
+   }); 
+
+
 
    if(submitSuccess){
      return <Redirect to={'/'} />
    }
    
-
    return(
     <Paper className={classes.root}>
+      <Typography 
+       variant="h5" 
+       component="h3"
+      >
+          Create New Listing
+      </Typography>
+     
      <form onSubmit={this.handleSubmit}>
        <FormGroup className={classes.formGroup} >
           <FormControl>
            <TextField
              label="Title"
              value={form.title}
-             onChange={this.handleFormChange('title')}
+             onChange={this.handleFormChange('title')}             
              margin="normal"
            />
+
          </FormControl>
+
          <FormControl>
            <TextField
              label="Price"
@@ -278,8 +352,11 @@ class NewListing extends Component{
               />  
          </FormControl>
 
-         {/* {imagePreviews} */}
+         <GridList cellHeight={160} className={classes.gridList} cols={3}>
+         {previews}
+        </GridList>
 
+          
          <div>
            <Button 
               variant="contained"
@@ -299,23 +376,20 @@ class NewListing extends Component{
              SUBMIT
             </Button>
          </div>
+
+
+       
        </FormGroup>
-        </form>
+      </form>
+      
+        
      </Paper>
    );
   }
 }
        
 
+
 export default withStyles(styles, { withTheme: true })(NewListing);
 
 
-
-
-
-
-
-
-
-
-  
