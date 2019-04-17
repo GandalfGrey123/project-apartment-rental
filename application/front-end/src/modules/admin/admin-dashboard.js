@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import styles from './styles/admin-dashboard';
 
-import LaunchIcon from '@material-ui/icons/Launch', 'react-admin';
+import LaunchIcon from '@material-ui/icons/Launch';
 
 
 const styles1 = {
