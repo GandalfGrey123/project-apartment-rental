@@ -4,7 +4,7 @@
   "private": true,
   "description": "Team 9 - Front-End App",
   "dependencies": {
-    "@material-ui/core": "^3.9.2",
+    "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "axios": "^0.18.0",
     "lodash": "^4.17.11",

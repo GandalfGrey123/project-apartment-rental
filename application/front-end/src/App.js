@@ -17,6 +17,7 @@ import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 import AboutPage from './modules/about/about-page';
 import HomePage from './modules/homepage/home-page';
 import NewListing from './modules/listing/new-listing';
+import AdminDashboard from './modules/admin/admin-dashboard';
 
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
@@ -57,6 +58,16 @@ class App extends Component {
               <Typography variant="h6" color="inherit" className={classes.grow} component={Link} to={'/'} >
                 SFSU - CSC 648 Team #9 Project
               </Typography>
+			  
+			  <Button 
+                    variant="contained" 
+                    color="primary"
+                    component={Link}
+                    to={'/admin'}
+                >
+                   Admin
+                   <AddIcon />
+                </Button>
 
                 <Button 
                     variant="contained" 
@@ -77,6 +88,7 @@ class App extends Component {
               <Route path={'/about'} component={AboutPage} />
               <Route path={'/new'} component={NewListing} />
               <Route path={'/'} component={HomePage} />
+			  <Route path={'/admin'} component={HomePage} />
             </Switch>
           </div>  
 
