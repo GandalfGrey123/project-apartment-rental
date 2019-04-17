@@ -20,11 +20,10 @@ class AdminDashboard extends Component {
 
     return (
       <div className={classes.root}>
-         <div>Admin Dashboard<div>
+         <div>Admin Dashboard</div>
       </div>
     );
   }
 }
 
-//export default withStyles(styles, { withTheme: true })(AdminDashboard);
-export default AdminDashboard;
+export default withStyles(styles, { withTheme: true })(AdminDashboard);
