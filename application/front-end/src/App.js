@@ -17,6 +17,7 @@ import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 import AboutPage from './modules/about/about-page';
 import HomePage from './modules/homepage/home-page';
 import NewListing from './modules/listing/new-listing';
+import ContactInbox from './modules/contact/contact-inbox';
 
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
@@ -76,6 +77,7 @@ class App extends Component {
             <Switch>
               <Route path={'/about'} component={AboutPage} />
               <Route path={'/new'} component={NewListing} />
+              <Route path={'/inbox'} component={ContactInbox} />
               <Route path={'/'} component={HomePage} />
             </Switch>
           </div>  
