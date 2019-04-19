@@ -12,7 +12,6 @@ import _ from 'lodash';
 
 const styles = {
   card: {
-    maxWidth: 345,
     margin: 10
   },
   media: {
@@ -28,8 +27,7 @@ const ListingCard = (props) => {
   const image = _.isArray(listing.images) && listing.images.length > 0 ? 
       "data:image/png;base64," + listing.images[0] :
       null;
-
-  const date = new Date();
+       
   return (
     <Card className={classes.card}>
       <CardActionArea>
