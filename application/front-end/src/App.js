@@ -18,7 +18,7 @@ import AboutPage from './modules/about/about-page';
 import HomePage from './modules/homepage/home-page';
 import NewListing from './modules/listing/new-listing';
 import LoginForm from './modules/Login/LoginForm';
-
+import Register from './modules/Register/Register';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 
@@ -61,7 +61,13 @@ class App extends Component {
           </AppBar>
 
           <div className={classes.content} >
-            
+            <Switch>
+              <Route path={'/about'} component={AboutPage} />
+              <Route path={'/new'} component={NewListing} />
+              <Route path={'/'} component={HomePage} />
+              <Route path={'/Login'} component={LoginForm} />
+              <Route path={'/Register'} component={Register} />
+            </Switch>
           </div>  
 
         </div>
