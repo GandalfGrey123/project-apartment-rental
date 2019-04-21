@@ -69,22 +69,34 @@ class NewListing extends Component{
     this.setState({ form: form });
   }; 
 
-   formValidate=(name,value)=>{
-   
-   }
+  formValidate=(name,value)=>{
 
+    if(['price','zipcode'].includes(name.toLowerCase())){
+      if(/[a-zA-Z]/.test(value)){
+        alert("must only contain digits");
+        //undo the change
+        this.setState({ 
+          form:{
+            ...this.state.form,
+            [name]: value.slice(0, -1)
+          } 
+         });
+      }
+    }
+  }
 
-  handleFormChange = name => ({target: {value}}) => {
-    this.formValidate(name,value);
+  handleFormChange = name => ({target: {value}}) => {   
     this.setState({ 
       form:{
     	  ...this.state.form,
     	  [name]: value 
       }	
     });
+    this.formValidate(name,value);
   };
 
   handleAddressChange = name => ({target: {value}}) => {
+    this.formValidate(name,value);
     const { form } = this.state
     form.address[name] = value;
     this.setState({ form: form });
@@ -99,15 +111,13 @@ class NewListing extends Component{
     });
   }
 
-
-
-
   onSubmitClick = () => {
       const { form } = this.state;
       if(Object.keys(form).length != 8){
         alert('you must fill out all form fields');
       }else{
         createPosting(form, () => {
+          //if response is good then redirect-render new page
           this.setState({ submitSuccess: true })
         })
       }
@@ -163,8 +173,6 @@ removeImage =(imageIndex) => {
 
      );
    }); 
-
-
 
    if(submitSuccess){
      return <Redirect to={'/'} />
