@@ -50,6 +50,15 @@ const styles = theme => ({
   iconButton: {
     margin: theme.spacing.unit,
   },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
+  searchButton: {
+    margin: theme.spacing.unit*2,
+  },
+  radioGroup: {
+    margin: `${theme.spacing.unit/2}px 0`,
+  },
 });
 
 export default styles;

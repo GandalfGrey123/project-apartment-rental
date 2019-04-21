@@ -21,9 +21,6 @@ import AboutPage from './modules/about/about-page';
 import HomePage from './modules/homepage/home-page';
 import NewListing from './modules/listing/new-listing';
 
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
-
 const styles = {
   root: {
     flexGrow: 1,

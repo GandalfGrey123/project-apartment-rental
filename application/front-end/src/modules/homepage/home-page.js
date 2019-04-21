@@ -3,22 +3,39 @@ import {
   Drawer, withStyles, CssBaseline,
   TextField, InputAdornment,
   Grid, Paper, Toolbar,
-  Hidden, IconButton
+  Hidden, IconButton, Button
 } from '@material-ui/core';
 
 import {
-  Search as SearchIcon,
+  SearchOutlined as SearchIcon,
   ViewListOutlined as ViewListIcon,
   ViewColumnOutlined as ViewColumnIcon,
-  Menu as MenuIcon
+  Menu as MenuIcon,
+  SortOutlined as SortIcon
 } from '@material-ui/icons';
 import ListingCard from './component/listing-card';
+import MenuPopUp from '../_global/component/appbar-menu';
 
 import styles from './styles/home-page';
 
 import _ from 'lodash';
 import { getListings } from '../../api/listings.actions';
 import DrawerItems from './component/drawer-items';
+
+const SORT_ACTIONS = [
+  {
+    id: 'newest',
+    label: 'Newest'
+  },
+  {
+    id: 'cheapest',
+    label: 'Cheapest'
+  },
+  {
+    id: 'bedrooms',
+    label: 'Bedrooms'
+  }
+];
 
 const FormRow = ({ listings, columnView = true }) => {
   return (
@@ -50,21 +67,52 @@ class HomePage extends Component {
     this.state = {
       listings: [],
       mobileOpen: false,
-      columnView: true
+      columnView: true,
+      sortMenuVisible: false,
+      anchorEl: null,
+      query: {},
+      searchTxt: '',
+      sortBy: null
     };
     this.getListings = this.getListings.bind(this);
+    this.onSearchClick = this.onSearchClick.bind(this);
+    this.handleSortTxt = this.handleSortTxt.bind(this);
+    this.handleSearchTxt = this.handleSearchTxt.bind(this);
+    this._toggleSortMenu = this._toggleSortMenu.bind(this);
+    this.onDrawerSelection = this.onDrawerSelection.bind(this);
+  }
+
+  _toggleSortMenu = (event) => {
+    const { sortMenuVisible } = this.state;
+    let state = { sortMenuVisible: !sortMenuVisible };
+    if(event){
+      state['anchorEl'] = event.currentTarget;
+    }
+    this.setState(state)
   }
 
   componentWillMount() {
     this.getListings();
   }
 
-  getListings = (payload = {}) => {
-    let selectedTypes = payload.types || [];
-    let params = {};
-    if (!_.isEmpty(selectedTypes)) {
-      params = new URLSearchParams();
+  onDrawerSelection = (query = {}) => {
+    this.setState({ query }, () => this.getListings(query));
+  }
+
+  getListings = (query = {}) => {
+    let params = new URLSearchParams();
+    if (query.types && !_.isEmpty(query.types)) {
+      let selectedTypes = query.types;
       selectedTypes.forEach((value) => params.append("type", value));
+    }
+    if(query.beds && query.beds !== '0'){
+      params.append("beds", query.beds);
+    }
+    if(query.sortBy){
+      params.append("sortBy", query.sortBy);
+    }
+    if(query.text){
+      params.append("text", encodeURI(query.text));
     }
     getListings(params, (data) => {
       this.setState({ listings: data || [] })
@@ -94,9 +142,31 @@ class HomePage extends Component {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
+  onSearchClick = () => {
+    const { searchTxt, query, sortBy } = this.state;
+    this.getListings({
+      ...query,
+      text: searchTxt,
+      sortBy: sortBy
+    })
+  }
+
+  handleSearchTxt = event => {
+    this.setState({ searchTxt: event.target.value });
+  };
+
+  handleSortTxt = key => {
+    const { searchTxt, query } = this.state;
+    this.setState({ sortBy: key }, () => this.getListings({
+      ...query,
+      text: searchTxt,
+      sortBy: key
+    }));
+  };
+
   render() {
     const classes = this.props.classes;
-    const { types, listings, columnView } = this.state;
+    const { listings, columnView, sortMenuVisible, anchorEl, searchTxt } = this.state;
 
     return (
       <Paper className={classes.main} elevation={1}>
@@ -123,9 +193,7 @@ class HomePage extends Component {
                 }}
               >
                 <DrawerItems
-                  onDrawerSelectionChange={(payload) => {
-                    this.getListings(payload);
-                  }}
+                  onDrawerSelectionChange={(payload) => this.onDrawerSelection(payload)}
                 />
               </Drawer>
             </Hidden>
@@ -154,6 +222,9 @@ class HomePage extends Component {
                   label="Listing Search"
                   className={classes.searchTextField}
                   name="listingSearch"
+                  value={searchTxt}
+                  onChange={this.handleSearchTxt}
+                  placeholder={'Enter Text'}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -162,6 +233,31 @@ class HomePage extends Component {
                     )
                   }}
                 />
+                <Button 
+                  color="primary"
+                  size="small"
+                  variant="contained"
+                  className={classes.searchButton}
+                  onClick={this.onSearchClick}
+                >
+                  Search
+                </Button>
+                <div>
+                  <IconButton
+                    aria-label="Grid-View"
+                    className={classes.iconButton}
+                    onClick={this._toggleSortMenu}
+                  >
+                    <SortIcon fontSize={'large'} />
+                  </IconButton>
+                  <MenuPopUp
+                      items={SORT_ACTIONS}
+                      anchorEl={anchorEl}
+                      open={sortMenuVisible}
+                      onClose={this._toggleSortMenu}
+                      onItemClick={(itemId) => this.handleSortTxt(itemId)}
+                    />
+                </div>
                 <IconButton
                   aria-label="Grid-View"
                   className={classes.iconButton}
