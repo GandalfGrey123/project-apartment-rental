@@ -159,6 +159,7 @@ class App extends Component {
             <Switch>
               <Route path={'/about'} component={AboutPage} />
               <Route path={'/new'} component={NewListing} />
+	      <Route path={'/maps'} component={Maps} />
               <Route path={'/'} component={HomePage} />
             </Switch>
           </div>  
