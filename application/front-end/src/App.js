@@ -20,7 +20,8 @@ import NewListing from './modules/listing/new-listing';
 
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
-
+//adding google maps
+import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 const styles = {
   root: {
@@ -76,6 +77,7 @@ class App extends Component {
             <Switch>
               <Route path={'/about'} component={AboutPage} />
               <Route path={'/new'} component={NewListing} />
+	      <Route path={'/maps'} component={Maps} />
               <Route path={'/'} component={HomePage} />
             </Switch>
           </div>  
