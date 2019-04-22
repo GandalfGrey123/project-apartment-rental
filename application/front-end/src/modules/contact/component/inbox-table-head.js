@@ -8,7 +8,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip';
 
 const rows = [
-  { id: 'username', numeric: false, disablePadding: false, label: 'Username'},
+  { id: 'name', numeric: false, disablePadding: false, label: 'Username'},
   { id: 'messageTitle', numeric: false, disablePadding: true, label: 'Message Title'},
   { id: 'listingTitle', numeric: false, disablePadding: true, label: 'Listing Title'},
   { id: 'date', numeric: false, disablePadding: false, label: 'Date Posted'}  
