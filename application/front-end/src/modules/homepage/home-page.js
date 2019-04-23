@@ -1,45 +1,61 @@
 import React, { Component } from 'react';
 import {
   Drawer, withStyles, CssBaseline,
-  Divider, Checkbox, Button,
-  List, ListItem, ListItemText, ListSubheader, 
   TextField, InputAdornment,
-  Grid,Paper, Toolbar,
-  Hidden,IconButton
+  Grid, Paper, Toolbar,
+  Hidden, IconButton, Button
 } from '@material-ui/core';
 
-import { 
-  Search as SearchIcon,
+import {
+  SearchOutlined as SearchIcon,
   ViewListOutlined as ViewListIcon,
   ViewColumnOutlined as ViewColumnIcon,
-  Menu as MenuIcon
+  Menu as MenuIcon,
+  SortOutlined as SortIcon
 } from '@material-ui/icons';
 import ListingCard from './component/listing-card';
+import MenuPopUp from '../_global/component/appbar-menu';
 
 import styles from './styles/home-page';
 
 import _ from 'lodash';
-import { getHouseTypes, getListings } from '../../api/listings.actions';
-import { Link, Route  } from 'react-router-dom';
+import { getListings } from '../../api/listings.actions';
+import DrawerItems from './component/drawer-items';
 
-const FormRow = ({ listings, props, columnView = true }) => {
+const SORT_ACTIONS = [
+  {
+    id: 'newest',
+    label: 'Newest'
+  },
+  {
+    id: 'cheapest',
+    label: 'Cheapest'
+  },
+  {
+    id: 'bedrooms',
+    label: 'Bedrooms'
+  }
+];
+
+const FormRow = ({ listings, columnView = true }) => {
   return (
     <React.Fragment>
       {
-        listings.map((value) => (
+        listings.map((value, index) => (
           <Grid
             item
             lg={columnView ? 4 : 11}
             md={6}
             sm={12}
             style={{ width: '100%' }}
+            key={`grid-index-${index}`}
           >
             <ListingCard
               listing={value}
             />
           </Grid>
         ))
-      }  
+      }
     </React.Fragment>
   );
 }
@@ -50,66 +66,66 @@ class HomePage extends Component {
     super(props);
     this.state = {
       listings: [],
-      types: ['All'], // All by default, other types will come from DB.
-      selectedTypes: [], // Empty means all
       mobileOpen: false,
-      columnView: true
+      columnView: true,
+      sortMenuVisible: false,
+      anchorEl: null,
+      query: {},
+      searchTxt: '',
+      sortBy: null
     };
-    this.isChecked = this.isChecked.bind(this);
     this.getListings = this.getListings.bind(this);
-    this.getHousingTypes = this.getHousingTypes.bind(this);
-    this.selectHousingType = this.selectHousingType.bind(this);
+    this.onSearchClick = this.onSearchClick.bind(this);
+    this.handleSortTxt = this.handleSortTxt.bind(this);
+    this.handleSearchTxt = this.handleSearchTxt.bind(this);
+    this._toggleSortMenu = this._toggleSortMenu.bind(this);
+    this.onDrawerSelection = this.onDrawerSelection.bind(this);
+  }
+
+  _toggleSortMenu = (event) => {
+    const { sortMenuVisible } = this.state;
+    let state = { sortMenuVisible: !sortMenuVisible };
+    if(event){
+      state['anchorEl'] = event.currentTarget;
+    }
+    this.setState(state)
   }
 
   componentWillMount() {
-    this.getHousingTypes();
     this.getListings();
   }
 
-  getListings = () => {
-    const { selectedTypes } = this.state;
-    let params = {};
-    if(!_.isEmpty(selectedTypes)){
-      params = new URLSearchParams();
+  onDrawerSelection = (query = {}) => {
+    this.setState({ query }, () => this.getListings(query));
+  }
+
+  getListings = (query = {}) => {
+    let params = new URLSearchParams();
+    if (query.types && !_.isEmpty(query.types)) {
+      let selectedTypes = query.types;
       selectedTypes.forEach((value) => params.append("type", value));
+    }
+    if(query.beds && query.beds !== '0'){
+      params.append("beds", query.beds);
+    }
+    if(query.sortBy){
+      params.append("sortBy", query.sortBy);
+    }
+    if(query.text){
+      params.append("text", encodeURI(query.text));
     }
     getListings(params, (data) => {
       this.setState({ listings: data || [] })
     })
   }
 
-  getHousingTypes = () => {
-    let { types } = this.state;
-    getHouseTypes((data) => {
-      types = types.concat(
-        data.map((value) => _.capitalize(value.type))
-      );
-      this.setState({ types: types })
-    })
-  }
-
-  selectHousingType = type => event => {
-    if (type === 'All') {
-      this.setState({ selectedTypes: [] });
-    } else {
-      let { selectedTypes } = this.state;
-      if (event.target.checked) selectedTypes.push(type);
-      else _.remove(selectedTypes, (i) => i === type);
-      this.setState({ selectedTypes: selectedTypes });
-    }
-  };
-
-  isChecked = (text) => {
-    return (text === 'All' && _.isEmpty(this.state.selectedTypes))
-      || this.state.selectedTypes.includes(text);
-  }
-
   displayListings = (listings, columnView) => {
     let rows = [];
-    for(let i = 0; i < listings.length; i += 3){
+    for (let i = 0; i < listings.length; i += 3) {
       rows.push(
-        <Grid 
+        <Grid
           container
+          key={`grid-container-${i + 1}`}
         >
           <FormRow
             listings={listings.slice(i, i + 3)}
@@ -125,111 +141,138 @@ class HomePage extends Component {
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
- 
+
+  onSearchClick = () => {
+    const { searchTxt, query, sortBy } = this.state;
+    this.getListings({
+      ...query,
+      text: searchTxt,
+      sortBy: sortBy
+    })
+  }
+
+  handleSearchTxt = event => {
+    this.setState({ searchTxt: event.target.value });
+  };
+
+  handleSortTxt = key => {
+    const { searchTxt, query } = this.state;
+    this.setState({ sortBy: key }, () => this.getListings({
+      ...query,
+      text: searchTxt,
+      sortBy: key
+    }));
+  };
+
   render() {
     const classes = this.props.classes;
-    const { types, listings, columnView } = this.state;
+    const { listings, columnView, sortMenuVisible, anchorEl, searchTxt } = this.state;
 
     return (
-      <Paper className={classes.main} elevation={1}>                
-        <Grid container style={{ width: '100%' }} > 
-             <Grid item lg={3} md={3} sm={3} >
-                 <CssBaseline />  
-                  
+      <Paper className={classes.main} elevation={1}>
+        <Grid container style={{ width: '100%' }} >
+          <Grid item lg={3} md={3} sm={3} >
+            <CssBaseline />
+
+            <IconButton
+              color="inherit"
+              aria-label="Open drawer"
+              onClick={this.handleDrawerToggle}
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
+
+            <Hidden smUp implementation="css">
+              <Drawer
+                variant="temporary"
+                open={this.state.mobileOpen}
+                onClose={this.handleDrawerToggle}
+                classes={{
+                  paper: classes.drawerMobilePaper,
+                }}
+              >
+                <DrawerItems
+                  onDrawerSelectionChange={(payload) => this.onDrawerSelection(payload)}
+                />
+              </Drawer>
+            </Hidden>
+
+            <Hidden xsDown implementation="css">
+              <Drawer
+                className={classes.drawer}
+                variant='permanent'
+                classes={{ paper: classes.drawerPaper }}
+                anchor="left"
+                open
+              >
+                <DrawerItems
+                  onDrawerSelectionChange={(payload) => {
+                    this.getListings(payload);
+                  }}
+                />
+              </Drawer>
+            </Hidden>
+          </Grid>
+
+          <Grid item lg={9} md={9} sm={9} >
+            <Grid item lg={11}>
+              <Toolbar className={classes.searchSection}>
+                <TextField
+                  label="Listing Search"
+                  className={classes.searchTextField}
+                  name="listingSearch"
+                  value={searchTxt}
+                  onChange={this.handleSearchTxt}
+                  placeholder={'Enter Text'}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    )
+                  }}
+                />
+                <Button 
+                  color="primary"
+                  size="small"
+                  variant="contained"
+                  className={classes.searchButton}
+                  onClick={this.onSearchClick}
+                >
+                  Search
+                </Button>
+                <div>
                   <IconButton
-                    color="inherit"
-                    aria-label="Open drawer"
-                    onClick={this.handleDrawerToggle}
-                    className={classes.menuButton}
+                    aria-label="Grid-View"
+                    className={classes.iconButton}
+                    onClick={this._toggleSortMenu}
                   >
-                    <MenuIcon />
+                    <SortIcon fontSize={'large'} />
                   </IconButton>
-
-                  <Hidden smUp implementation="css">
-                    <Drawer
-                      container={this.props.container}
-                      variant="temporary"                      
-                      open={this.state.mobileOpen}
-                      onClose={this.handleDrawerToggle}
-                      classes={{
-                        paper: classes.drawerMobilePaper,
-                      }}
-                    >
-                        <List subheader={<ListSubheader> Housing Types</ListSubheader>} className={classes.subList}>
-                          {types.map((text, index) => (
-                            <ListItem button key={`item-${index}`}>
-                              <Checkbox
-                                checked={this.isChecked(text)}
-                                onChange={this.selectHousingType(text)}
-                              />
-                              <ListItemText primary={text} />
-                            </ListItem>
-                          ))}
-                          </List>
-                        <Button color="primary" onClick={() => { this.getListings(); }}>
-                          Update
-                        </Button>
-                        <Divider />                    
-                    </Drawer>  
-                  </Hidden>
-
-                <Hidden xsDown implementation="css">
-                   <Drawer
-                     className={classes.drawer}
-                     variant='permanent'
-                     classes={{ paper: classes.drawerPaper }}
-                     anchor="left"
-                     open
-                   >
-                      <List subheader={<ListSubheader> Housing Types</ListSubheader>} className={classes.subList}>
-                        {types.map((text, index) => (
-                          <ListItem button key={`item-${index}`}>
-                            <Checkbox
-                              checked={this.isChecked(text)}
-                              onChange={this.selectHousingType(text)}
-                            />
-                            <ListItemText primary={text} />
-                          </ListItem>
-                        ))}
-                      </List>
-                      <Button color="primary" onClick={() => { this.getListings(); }}>
-                        Update
-                      </Button>
-                      <Divider />
-                   </Drawer>
-                </Hidden>
-              </Grid>
-
-              <Grid item lg={9} md={9} sm={9} >  
-                  <Grid item lg={11}>
-                    <Toolbar className={classes.searchSection}>
-                          <TextField
-                            label="Listing Search"
-                            className={classes.searchTextField}
-                            name="listingSearch"                                                
-                              InputProps={{
-                              startAdornment: (
-                                  <InputAdornment position="start"> 
-                                      <SearchIcon /> 
-                                  </InputAdornment>
-                              )
-                            }}
-                          />
-                          <IconButton 
-                            aria-label="Grid-View"
-                            className={classes.iconButton}
-                            onClick={() => this.setState({ columnView: !columnView })}
-                          >
-                             { columnView ?
-                                <ViewColumnIcon fontSize="large" /> :
-                                <ViewListIcon fontSize="large" />
-                             }
-                          </IconButton>
-                      </Toolbar>
-                  </Grid>           
-                  {this.displayListings(listings, columnView)}
-              </Grid>
-          </Grid>      
+                  <MenuPopUp
+                      items={SORT_ACTIONS}
+                      anchorEl={anchorEl}
+                      open={sortMenuVisible}
+                      onClose={this._toggleSortMenu}
+                      onItemClick={(itemId) => this.handleSortTxt(itemId)}
+                    />
+                </div>
+                <IconButton
+                  aria-label="Grid-View"
+                  className={classes.iconButton}
+                  onClick={() => this.setState({ columnView: !columnView })}
+                >
+                  {columnView ?
+                    <ViewColumnIcon fontSize="large" /> :
+                    <ViewListIcon fontSize="large" />
+                  }
+                </IconButton>
+              </Toolbar>
+            </Grid>
+            {this.displayListings(listings, columnView)}
+          </Grid>
+        </Grid>
       </Paper>
 
     );
