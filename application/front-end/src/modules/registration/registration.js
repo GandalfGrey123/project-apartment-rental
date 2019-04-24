@@ -49,15 +49,15 @@ class Register extends Component {
                   onValidSubmit={this.submit}>
 
             <ValidateTextField
-                name="username"
-                autoComplete="username"
+                name="email"
+                autoComplete="email"
                 validations="minLength:3"
                 validationErrors={{
                   minLength: "Too short"
                 }}
                 required
                 className={classes.field}
-                label="Desired username"
+                label="Desired email"
             />
 
             <ValidateTextField
