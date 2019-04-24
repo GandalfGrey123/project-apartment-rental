@@ -3,7 +3,7 @@ import {withStyles} from '@material-ui/core/styles';
 import Formsy from 'formsy-react';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
-
+import Checkbox from '@material-ui/core/Checkbox';
 import ValidateTextField from './field-with-validation';
 import LoginRegisterError from "./registration-error";
 
@@ -58,6 +58,7 @@ class Register extends Component {
                 required
                 className={classes.field}
                 label="Desired email"
+                style = {{width: 100}}
             />
 
             <ValidateTextField
@@ -71,6 +72,7 @@ class Register extends Component {
                 required
                 className={classes.field}
                 label="Create a password"
+                style = {{width: 100}}
             />
 
             <ValidateTextField
@@ -84,8 +86,14 @@ class Register extends Component {
                 required
                 className={classes.field}
                 label="Enter password again"
+                style = {{width: 100}}
             />
-
+            <Checkbox
+            checked={this.state.checkedB}
+             onChange={this.handleChange('checkedB')}
+              value="checkedB"
+               color="primary"
+        />
             {
               registerFailed && <LoginRegisterError message={registerFailed}/>
             }
@@ -98,6 +106,7 @@ class Register extends Component {
             </div>
 
           </Formsy>
+          <Checkbox defaultChecked color="default" value="checkedG" />
         </div>
     );
   }
