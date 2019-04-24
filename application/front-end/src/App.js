@@ -16,10 +16,12 @@ import {
 } from '@material-ui/icons';
 import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 import AppBarMenu from './modules/_global/component/appbar-menu';
-
+import Maps from './modules/googlemaps/maps';
 import AboutPage from './modules/about/about-page';
 import HomePage from './modules/homepage/home-page';
 import NewListing from './modules/listing/new-listing';
+import Registration from './modules/registration/registration';
+import LoginForm from './modules/login/login-form';
 
 const styles = {
   root: {
@@ -159,7 +161,9 @@ class App extends Component {
             <Switch>
               <Route path={'/about'} component={AboutPage} />
               <Route path={'/new'} component={NewListing} />
-	      <Route path={'/maps'} component={Maps} />
+	            <Route path={'/maps'} component={Maps} />
+              <Route path={'/login'} component={LoginForm} />
+              <Route path={'/register'} component={Registration} />
               <Route path={'/'} component={HomePage} />
             </Switch>
           </div>  
