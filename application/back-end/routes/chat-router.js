@@ -5,7 +5,7 @@ const app = express();
 
 router.post('/new', (req,res) =>{
 	models.Message.create({
-		message: req.body.message;
+		message: req.body.message,
 		senderUserId: req.body.senderId,
 	    recieverUserId: req.body.recieverId,
 	}).then((newMessage) => {
@@ -34,3 +34,6 @@ router.get('/inbox', (req,res) =>{
 //		// find all messages from this user
 //	});
 //});
+
+
+module.exports = router;
