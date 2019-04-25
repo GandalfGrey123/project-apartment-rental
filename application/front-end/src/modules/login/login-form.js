@@ -1,56 +1,127 @@
-import React from 'react';
-import { Paper, withStyles, Grid, TextField, Button, FormControlLabel, Checkbox } from '@material-ui/core';
-import { Face, Fingerprint } from '@material-ui/icons'
+import React, { Component } from 'react';
+import { withStyles, FormControlLabel } from '@material-ui/core';
+import Formsy from 'formsy-react';
+import Button from '@material-ui/core/Button';
+import PropTypes from 'prop-types';
+import Checkbox from '@material-ui/core/Checkbox';
+import ValidateTextField from '../registration/field-with-validation';
+import LoginRegisterError from "../registration/registration-error";
+
 const styles = theme => ({
-    margin: {
-        margin: theme.spacing.unit * 2,
-    },
-    padding: {
-        padding: theme.spacing.unit
-    }
+  root: {
+    marginLeft: theme.spacing.unit*10,
+    marginRight: theme.spacing.unit*10,
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  field: {
+    marginTop: theme.spacing.unit,
+    width: theme.spacing.unit*50
+  },
+  actions: {
+    marginTop: theme.spacing.unit * 2
+  }
 });
 
-class LoginTab extends React.Component {
-    render() {
-        const { classes } = this.props;
-        return (
-            <Paper className={classes.padding}>
-                <div className={classes.margin}>
-                    <Grid container spacing={8} alignItems="flex-end">
-                        <Grid item>
-                            <Face />
-                        </Grid>
-                        <Grid item md={true} sm={true} xs={true}>
-                            <TextField id="username" label="Username" type="email" fullWidth autoFocus required />
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={8} alignItems="flex-end">
-                        <Grid item>
-                            <Fingerprint />
-                        </Grid>
-                        <Grid item md={true} sm={true} xs={true}>
-                            <TextField id="username" label="Password" type="password" fullWidth required />
-                        </Grid>
-                    </Grid>
-                    <Grid container alignItems="center" justify="space-between">
-                        <Grid item>
-                            <FormControlLabel control={
-                                <Checkbox
-                                    color="primary"
-                                />
-                            } label="Remember me" />
-                        </Grid>
-                        <Grid item>
-                            <Button disableFocusRipple disableRipple style={{ textTransform: "none" }} variant="text" color="primary">Forgot password ?</Button>
-                        </Grid>
-                    </Grid>
-                    <Grid container justify="center" style={{ marginTop: '10px' }}>
-                        <Button variant="outlined" color="primary" style={{ textTransform: "none" }}>Login</Button>
-                    </Grid>
-                </div>
-            </Paper>
-        );
+
+class LoginForm extends Component {
+  static propTypes = {
+    onRegister: PropTypes.func,
+    registerFailed: PropTypes.string
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      canSubmit: false,
+      admin: false
     }
+    this._handleCheck = this._handleCheck.bind(this);
+  }
+
+  _handleCheck = () => {
+    const { admin } = this.state;
+    this.setState({ admin: !admin })
+  }
+
+  render() {
+
+    const { classes, registerFailed } = this.props;
+    const { canSubmit, admin } = this.state;
+
+    return (
+      <div className={classes.root}>
+        <Formsy className={classes.form}
+          onValid={this.enableSubmit} onInvalid={this.disableSubmit}
+          onValidSubmit={this.submit}>
+
+          <ValidateTextField
+            name="email"
+            autoComplete="email"
+            validations="minLength:3"
+            validationErrors={{
+              minLength: "Invalid Email"
+            }}
+            required
+            className={classes.field}
+            label="Email"
+          />
+
+          <ValidateTextField
+            name="password"
+            autoComplete="password"
+            validations="minLength:3"
+            validationErrors={{
+              minLength: "Invalid Password"
+            }}
+            required
+            className={classes.field}
+            label="Password"
+          />
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={admin}
+                onChange={this._handleCheck}
+                value="admin"
+                color="primary"
+
+              />
+            }
+            label="Remember Me"
+          />
+          
+         <Button disableFocusRipple disableRipple style={{ textTransform: "none" }} variant="text" color="primary">Forgot password ?</Button>
+
+          <div className={classes.actions}>
+            <Button type="submit"
+              fullWidth
+              variant="contained" color="primary"
+              disabled={!canSubmit}>Log In</Button>
+          </div>
+
+        </Formsy>
+      </div>
+    );
+  }
+
+  disableSubmit = () => {
+    this.setState({ canSubmit: false })
+  };
+
+  enableSubmit = () => {
+    this.setState({ canSubmit: true })
+  };
+
+  submit = model => {
+    if (this.props.onRegister) {
+      this.props.onRegister(model);
+    }
+  }
+
 }
 
-export default withStyles(styles)(LoginTab);
+export default withStyles(styles)(LoginForm);

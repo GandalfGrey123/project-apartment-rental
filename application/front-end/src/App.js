@@ -15,7 +15,7 @@ import {
   MoreVert as MoreIcon
 } from '@material-ui/icons';
 import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
-import AppBarMenu from './modules/_global/component/appbar-menu';
+import AppBarMenu from './modules/_global/component/appbar-menu-nav';
 import Maps from './modules/googlemaps/maps';
 import AboutPage from './modules/about/about-page';
 import HomePage from './modules/homepage/home-page';
@@ -53,12 +53,12 @@ const PROFILE_MENU_ACTIONS = [
 
 const UNAUTHENTICATED_ACTIONS = [
   {
-    id: 'login',
+    id: '/login',
     label: 'Log In'
   },
   {
-    id: 'enroll',
-    label: 'Enroll'
+    id: '/register',
+    label: 'Register'
   }
 ]
 
@@ -132,7 +132,6 @@ class App extends Component {
                       anchorEl={anchorEl}
                       open={profileMenu}
                       onClose={this._toggleProfileMenu}
-                      onItemClick={(itemId) => console.log('Item Clicked:', itemId)}
                     />
                   </div>): 
                   (<div>
@@ -149,7 +148,6 @@ class App extends Component {
                       anchorEl={anchorEl}
                       open={unauthenticatedMenu}
                       onClose={this._toggleUnauthenticatedMenu}
-                      onItemClick={(itemId) => console.log('Item Clicked:', itemId)}
                     />
                   </div>)
                 }

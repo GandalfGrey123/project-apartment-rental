@@ -2,13 +2,13 @@ import React from 'react';
 import {
     Menu, MenuItem
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const AppBarMenu = ({ 
     items,
     open,
     onClose,
     anchorEl,
-    onItemClick
 }) => {
     return (
         <Menu
@@ -27,9 +27,9 @@ const AppBarMenu = ({
         >
             {
                 items.map((value, index) => (
-                    <MenuItem 
+                    <MenuItem
+                        component={Link}
                         key={`menu-item-${index+1}`}
-                        onClick={() => onItemClick(value.id)}
                         to={value.id}
                     >
                         {value.label}
