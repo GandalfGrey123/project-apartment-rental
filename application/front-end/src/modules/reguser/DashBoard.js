@@ -103,18 +103,11 @@ render() {
 
 			<Divider />
 
-			
-			<DashBaordList classes={classes} fname={"19 Jesica Steve"}>
+			<DashBoardList classes={classes} fname={"19 Jesica Steve"} />
 
-			</DashBoardList>
+			<DashBoardList classes={classes} fname={"28 Merinda Alba"} />
 
-			<DashBoardList classes={classes} fname={"28 Merinda Alba"}>
-
-			</DashBoardList>
-
-			<DashBoardList classes={classes} fname={"35 Alex Alex"}>
-
-			</DashBoardList>
+			<DashBoardList classes={classes} fname={"35 Alex Alex"} />
 
 		</Paper>
 	)
