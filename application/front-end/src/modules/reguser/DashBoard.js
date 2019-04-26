@@ -1,156 +1,124 @@
 import React, { Component } from 'react';
-import "./styles/styles.css"
-import "./styles/bootstrap.css"
+import "./css/DashBoard.css"
+import styles from './css/DashBoard';
 import logo from './img/logo.jpg';
-import logo1 from './img/favicon1.png';
+import logo2 from './img/logo2.png';
 import picture from './img/picture.png';
+import DashBoardList from './component/DashBoardList';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+
+import {
+    withStyles,TextField,
+    Paper, Typography, 
+    Toolbar, AppBar,
+    Grid, Button,
+    CardActions, Card,
+    CardContent, List, ListItem, ListItemText,
+    Divider, 
+} from '@material-ui/core'
 
 
 class DashBoard extends Component {
 
+       
 
 
-  createTable = () => {
-let table = []
+render() {
+	const { classes } = this.props;
+	return (
+		<Paper>
+			<AppBar position="static" >
+				<Toolbar>
+					<Typography variant="title" color="inherit">
+						 <img alt="label" className="ml" src={logo2} />
+						 <div class="vl"> 
+						 	<span>&nbsp; Gatorooms</span>
+						 </div>
 
-    for (let i = 0; i < 3; i++) {
-      table.push(
-        <div className="ml-5">
-        <div className="col text-center">
-        <button type="button" className="btn btn-primary mrg20" >Active</button>
-        <button type="button" className="btn btn-warning mrg20" >Message</button>
-        <button type="button" className="btn btn-danger mrg20" >Remove</button>
-        </div>
+					</Typography>
+				</Toolbar>
+			</AppBar>
 
-        <span className="pl-2">22 Dave James</span>
-        
+			<Grid
+		      justify="space-between" // Add it here :)
+		      container 
+		      spacing={0}
+      		>
 
-        <div className="mt-2 mxw25">
-            <img className="wd100" alt="post" src="https://via.placeholder.com/500/f5f5f5" />
-        </div>
-        <hr />
-        </div>
+			<Grid item>
+	        <TextField
+	          id="outlined-search"
+	          label="Search field"
+	          type="search"
+	          style={{marginRight: '40px'}}
+	          margin="normal"
+	          variant="outlined"
 
-      )
-    }
-    return table
-  }
+	        />
+	        
+	        <Button variant="outlined" color="primary" className={classes.button}>
+	            Search
+	        </Button>
+	        </Grid>
 
+	        <Grid item>
+	        <Button variant="contained" color="primary" className={classes.button}>
+	       	 	Home
+	        </Button>
 
-  render() {
-    return (
-      <div >
-        
-        <header className="j2t3bix j1axqjmf j1auq9sh jkgbs4i j17dd4mj">
-            <div className="jte21hw j1i3ghpr ju2y67y toolbar__root toolbar--narrow">
-                <div className="j1njibue jqqz69l">
-                    <div className="jmra8tp jyzjcyu">
-                        <div className="j1njibue jqqz69l">
-                            <img alt="logo" src={logo1} />
+	        <Button variant="contained" color="primary" className={classes.button}>
+	        	Listing
+	        </Button>
+	        </Grid>
+			
+			</Grid>
 
-                            <hr className="jaewh4y divider__root divider--vertical" />
-          <img alt="label" className="image__instagram-label" src={logo} /></div>
-                    </div>
-                   
-                </div>
-            </div>
+			<Divider light />
 
+			<div >
+				<div>
+					<img src={picture} className={classes.imgCard + " fl"}/>
+				</div>
 
-        </header>
+				<div className="fl">
+					<h4>Your Properties</h4>
+					<p>&#8226; 22 James Smith</p>
+					<h4>Messages</h4>
+					<p>&#8226; 2 Unread Messages</p>
+				</div>
 
-        <div>
-           <nav className="navbar navbar-expand-lg navbar-light bg-default">
-                  <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
-
-                     <form className="form-inline my-2 my-lg-0">
-                      <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-                      <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                  </form>
-
-                    <ul className="navbar-nav ml-auto">
-                      <li className="nav-item active">
-                        <a className="nav-link btn btn-primary" >Home </a>
-                    </li>
-
-                    <li className="nav-item active ml-2">
-                        <a className="nav-link btn btn-primary" >New Listing </a>
-                    </li>
-                    
-
-                    </ul>
-                   
-                </div>
-          </nav>
-
-        </div>
+				<div className="fl">
+					<h4>About</h4>
+					<p> 
+					About me, Lorem Ipsum is simply<br/>
+					Dividerummy text of the printing<br/>
+					and typesetting 
+					</p>
+				</div>
 
 
-        <div className="container mt-5">
-            <div className="jh17x6u j2">
 
-            <span className="font-weight-bolder">Welcome to your Hub</span>
+			</div>
 
+			<Divider />
 
-                 <div className="j1njibue mt-5">
-                    <div className="jr7no7f avatar__root avatar--ultra-large">
-                      <img src={picture} />
-                  </div>
+			
+			<DashBaordList classes={classes} fname={"19 Jesica Steve"}>
 
-                 
+			</DashBoardList>
 
-            
+			<DashBoardList classes={classes} fname={"28 Merinda Alba"}>
 
-              <div className="jmra8tp j19rc5s">
-                <div className="float-right">
-                  <div >
-                    <h1 className="j129u29 j10yh1l1 text__root text--light-weight">About</h1>
-                    <p>About me, Lorem Ipsum is simply<br/>
-                    dummy text of the printing <br/>
-                    and typesetting </p>
-                  </div>
+			</DashBoardList>
 
-              </div>
-              <div >
-              <h1 className="j129u29 j10yh1l1 text__root text--light-weight">Your Properties</h1>
+			<DashBoardList classes={classes} fname={"35 Alex Alex"}>
 
+			</DashBoardList>
 
-              </div>
+		</Paper>
+	)
 
-              <div className="jh17x6u j4">
-                  <ul>
-                  <li>22 James Smith</li>
-                  </ul>
-              </div>
-
-              <div >
-                    <h1 className="j129u29 j10yh1l1 text__root text--light-weight">Messages</h1>
-
-                </div>
-
-                <div className="jh17x6u j4">
-                    <ul>
-                    <li>2 Unread Messages</li>
-                    </ul>
-                </div>
-
-                </div>
-              </div>
-              </div>
-        </div>
-
-        <hr />
-
-        {this.createTable()}
-
-
-      </div>
-    );
-  }
 }
-
-
-export default DashBoard;
+}
+export default withStyles(styles)(DashBoard);
