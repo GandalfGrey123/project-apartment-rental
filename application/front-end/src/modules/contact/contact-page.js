@@ -113,25 +113,25 @@ class ContactPage extends Component{
     this.setState({ open: false });
   };
 	render() {
-        const {classes,theme} = this.props;
+    const {classes,theme} = this.props;
 	  return(
 
 	  	 <div className = {classes.root}>
       	
-        			  <Drawer
-          variant="permanent"
-          className={classNames(classes.drawer, {
-            [classes.drawerOpen]: this.state.open,
-            [classes.drawerClose]: !this.state.open,
-          })}
-          classes={{
-            paper: classNames(classes.drawerPaper,{             
+          <Drawer
+            variant="permanent"
+            className={classNames(classes.drawer, {
               [classes.drawerOpen]: this.state.open,
               [classes.drawerClose]: !this.state.open,
-            }),
-          }}
-          open={this.state.open}
-        >
+            })}
+            classes={{
+              paper: classNames(classes.drawerPaper,{             
+                [classes.drawerOpen]: this.state.open,
+                [classes.drawerClose]: !this.state.open,
+              }),
+            }}
+            open={this.state.open}
+          >
           <div className={classes.toolbar}>
             <IconButton onClick={this.handleDrawerOpen}>
               {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
@@ -159,9 +159,9 @@ class ContactPage extends Component{
         
 
         	<main className={classes.content}>
-        		<InboxTable />
+        	
         		
-              </main>
+          </main>
 
     
          </div>
