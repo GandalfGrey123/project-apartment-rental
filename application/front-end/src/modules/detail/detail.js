@@ -36,6 +36,7 @@ render() {
 <p>*   Close to all amenities and SFSU</p>
 <p>*   Designated parking spot. Lots of street Parkings</p>
 <button type="button">Favorite</button>
+&nbsp;
 <button type="button">Contact Landlord</button>
       </div>
  )
