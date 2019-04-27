@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 
 import { 
-  Menu as MenuIcon,
+  //Menu as MenuIcon,
   Info as InfoIcon
 } from '@material-ui/icons';
 import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
@@ -87,8 +87,9 @@ class App extends Component {
             <Switch>
               <Route path={'/about'} component={AboutPage} />
               <Route path={'/new'} component={NewListing} />
+              
+			  <Route path={'/admin'} component={AdminDashboard} />
               <Route path={'/'} component={HomePage} />
-			  <Route path={'/admin'} component={HomePage} />
             </Switch>
           </div>  
 

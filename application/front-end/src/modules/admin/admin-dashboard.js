@@ -1,65 +1,103 @@
-import React, { Component } from 'react';
-import {
-  Drawer, withStyles, CssBaseline,
-  Divider, Checkbox, Button,
-  List, ListItem, ListItemText, ListSubheader,
-  Grid, TextField, EmailField
-} from '@material-ui/core';
-import styles from './styles/admin-dashboard';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Checkbox from '@material-ui/core/Checkbox';
 
-import LaunchIcon from '@material-ui/icons/Launch';
+const styles = theme => ({
+  root: {
+    display: 'flex',
+  },
+  formControl: {
+    margin: theme.spacing.unit * 3,
+  },
+});
 
+class CheckboxesGroup extends React.Component {
+  state = {
+    gilad: true,
+    jason: false,
+    antoine: false,
+  };
 
-const styles1 = {
-	link: { 
-		textDecoration: 'none',
-	},
-	icon: {
-		width: '0.5em',
-		paddingLeft: 2,
-	},
-};
-
-const MyUrlField = ({ record = {}, source, classes }) =>
-	<a href={record[source]} className={classes.link}>
-        {record[source]}
-        <LaunchIcon className={classes.icon} />
-    </a>;
-	
-export const UserList = props => (
-    <List {...props}>
-        <Datagrid rowClick="edit">
-            <TextField source="id" />
-            <TextField source="name" />
-            <TextField source="username" />
-            <EmailField source="email" />
-            <TextField source="address.street" />
-            <TextField source="phone" />
-            <TextField source="website" />
-            <TextField source="company.name" />
-        </Datagrid>
-    </List>
-);
-	
-
-
-class AdminDashboard extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.checked });
+  };
 
   render() {
-
-    const classes = this.props.classes;
+    const { classes } = this.props;
+    const { gilad, jason, antoine } = this.state;
+    const error = [gilad, jason, antoine].filter(v => v).length !== 2;
 
     return (
       <div className={classes.root}>
-         <div>Admin Dashboard</div>
+        <FormControl component="fieldset" className={classes.formControl}>
+          <FormLabel component="legend">Assign responsibility</FormLabel>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox checked={gilad} onChange={this.handleChange('gilad')} value="gilad" />
+              }
+              label="Gilad Gray"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox checked={jason} onChange={this.handleChange('jason')} value="jason" />
+              }
+              label="Jason Killian"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={antoine}
+                  onChange={this.handleChange('antoine')}
+                  value="antoine"
+                />
+              }
+              label="Antoine Llorca"
+            />
+          </FormGroup>
+          <FormHelperText>Be careful</FormHelperText>
+        </FormControl>
+        <FormControl required error={error} component="fieldset" className={classes.formControl}>
+          <FormLabel component="legend">Pick two</FormLabel>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox checked={gilad} onChange={this.handleChange('gilad')} value="gilad" />
+              }
+              label="Gilad Gray"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox checked={jason} onChange={this.handleChange('jason')} value="jason" />
+              }
+              label="Jason Killian"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={antoine}
+                  onChange={this.handleChange('antoine')}
+                  value="antoine"
+                />
+              }
+              label="Antoine Llorca"
+            />
+          </FormGroup>
+          <FormHelperText>You can display an error</FormHelperText>
+        </FormControl>
       </div>
     );
   }
 }
 
-export default withStyles(styles, { withTheme: true })(AdminDashboard);
+CheckboxesGroup.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(CheckboxesGroup);
