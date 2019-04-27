@@ -1,103 +1,57 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Checkbox from '@material-ui/core/Checkbox';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
-const styles = theme => ({
-  root: {
-    display: 'flex',
+const styles = {
+  card: {
+    maxWidth: 345,
   },
-  formControl: {
-    margin: theme.spacing.unit * 3,
+  media: {
+    height: 140,
   },
-});
+};
 
-class CheckboxesGroup extends React.Component {
-  state = {
-    gilad: true,
-    jason: false,
-    antoine: false,
-  };
-
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
-  };
-
-  render() {
-    const { classes } = this.props;
-    const { gilad, jason, antoine } = this.state;
-    const error = [gilad, jason, antoine].filter(v => v).length !== 2;
-
-    return (
-      <div className={classes.root}>
-        <FormControl component="fieldset" className={classes.formControl}>
-          <FormLabel component="legend">Assign responsibility</FormLabel>
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox checked={gilad} onChange={this.handleChange('gilad')} value="gilad" />
-              }
-              label="Gilad Gray"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={jason} onChange={this.handleChange('jason')} value="jason" />
-              }
-              label="Jason Killian"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={antoine}
-                  onChange={this.handleChange('antoine')}
-                  value="antoine"
-                />
-              }
-              label="Antoine Llorca"
-            />
-          </FormGroup>
-          <FormHelperText>Be careful</FormHelperText>
-        </FormControl>
-        <FormControl required error={error} component="fieldset" className={classes.formControl}>
-          <FormLabel component="legend">Pick two</FormLabel>
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox checked={gilad} onChange={this.handleChange('gilad')} value="gilad" />
-              }
-              label="Gilad Gray"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={jason} onChange={this.handleChange('jason')} value="jason" />
-              }
-              label="Jason Killian"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={antoine}
-                  onChange={this.handleChange('antoine')}
-                  value="antoine"
-                />
-              }
-              label="Antoine Llorca"
-            />
-          </FormGroup>
-          <FormHelperText>You can display an error</FormHelperText>
-        </FormControl>
-      </div>
-    );
-  }
+function MediaCard(props) {
+  const { classes } = props;
+  return (
+    <Card className={classes.card}>
+      <CardActionArea>
+        <CardMedia
+          className={classes.media}
+          image="/static/images/cards/contemplative-reptile.jpg"
+          title="Contemplative Reptile"
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="h2">
+            Lizard
+          </Typography>
+          <Typography component="p">
+            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
+            across all continents except Antarctica
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+      <CardActions>
+        <Button size="small" color="primary">
+          Share
+        </Button>
+        <Button size="small" color="primary">
+          Learn More
+        </Button>
+      </CardActions>
+    </Card>
+  );
 }
 
-CheckboxesGroup.propTypes = {
+MediaCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(CheckboxesGroup);
+export default withStyles(styles)(MediaCard);
