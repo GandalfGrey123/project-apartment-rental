@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import Checkbox from '@material-ui/core/Checkbox';
 import ValidateTextField from '../registration/field-with-validation';
-import LoginRegisterError from "../registration/registration-error";
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   root: {
@@ -99,6 +99,8 @@ class LoginForm extends Component {
           <div className={classes.actions}>
             <Button type="submit"
               fullWidth
+              component={Link}
+              to={'/profile'}
               variant="contained" color="primary"
               disabled={!canSubmit}>Log In</Button>
           </div>
