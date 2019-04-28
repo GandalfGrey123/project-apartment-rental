@@ -18,7 +18,7 @@ import AboutPage from './modules/about/about-page';
 import HomePage from './modules/homepage/home-page';
 import NewListing from './modules/listing/new-listing';
 import Maps from './modules/googlemaps/maps';
-
+import AdminDashboard from './modules/admindashboard/admin-dashboard';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 //adding google maps
@@ -79,6 +79,7 @@ class App extends Component {
               <Route path={'/about'} component={AboutPage} />
               <Route path={'/new'} component={NewListing} />
 	          <Route path={'/maps'} component={Maps} />
+              <Route path={'/admin'} component={AdminDashboard} />
               <Route path={'/'} component={HomePage} />
             </Switch>
           </div>  
