@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
-  withStyles, Grid, Paper,
-  CardActions, Button
+  withStyles, Grid, Paper, Button,
+  CardActions
 } from '@material-ui/core';
 import ListingCard from '../../_global/component/listing-card';
 import styles from '../styles/styles';
@@ -25,8 +25,11 @@ const FormRow = ({ listings, columnView = true }) => {
               listing={value}
               actions={(
                 <CardActions>
+                  <Button size="small" color="primary">
+                    Approve
+                  </Button>
                   <Button size="small" color="secondary">
-                    Delete
+                    Reject
                   </Button>
                 </CardActions>
               )}
@@ -38,7 +41,7 @@ const FormRow = ({ listings, columnView = true }) => {
   );
 }
 
-class ProfileListings extends Component {
+class AdminListings extends Component {
 
   constructor(props) {
     super(props);
@@ -132,4 +135,4 @@ class ProfileListings extends Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(ProfileListings);
+export default withStyles(styles, { withTheme: true })(AdminListings);
