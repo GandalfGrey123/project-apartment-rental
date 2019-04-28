@@ -20,17 +20,17 @@ import Maps from './modules/googlemaps/maps';
 import AboutPage from './modules/about/about-page';
 import HomePage from './modules/homepage/home-page';
 import NewListing from './modules/listing/new-listing';
-<<<<<<< HEAD
-import Maps from './modules/googlemaps/maps';
+
 import AdminDashboard from './modules/admindashboard/admin-dashboard';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 //adding google maps
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
-=======
 import Registration from './modules/registration/registration';
 import LoginForm from './modules/login/login-form';
->>>>>>> c9ee1b442579d130db6ec24193453e2d0f8313ea
+
+import ProfileDashboard from './modules/reguser/dashboard';
+
 
 const styles = {
   root: {
@@ -168,14 +168,15 @@ class App extends Component {
             <Switch>
               <Route path={'/about'} component={AboutPage} />
               <Route path={'/new'} component={NewListing} />
-<<<<<<< HEAD
+
 	          <Route path={'/maps'} component={Maps} />
               <Route path={'/admin'} component={AdminDashboard} />
-=======
-	            <Route path={'/maps'} component={Maps} />
+
               <Route path={'/login'} component={LoginForm} />
               <Route path={'/register'} component={Registration} />
->>>>>>> c9ee1b442579d130db6ec24193453e2d0f8313ea
+
+              <Route path={'/profile'} component={ProfileDashboard} />
+
               <Route path={'/'} component={HomePage} />
             </Switch>
           </div>  
