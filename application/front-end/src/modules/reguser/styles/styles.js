@@ -1,28 +1,23 @@
 const styles = theme => ({
-	textField: {
+  textField: {
     marginLeft: 30,
     marginRight: 100,
-	
   },
-   button: {
-	marginTop: 20,
-	marginRight: 30
+  button: {
+    marginTop: 20,
+    marginRight: 30
   },
-  imgCard:{
-	  width: 200,
-	  height: 200,
-	  marginLeft: 150
+  imgCard: {
+    width: 200,
+    height: 200,
+    marginLeft: 150
   },
-   ml: {
+  ml: {
     marginLeft: 20
   },
-  
   justContent: {
     justifyContent: 'center'
   },
-  
-
-	
 });
 
 export default styles;

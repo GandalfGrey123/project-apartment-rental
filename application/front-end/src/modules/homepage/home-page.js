@@ -224,7 +224,7 @@ class HomePage extends Component {
                   name="listingSearch"
                   value={searchTxt}
                   onChange={this.handleSearchTxt}
-                  placeholder={'Enter Text'}
+                  placeholder={'Enter city or state or zip code '}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
