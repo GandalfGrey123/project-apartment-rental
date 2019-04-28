@@ -8,50 +8,65 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import _ from 'lodash';
 
 const styles = {
   card: {
     maxWidth: 345,
+    margin: 10
   },
   media: {
-    height: 140,
+    height: 200,
   },
+  cardcontent: {
+    height: 140,
+  }
 };
 
-function MediaCard(props) {
-  const { classes } = props;
+const ListingCard = (props) => {
+  const { classes, listing } = props;
+  const image = _.isArray(listing.images) && listing.images.length > 0 ? 
+      "data:image/png;base64," + listing.images[0] :
+      null;
+
+  const date = new Date();
   return (
     <Card className={classes.card}>
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image="/static/images/cards/contemplative-reptile.jpg"
-          title="Contemplative Reptile"
+          image={image}
+          title={"Listing Image"}
         />
-        <CardContent>
+        <CardContent className={classes.cardcontent}>
           <Typography gutterBottom variant="h5" component="h2">
-            Lizard
+            {listing.title}
           </Typography>
+
           <Typography component="p">
-            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-            across all continents except Antarctica
+            {listing.datePosted}
+          </Typography>
+
+          <Typography component="p">
+            {listing.description}
           </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
+        {/* <Button size="small" color="primary">
           Share
         </Button>
         <Button size="small" color="primary">
           Learn More
-        </Button>
+        </Button> */}
       </CardActions>
     </Card>
   );
 }
 
-MediaCard.propTypes = {
+ListingCard.propTypes = {
   classes: PropTypes.object.isRequired,
+  listing: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(MediaCard);
+export default withStyles(styles)(ListingCard);
