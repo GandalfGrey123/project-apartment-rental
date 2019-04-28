@@ -3,6 +3,8 @@ var models = require('../models');
 const router = express.Router();
 const _ = require('lodash');
 const app = express();
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 // sequelize returns a json that needs to be cleaned up a bit
 function clearListing(listings){
@@ -34,38 +36,76 @@ function convertSequilizeToObject(sequelizeResp){
   return JSON.parse(body);
 }
 
-//get listings route
-router.get('/', function(req,res){
-  //if search parameters
-  if(req.query.type ){ 
-    models.HousingType.findAll({
-      where:{
-        type: req.query.type
+/*    
+  newest, bedrooms, cheapest
+*/
+_buildSearchQuery = async (query) => {
+  let searchQuery = {};
+  let order = [];
+  if (query.type) {
+    let types = await models.HousingType.findAll({
+      where: {
+        type: query.type
       },
       attributes: [
         'id'
       ]
-    }).then((types) => {
-      types = convertSequilizeToObject(types);
-      types = types
-        .map((value) => value.id);
-      models.ListingPost.findAll({
-        include: [models.HousingType,models.ListingImage],
-        where: { 'HousingTypeId': types }
-      }).then(listings =>{
-        var body = convertSequilizeToObject(listings);
-        res.json(clearListing(body));
-      });
-    });    
-  }else{
-     //else return all
-     models.ListingPost.findAll({
-       include: [models.HousingType,models.ListingImage],
-     }).then(listings =>{     
-       var body = convertSequilizeToObject(listings);       
-       res.json(clearListing(body));
-     });
+    });
+    types = types.map((value) => value.id);
+    searchQuery['HousingTypeId'] = types;
   }
+
+  if(query.beds){
+    searchQuery['bedrooms'] = {
+      [Op.gte]: query.beds
+    }
+  }
+
+  if(query.text){
+    let txt = decodeURI(query.text);
+    searchQuery[Op.or] = [
+      {
+        title: {
+          [Op.like]: `%${txt}%`
+        }
+      },
+      {
+        description: {
+          [Op.like]: `%${txt}%`
+        }
+      }
+    ]
+  }
+
+  if(query.sortBy){
+    if(query.sortBy === 'newest'){
+      order.push([ 'datePosted', 'DESC' ])
+    }else if(query.sortBy === 'bedrooms'){
+      order.push([ 'bedrooms' ])
+    }else if(query.sortBy === 'cheapest'){
+      order.push([ 'price' ])
+    }
+  }
+
+  return {
+    searchQuery: searchQuery,
+    order: order
+  };
+}
+
+// http://docs.sequelizejs.com/manual/querying.html
+
+//get listings route
+router.get('/', async (req,res) => {
+  let result = await _buildSearchQuery(req.query);
+  models.ListingPost.findAll({
+    include: [models.HousingType,models.ListingImage],
+    where: result.searchQuery,
+    order: result.order
+  }).then(listings =>{     
+    var body = convertSequilizeToObject(listings);       
+    res.json(clearListing(body));
+  });
 });
 
 //return all housing types that website provides

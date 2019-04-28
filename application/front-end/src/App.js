@@ -10,19 +10,27 @@ import {
 
 import { 
   Menu as MenuIcon,
-  Info as InfoIcon
+  Info as InfoIcon,
+  AccountCircle as AccountCircleIcon,
+  MoreVert as MoreIcon
 } from '@material-ui/icons';
 import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
-
+import AppBarMenu from './modules/_global/component/appbar-menu-nav';
+import Maps from './modules/googlemaps/maps';
 import AboutPage from './modules/about/about-page';
 import HomePage from './modules/homepage/home-page';
 import NewListing from './modules/listing/new-listing';
+<<<<<<< HEAD
 import Maps from './modules/googlemaps/maps';
 import AdminDashboard from './modules/admindashboard/admin-dashboard';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 //adding google maps
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
+=======
+import Registration from './modules/registration/registration';
+import LoginForm from './modules/login/login-form';
+>>>>>>> c9ee1b442579d130db6ec24193453e2d0f8313ea
 
 const styles = {
   root: {
@@ -37,10 +45,68 @@ const styles = {
   },
 };
 
+const PROFILE_MENU_ACTIONS = [
+  {
+    id: 'profile',
+    label: 'Profile'
+  },
+  {
+    id: 'postings',
+    label: 'Listings'
+  },
+  {
+    id: 'new-posting',
+    label: 'New Posting'
+  }
+];
+
+const UNAUTHENTICATED_ACTIONS = [
+  {
+    id: '/login',
+    label: 'Log In'
+  },
+  {
+    id: '/register',
+    label: 'Register'
+  }
+]
+
 class App extends Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      isLoggedIn: false,
+      profileMenu: false,
+      unauthenticatedMenu: false,
+      anchorEl: null
+    }
+    this._toggleProfileMenu = this._toggleProfileMenu.bind(this);
+  }
+
+  _toggleProfileMenu = (event) => {
+    const { profileMenu } = this.state;
+    let state = { profileMenu: !profileMenu };
+    if(event){
+      state['anchorEl'] = event.currentTarget;
+    }
+    this.setState(state)
+  }
+
+  _toggleUnauthenticatedMenu = (event) => {
+    const { unauthenticatedMenu } = this.state;
+    let state = { unauthenticatedMenu: !unauthenticatedMenu };
+    if(event){
+      state['anchorEl'] = event.currentTarget;
+    }
+    this.setState(state)
+  }
+
   render() {
 
     const { classes } = this.props;
+    const { isLoggedIn, profileMenu, 
+            unauthenticatedMenu, anchorEl } = this.state;
 
     return (
       <BrowserRouter>
@@ -56,20 +122,44 @@ class App extends Component {
               >
                 <InfoIcon />
               </IconButton>
-              <Typography variant="h6" color="inherit" className={classes.grow} component={Link} to={'/'} >
+              <Typography variant="caption" color="inherit" className={classes.grow} component={Link} to={'/'} >
                 SFSU - CSC 648 Team #9 Project
               </Typography>
-
-                <Button 
-                    variant="contained" 
-                    color="primary"
-                    component={Link}
-                    to={'/new'}
-                >
-                   New Listing
-                   <AddIcon />
-                </Button>
-
+                { 
+                  isLoggedIn ? 
+                  (<div>
+                    <IconButton
+                      aria-owns={profileMenu ? 'menu-appbar' : undefined}
+                      aria-haspopup="true"
+                      onClick={this._toggleProfileMenu}
+                      color="inherit"
+                    >
+                      <AccountCircleIcon />
+                    </IconButton>
+                    <AppBarMenu
+                      items={PROFILE_MENU_ACTIONS}
+                      anchorEl={anchorEl}
+                      open={profileMenu}
+                      onClose={this._toggleProfileMenu}
+                    />
+                  </div>): 
+                  (<div>
+                    <IconButton
+                      aria-owns={unauthenticatedMenu ? 'menu-appbar' : undefined}
+                      aria-haspopup="true"
+                      onClick={this._toggleUnauthenticatedMenu}
+                      color="inherit"
+                    >
+                      <MoreIcon />
+                    </IconButton>
+                    <AppBarMenu
+                      items={UNAUTHENTICATED_ACTIONS}
+                      anchorEl={anchorEl}
+                      open={unauthenticatedMenu}
+                      onClose={this._toggleUnauthenticatedMenu}
+                    />
+                  </div>)
+                }
 
             </Toolbar>
           </AppBar>
@@ -78,8 +168,14 @@ class App extends Component {
             <Switch>
               <Route path={'/about'} component={AboutPage} />
               <Route path={'/new'} component={NewListing} />
+<<<<<<< HEAD
 	          <Route path={'/maps'} component={Maps} />
               <Route path={'/admin'} component={AdminDashboard} />
+=======
+	            <Route path={'/maps'} component={Maps} />
+              <Route path={'/login'} component={LoginForm} />
+              <Route path={'/register'} component={Registration} />
+>>>>>>> c9ee1b442579d130db6ec24193453e2d0f8313ea
               <Route path={'/'} component={HomePage} />
             </Switch>
           </div>  
