@@ -8,6 +8,7 @@ import {
 
 import ProfileForm from './pages/profile-form';
 import ProfileListings from './pages/profile-listings';
+import AdminListings from './pages/admin-listings';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 class DashBoard extends Component {
@@ -63,7 +64,7 @@ class DashBoard extends Component {
 						<Redirect exact from={`/${from}`} to={`/${to}`} />
 						<Route path={'/profile/listings'} component={ProfileListings} />
 						{/* <Route path={'/profile/messages'} component={RegUserDashboarrd} /> */}
-						{/* <Route path={'/profile/admin'} component={RegUserDashboarrd} /> */}
+						<Route path={'/profile/admin'} component={AdminListings} />
 						<Route path={'/profile'} component={ProfileForm} />
 					</Switch>
 				</div>

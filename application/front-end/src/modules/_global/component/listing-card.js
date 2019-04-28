@@ -23,7 +23,7 @@ const styles = {
 };
 
 const ListingCard = (props) => {
-  const { classes, listing } = props;
+  const { classes, listing, actions } = props;
   const image = _.isArray(listing.images) && listing.images.length > 0 ? 
       "data:image/png;base64," + listing.images[0] :
       null;
@@ -50,21 +50,15 @@ const ListingCard = (props) => {
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <Button size="small" color="primary">
-          View
-        </Button>
-        <Button size="small" color="secondary">
-          Delete
-        </Button>
-      </CardActions>
+      {actions}
     </Card>
   );
 }
 
 ListingCard.propTypes = {
   classes: PropTypes.object.isRequired,
-  listing: PropTypes.object.isRequired
+  listing: PropTypes.object.isRequired,
+  actions: PropTypes.any
 };
 
 export default withStyles(styles)(ListingCard);

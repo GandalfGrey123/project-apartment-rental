@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import Checkbox from '@material-ui/core/Checkbox';
 import ValidateTextField from './field-with-validation';
 import LoginRegisterError from "./registration-error";
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   root: {
@@ -137,6 +138,8 @@ class Register extends Component {
           <div className={classes.actions}>
             <Button type="submit"
               fullWidth
+              component={Link}
+              to={'/login'}
               variant="contained" color="primary"
               disabled={!canSubmit}>Register</Button>
           </div>

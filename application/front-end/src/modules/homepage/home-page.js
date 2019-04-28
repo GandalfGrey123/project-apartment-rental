@@ -13,7 +13,7 @@ import {
   Menu as MenuIcon,
   SortOutlined as SortIcon
 } from '@material-ui/icons';
-import ListingCard from './component/listing-card';
+import ListingCard from '../_global/component/listing-card';
 import MenuPopUp from '../_global/component/appbar-menu';
 
 import styles from './styles/home-page';
