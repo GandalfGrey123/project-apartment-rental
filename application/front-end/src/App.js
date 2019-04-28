@@ -22,6 +22,7 @@ import HomePage from './modules/homepage/home-page';
 import NewListing from './modules/listing/new-listing';
 import Registration from './modules/registration/registration';
 import LoginForm from './modules/login/login-form';
+import ProfileDashboard from './modules/reguser/dashboard';
 
 const styles = {
   root: {
@@ -162,6 +163,7 @@ class App extends Component {
 	            <Route path={'/maps'} component={Maps} />
               <Route path={'/login'} component={LoginForm} />
               <Route path={'/register'} component={Registration} />
+              <Route path={'/profile'} component={ProfileDashboard} />
               <Route path={'/'} component={HomePage} />
             </Switch>
           </div>  
