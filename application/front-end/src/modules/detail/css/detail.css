@@ -1,0 +1,19 @@
+img {
+  border-radius: 5px;
+  padding: 2px;
+}
+
+div {
+  padding: 1px;
+
+}
+
+p {
+  font-family: verdana;
+  font-size: 20px;
+}
+
+button {
+     width: 13%;
+
+}
