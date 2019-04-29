@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+
+
 import {
   AppBar, Toolbar, Typography,
   IconButton,
@@ -30,12 +32,12 @@ class MainBar extends Component{
 
   renderAppOptions(props){
 
-    //add a hamburger menu to inbox view AppBar  
-    if(props.location.pathname == '/inbox'){
+    //if logged in display different appbar stuff
+    if(true == false){
       return(
-        <Typography variant="h6" color="inherit" className={this.props.classes.grow} component={Link} to={'/'} >
-            Inbox Menu
-        </Typography>
+       <Typography >
+         other options
+       </Typography>
       );
     }
      else{
@@ -61,8 +63,6 @@ class MainBar extends Component{
 
 
   render(){
-
-    const { classes} = this.props;
 
     return(        
     <div>
