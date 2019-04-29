@@ -1,174 +1,178 @@
 import React, {Component} from 'react';
-import InboxTable from './component/contact-inbox';
-
-
-
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
-
-import Drawer from '@material-ui/core/Drawer';
-
-import List from '@material-ui/core/List';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-
 
 import { 
-	Grid,Paper
-}from '@material-ui/core';
+  Grid,Paper,AppBar,Toolbar,withStyles,
+  Button,TextField, Typography, 
+  Icon,IconButton,
+  List,ListItem,
+  ListItemIcon, ListItemText, ListItemSecondaryAction,ListItemAvatar,
+  Avatar, 
+  FormGroup,FormControl
+ } from '@material-ui/core';
 
+import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
+import styles from './styles/contact-page';
 
-
-const drawerWidth = 200;
-
-const styles = theme => ({
-  root: {
-    display: 'flex',
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginLeft: 12,
-    marginRight: 36,
-  },
-  hide: {
-    display: 'none',
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    position:'relative',
-    height: '100%',
-  },
-
-  drawerPaper: {
-    position:'relative',
-    height: '100%',
-  },
-  
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: theme.spacing.unit * 7 + 1,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing.unit * 9 + 1,
-    },
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing.unit * 3,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    overflowX: 'hidden',
-  },
-});
+import { getChats, sendMessage } from '../../api/message.actions';
 
 class ContactPage extends Component{
-  state = {
-    open: false,
-  };
 
-  handleDrawerOpen = () => {
-    this.setState({ open: true });
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+      allUsersChats: [],
+      nextMessage:'',
+    };
 
-  handleDrawerClose = () => {
-    this.setState({ open: false });
-  };
-	render() {
+    this.getAllChats = this.getAllChats.bind(this);
+    this.handleSendMessage = this.handleSendMessage.bind(this);
+  }
+
+  componentDidMount(){
+    this.getAllChats();
+  }
+
+  getAllChats = () => {
+    // get UserId from session
+    // userId = session.UserId
+    var userId = 1
+    getChats(userId, (chats) => {
+      this.setState({ allUsersChats: chats});
+    });
+  }
+
+  onChangeMessage = ({target: {value}}) =>{
+    this.setState({
+      nextMessage: value
+    });
+  }
+
+
+  handleSendMessage = ()=>{
+    getChats(this.state.nextMessage, () => { 
+       this.setState({
+        nextMessage: ''
+       });
+    })  
+  }
+
+
+
+  chatsList = (chats) => {
+    let chatListItems = [];
+    for(let i = 0; i < chats.length; i +=1){
+      chatListItems.push(
+        <ListItem button >
+         <ListItemAvatar>
+            <Avatar alt="Remy Sharp" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
+         </ListItemAvatar>
+    
+          <ListItemText
+             primary={chats.withUserName}
+             secondary={chats.listingTitle}                 
+          />
+    
+          <ListItemSecondaryAction>
+                <IconButton aria-label="Delete">
+                  <DeleteForeverRoundedIcon />
+                </IconButton>
+          </ListItemSecondaryAction>
+       </ListItem>
+      );
+    }
+    return chatListItems;
+  }
+
+  allMessages(classes){
+      return(
+        <React.Fragment>
+         <Paper>
+            <List className={classes.chatBox}>             
+            //LIST ITEMS
+            </List>
+
+            <FormGroup>
+            <FormControl fullWidth className={classes.margin}>
+           
+                 <TextField
+                     id="standard-full-width"
+                     onChange={this.onChangeMessage}
+                     label="Type message"        
+                     variant="outlined"
+                     multiline="true"
+                     fullWidth 
+                    value={this.state.nextMessage}
+                   />
+                         
+            </FormControl>
+                <Button 
+                   variant="contained" 
+                   color="primary" 
+                   className={classes.button}
+                   onClick= {this.handleSendMessage}
+                 >
+                      Send 
+                   <Icon className={classes.rightIcon}>send</Icon>
+                 </Button>
+            </FormGroup>
+         </Paper>
+        </React.Fragment>
+      );
+  }
+
+
+  render() {
     const {classes,theme} = this.props;
-	  return(
+    const {allUsersChats} = this.state;
+    return(
 
-	  	 <div className = {classes.root}>
-      	
-          <Drawer
-            variant="permanent"
-            className={classNames(classes.drawer, {
-              [classes.drawerOpen]: this.state.open,
-              [classes.drawerClose]: !this.state.open,
-            })}
-            classes={{
-              paper: classNames(classes.drawerPaper,{             
-                [classes.drawerOpen]: this.state.open,
-                [classes.drawerClose]: !this.state.open,
-              }),
-            }}
-            open={this.state.open}
-          >
-          <div className={classes.toolbar}>
-            <IconButton onClick={this.handleDrawerOpen}>
-              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-            </IconButton>
-          </div>
-          <Divider />
-          <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {['All mail', 'Trash'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
+       <div>
+          <AppBar position="static" color="default">
+            <Toolbar>
+               
+             <div className={classes.toolbar}>
+             //message toolbar blank for now  
+             </div>
+
+            </Toolbar>
+           </AppBar>
+        
+      
+
+      <Grid container>       
+
+          <Grid item xs={4}>
+            <Typography 
+               variant="h5" 
+               gutterBottom 
+               align="center"
+               style={{padding:20}}
+            >
+              Direct Messages
+            </Typography>
+           <List className={classes.root}>
+
+               {this.chatsList(allUsersChats)}
+            </List>
+          </Grid>
         
 
-        	<main className={classes.content}>
-        	
-        		
-          </main>
+         <Grid item xs={8}>
+            <Paper 
+              className={classes.messagePaper}
+              square='true'
+              elevation='1'
+             >
 
-    
-         </div>
-	  	 
-	  );
-	}
+             {this.allMessages(classes)}
+          </Paper>                   
+        </Grid>
 
+      </Grid>        
+      </div>       
+    );
+  }
 
 }
+
 export default withStyles(styles, {withTheme:true}) (ContactPage);
