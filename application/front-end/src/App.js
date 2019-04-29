@@ -7,7 +7,7 @@ import {
   IconButton,
 } from '@material-ui/core';
 
-import { 
+import {
   Menu as MenuIcon,
   Info as InfoIcon,
   AccountCircle as AccountCircleIcon,
@@ -96,7 +96,7 @@ class App extends Component {
   render() {
 
     const { classes } = this.props;
-    const { isLoggedIn, profileMenu, 
+    const { isLoggedIn, profileMenu,
             unauthenticatedMenu, anchorEl } = this.state;
 
     return (
@@ -104,8 +104,8 @@ class App extends Component {
         <div className={classes.root}>
           <AppBar position="static">
             <Toolbar>
-              <IconButton 
-                className={classes.menuButton} 
+              <IconButton
+                className={classes.menuButton}
                 color="inherit"
                 aria-label="Menu"
                 component={Link}
@@ -116,8 +116,8 @@ class App extends Component {
               <Typography variant="caption" color="inherit" className={classes.grow} component={Link} to={'/'} >
                 SFSU - CSC 648 Team #9 Project
               </Typography>
-                { 
-                  isLoggedIn ? 
+                {
+                  isLoggedIn ?
                   (<div>
                     <IconButton
                       aria-owns={profileMenu ? 'menu-appbar' : undefined}
@@ -133,7 +133,7 @@ class App extends Component {
                       open={profileMenu}
                       onClose={this._toggleProfileMenu}
                     />
-                  </div>): 
+                  </div>):
                   (<div>
                     <IconButton
                       aria-owns={unauthenticatedMenu ? 'menu-appbar' : undefined}
@@ -165,7 +165,7 @@ class App extends Component {
               <Route path={'/profile'} component={ProfileDashboard} />
               <Route path={'/'} component={HomePage} />
             </Switch>
-          </div>  
+          </div>
 
         </div>
       </BrowserRouter>

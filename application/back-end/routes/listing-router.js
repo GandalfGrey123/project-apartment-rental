@@ -7,26 +7,26 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 // sequelize returns a json that needs to be cleaned up a bit
-function clearListing(listings){
-
- for(let i = 0; i < listings.length; i += 1){
-   delete listings[i]['HousingTypeId']
-   listings[i]['housingType'] = listings[i]['HousingType'] ? listings[i]['HousingType'].type : null;
-   delete listings[i]['HousingType'];
-   if(listings[i]['ListingImages'] && _.isArray(listings[i]['ListingImages'])){
-     let images = listings[i]['ListingImages']
+function clearListing(listing){
+   delete listing['HousingTypeId']
+   listing['housingType'] = listing['HousingType'] ? listing['HousingType'].type : null;
+   delete listing['HousingType'];
+   if(listing['ListingImages'] && _.isArray(listing['ListingImages'])){
+     let images = listing['ListingImages']
        .map((value) => value.imageFile);
-     delete listings[i]['ListingImages'];
-     listings[i]['images'] = images;
+     delete listing['ListingImages'];
+     listing['images'] = images;
    }
    else{
-     delete listings[i]['ListingImages'];
-     listings[i]['images'] = [];
+     delete listing['ListingImages'];
+     listing['images'] = [];
    }
+   listing['datePosted'] = (new Date(listing['datePosted'])).toLocaleString('en-us', { month: 'long' ,day:'numeric' });   
+   return listing;
+}
 
-  listings[i]['datePosted'] = (new Date(listings[i]['datePosted'])).toLocaleString('en-us', { month: 'long' ,day:'numeric' });   
- }
- return listings;
+function clearListings(listings){
+ return listings.map((l) => clearListing(l));
 }
 
 function convertSequilizeToObject(sequelizeResp){
@@ -104,12 +104,22 @@ router.get('/', async (req,res) => {
     order: result.order
   }).then(listings =>{     
     var body = convertSequilizeToObject(listings);       
+    res.json(clearListings(body));
+  });
+});
+
+router.get('/one/:listingId', async (req,res) => {
+  models.ListingPost.findOne({
+    include: [models.HousingType,models.ListingImage],
+    where: { id: req.params.listingId }
+  }).then(listing =>{     
+    var body = convertSequilizeToObject(listing);       
     res.json(clearListing(body));
   });
 });
 
 //return all housing types that website provides
-router.get('/types', (req, res) => {
+router.get('/types', (_, res) => {
   models.HousingType
     .findAll()
     .then((types) => res.json(types));
