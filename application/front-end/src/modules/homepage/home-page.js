@@ -15,6 +15,7 @@ import {
 } from '@material-ui/icons';
 import ListingCard from '../_global/component/listing-card';
 import MenuPopUp from '../_global/component/appbar-menu';
+import ListingDetail from '../_global/component/listing-detail';
 
 import styles from './styles/home-page';
 
@@ -37,7 +38,7 @@ const SORT_ACTIONS = [
   }
 ];
 
-const FormRow = ({ listings, columnView = true }) => {
+const FormRow = ({ listings, columnView = true, onListingPress }) => {
   return (
     <React.Fragment>
       {
@@ -52,6 +53,7 @@ const FormRow = ({ listings, columnView = true }) => {
           >
             <ListingCard
               listing={value}
+              onListingPress={onListingPress}
             />
           </Grid>
         ))
@@ -72,7 +74,8 @@ class HomePage extends Component {
       anchorEl: null,
       query: {},
       searchTxt: '',
-      sortBy: null
+      sortBy: null,
+      detailId: -1
     };
     this.getListings = this.getListings.bind(this);
     this.onSearchClick = this.onSearchClick.bind(this);
@@ -131,6 +134,7 @@ class HomePage extends Component {
             listings={listings.slice(i, i + 3)}
             props={this.props}
             columnView={columnView}
+            onListingPress={(id) => this.setState({ detailId: id })}
           />
         </Grid>
       );
@@ -166,7 +170,8 @@ class HomePage extends Component {
 
   render() {
     const classes = this.props.classes;
-    const { listings, columnView, sortMenuVisible, anchorEl, searchTxt } = this.state;
+    const { listings, columnView, sortMenuVisible,
+            anchorEl, searchTxt, detailId } = this.state;
 
     return (
       <Paper className={classes.main} elevation={1}>
@@ -273,6 +278,11 @@ class HomePage extends Component {
             {this.displayListings(listings, columnView)}
           </Grid>
         </Grid>
+        <ListingDetail
+          open={detailId !== -1}
+          listingId={detailId}
+          onClose={() => this.setState({ detailId: -1 })}
+        />
       </Paper>
 
     );

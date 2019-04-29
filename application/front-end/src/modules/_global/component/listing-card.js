@@ -23,14 +23,18 @@ const styles = {
 };
 
 const ListingCard = (props) => {
-  const { classes, listing, actions } = props;
+  const { classes, listing, actions, onListingPress } = props;
   const image = _.isArray(listing.images) && listing.images.length > 0 ? 
       "data:image/png;base64," + listing.images[0] :
       null;
        
   return (
     <Card className={classes.card}>
-      <CardActionArea>
+      <CardActionArea
+        onClick={() => {
+          if(onListingPress) onListingPress(listing.id);
+        }}
+      >
         <CardMedia
           className={classes.media}
           image={image}
