@@ -70,7 +70,13 @@ class App extends Component {
       unauthenticatedMenu: false,
       anchorEl: null
     }
+
     this._toggleProfileMenu = this._toggleProfileMenu.bind(this);
+  }
+
+
+  componentDidMount(){
+  
   }
 
   _toggleProfileMenu = (event) => {
