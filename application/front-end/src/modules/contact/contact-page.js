@@ -4,7 +4,7 @@ import {
   Grid,Paper,AppBar,Toolbar,withStyles,
   Button,TextField, Typography, 
   Icon,IconButton,
-  List,ListItem,
+  List,ListItem,Divider,
   ListItemIcon, ListItemText, ListItemSecondaryAction,ListItemAvatar,
   Avatar, 
   FormGroup,FormControl
@@ -24,21 +24,7 @@ class ContactPage extends Component{
       nextMessage:'',
     };
 
-    this.getAllChats = this.getAllChats.bind(this);
     this.handleSendMessage = this.handleSendMessage.bind(this);
-  }
-
-  componentDidMount(){
-    this.getAllChats();
-  }
-
-  getAllChats = () => {
-    // get UserId from session
-    // userId = session.UserId
-    var userId = 1
-    getChats(userId, (chats) => {
-      this.setState({ allUsersChats: chats});
-    });
   }
 
   onChangeMessage = ({target: {value}}) =>{
@@ -60,16 +46,17 @@ class ContactPage extends Component{
 
   chatsList = (chats) => {
     let chatListItems = [];
-    for(let i = 0; i < chats.length; i +=1){
+    for(let i = 0; i < 6; i +=1){
       chatListItems.push(
+        <div>
         <ListItem button >
          <ListItemAvatar>
-            <Avatar alt="Remy Sharp" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
+            <Avatar alt="dm user avatar${i}" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
          </ListItemAvatar>
     
           <ListItemText
-             primary={chats.withUserName}
-             secondary={chats.listingTitle}                 
+             primary={ " LandLordUsername123"}
+             secondary={" ListingPost123"}                 
           />
     
           <ListItemSecondaryAction>
@@ -78,17 +65,144 @@ class ContactPage extends Component{
                 </IconButton>
           </ListItemSecondaryAction>
        </ListItem>
+       <Divider light />
+       </div>
       );
     }
     return chatListItems;
   }
 
+
+  generateFakeConvo(){
+    return(
+        <React.Fragment>
+          <ListItem alignItems="flex-start">
+           <ListItemAvatar>
+             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
+           </ListItemAvatar>
+           <ListItemText
+             primary="YourUsername123 - sent 12:00pm"
+             secondary={
+               <React.Fragment>
+                 <Typography component="span"  color="textPrimary">
+                 Hello I a m contacting you about this listing #Listing1235 , is it still for rent?
+                 </Typography>
+               
+               </React.Fragment>
+             }
+           />
+          </ListItem>
+
+
+          <ListItem alignItems="flex-start">
+           <ListItemAvatar>
+             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
+           </ListItemAvatar>
+           <ListItemText
+             primary="YourUsername123 - sent 12:03pm"
+             secondary={
+               <React.Fragment>
+                 <Typography component="span"  color="textPrimary">
+                my phone number is 415 1234567890 , you can give me a call anytime!!!
+                 </Typography>
+               
+               </React.Fragment>
+             }
+           />
+          </ListItem>
+
+
+
+
+          <ListItem alignItems="flex-start">
+           <ListItemAvatar>
+             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
+           </ListItemAvatar>
+           <ListItemText
+             primary="LandLordUsername123 - sent 1:00pm"
+             secondary={
+               <React.Fragment>
+                 <Typography component="span"  color="textPrimary">
+                 Hello YourUsername123, yes the apartment is still for rent, its only $10000 per month!!!
+                 </Typography>
+               
+               </React.Fragment>
+             }
+           />
+          </ListItem>
+
+          <ListItem >
+           <ListItemAvatar>
+             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
+           </ListItemAvatar>
+           <ListItemText
+             primary="LandLordUsername123 - sent 1:02pm"
+             secondary={
+               <React.Fragment>
+                 <Typography component="span"  color="textPrimary">
+                   and this is a very long message regarding the apartment details
+                     and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details
+                       and this is a very long message regarding the apartment details
+                         and this is a very long message regarding the apartment details  and this is a very long message regarding the apartmen
+                           and this is a very long message regarding the apartment details
+
+
+                 </Typography>
+                             
+               </React.Fragment>
+             }
+           />
+          </ListItem>
+
+
+           <ListItem alignItems="flex-start">
+           <ListItemAvatar>
+             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
+           </ListItemAvatar>
+           <ListItemText
+             primary="YourUsername123 - sent 2:00pm"
+             secondary={
+               <React.Fragment>
+                 <Typography component="span"  color="textPrimary">
+                 thank you for that very long detailed messsage
+                 </Typography>
+               
+               </React.Fragment>
+             }
+           />
+          </ListItem>
+
+
+        </React.Fragment>
+    );
+  }
+
+
+
   allMessages(classes){
       return(
         <React.Fragment>
+
+      <ListItem 
+        button 
+        selected = {true}
+      > 
+         <ListItemAvatar className={classes.contactAvatar}>
+            <Avatar alt="contact user's avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
+         </ListItemAvatar>
+    
+          <ListItemText
+             primary={ "Conversation with - LandLordUsername123"}
+             secondary={"About Listing - #ListingPost123"}                 
+          />        
+       </ListItem>
+
          <Paper>
+
             <List className={classes.chatBox}>             
-            //LIST ITEMS
+           
+              {this.generateFakeConvo()}
+
             </List>
 
             <FormGroup>
@@ -127,21 +241,10 @@ class ContactPage extends Component{
     return(
 
        <div>
-          <AppBar position="static" color="default">
-            <Toolbar>
-               
-             <div className={classes.toolbar}>
-             //message toolbar blank for now  
-             </div>
-
-            </Toolbar>
-           </AppBar>
-        
       
-
       <Grid container>       
 
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4} lg={4}>
             <Typography 
                variant="h5" 
                gutterBottom 
@@ -157,7 +260,7 @@ class ContactPage extends Component{
           </Grid>
         
 
-         <Grid item xs={8}>
+         <Grid item xs={12} md={8} lg={8}>
             <Paper 
               className={classes.messagePaper}
               square='true'
