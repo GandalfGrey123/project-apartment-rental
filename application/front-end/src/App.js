@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 //import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 
 import {
   AppBar, Toolbar, Typography,
@@ -14,14 +14,12 @@ import {
   AccountCircle as AccountCircleIcon,
   MoreVert as MoreIcon
 } from '@material-ui/icons';
-import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 import AppBarMenu from './modules/_global/component/appbar-menu-nav';
 import Maps from './modules/googlemaps/maps';
 import AboutPage from './modules/about/about-page';
 import HomePage from './modules/homepage/home-page';
 import NewListing from './modules/listing/new-listing';
 import Registration from './modules/registration/registration';
-import ContactPage from './modules/contact/contact-page';
 import LoginForm from './modules/login/login-form';
 import ProfileDashboard from './modules/reguser/dashboard';
 
@@ -30,6 +28,9 @@ const styles = {
   root: {
     flexGrow: 1,
   },
+  grow: {	
+    flexGrow: 1,	
+  }
 };
 
 const PROFILE_MENU_ACTIONS = [
@@ -154,7 +155,6 @@ class App extends Component {
             <Switch>
               <Route path={'/about'} component={AboutPage} />
               <Route path={'/new'} component={NewListing} />
-              <Route path={'/inbox'} component={ContactPage} />
 	            <Route path={'/maps'} component={Maps} />
               <Route path={'/login'} component={LoginForm} />
               <Route path={'/register'} component={Registration} />

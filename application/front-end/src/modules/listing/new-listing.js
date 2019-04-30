@@ -176,7 +176,7 @@ removeImage =(imageIndex) => {
    }); 
 
    if(submitSuccess){
-     return <Redirect to={'/'} />
+     return <Redirect to={'/profile/listings'} />
    }
    
    return(

@@ -100,6 +100,7 @@ router.get('/', async (req,res) => {
   let result = await _buildSearchQuery(req.query);
   models.ListingPost.findAll({
     include: [models.HousingType,models.ListingImage],
+    exclude: [models.Chat],
     where: result.searchQuery,
     order: result.order
   }).then(listings =>{     
@@ -111,6 +112,7 @@ router.get('/', async (req,res) => {
 router.get('/one/:listingId', async (req,res) => {
   models.ListingPost.findOne({
     include: [models.HousingType,models.ListingImage],
+    exclude: [models.Chat],
     where: { id: req.params.listingId }
   }).then(listing =>{     
     var body = convertSequilizeToObject(listing);       
