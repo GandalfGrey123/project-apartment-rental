@@ -13,8 +13,6 @@ import {
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
 import styles from './styles/contact-page';
 
-import { getChats, sendMessage } from '../../api/message.actions';
-
 class ContactPage extends Component{
 
   constructor(props){
@@ -34,12 +32,10 @@ class ContactPage extends Component{
   }
 
 
-  handleSendMessage = ()=>{
-    getChats(this.state.nextMessage, () => { 
-       this.setState({
-        nextMessage: ''
-       });
-    })  
+  handleSendMessage = ()=>{    
+    this.setState({
+     nextMessage: ''
+    });
   }
 
 
