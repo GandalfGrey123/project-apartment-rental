@@ -7,6 +7,7 @@ import ListingCard from '../../_global/component/listing-card';
 import styles from '../styles/styles';
 import _ from 'lodash';
 import { getListings } from '../../../api/listings.actions';
+import { Link } from 'react-router-dom';
 
 const FormRow = ({ listings, columnView = true }) => {
   return (
@@ -121,6 +122,9 @@ class ProfileListings extends Component {
 
     return (
       <Paper className={classes.main} elevation={1}>
+        <Button size="small" color="primary" component={Link} to={'/profile/listings/new'} >
+          Create Listing
+        </Button>
         <Grid container style={{ width: '100%' }} >
           <Grid item lg={12} md={12} sm={12} >
             {this.displayListings(listings, columnView)}

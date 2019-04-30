@@ -88,9 +88,9 @@ class NewListing extends Component{
   handleFormChange = name => ({target: {value}}) => {   
     this.setState({ 
       form:{
-    	  ...this.state.form,
-    	  [name]: value 
-      }	
+        ...this.state.form,
+        [name]: value 
+      } 
     });
     this.formValidate(name,value);
   };
@@ -117,6 +117,7 @@ class NewListing extends Component{
         alert('you must fill out all form fields');
       }else{
         createPosting(form, () => {
+
           //if response is good then redirect-render new page
           this.setState({ submitSuccess: true })
         })
@@ -175,7 +176,7 @@ removeImage =(imageIndex) => {
    }); 
 
    if(submitSuccess){
-     return <Redirect to={'/'} />
+     return <Redirect to={'/profile/listings'} />
    }
    
    return(
@@ -187,7 +188,6 @@ removeImage =(imageIndex) => {
           Create New Listing
       </Typography>
      
-     <form onSubmit={this.handleSubmit}>
        <FormGroup className={classes.formGroup} >
           <FormControl>
            <TextField
@@ -384,20 +384,10 @@ removeImage =(imageIndex) => {
              SUBMIT
             </Button>
          </div>
-
-
-       
-       </FormGroup>
-      </form>
-      
-        
+       </FormGroup>              
      </Paper>
    );
   }
 }
-       
-
 
 export default withStyles(styles, { withTheme: true })(NewListing);
-
-
