@@ -6,7 +6,9 @@ import PropTypes from 'prop-types';
 import Checkbox from '@material-ui/core/Checkbox';
 import ValidateTextField from './field-with-validation';
 import LoginRegisterError from "./registration-error";
-import { Link } from 'react-router-dom';
+
+import {userRegister} from '../../api/user.actions';
+
 
 const styles = theme => ({
   root: {
@@ -42,6 +44,13 @@ class Register extends Component {
     this._handleCheck = this._handleCheck.bind(this);
   }
 
+  registerSubmit = (regForm) =>{
+    regForm.isAdmin = this.state.admin;
+    userRegister(regForm, (response)=>{
+      alert(response);
+    });
+  }
+
   _handleCheck = () => {
     const { admin } = this.state;
     this.setState({ admin: !admin })
@@ -56,11 +65,11 @@ class Register extends Component {
       <div className={classes.root}>
         <Formsy className={classes.form}
           onValid={this.enableSubmit} onInvalid={this.disableSubmit}
-          onValidSubmit={this.submit}>
+          onValidSubmit={this.registerSubmit}>
 
           <ValidateTextField
-            name="first_name"
-            autoComplete="first_name"
+            name="firstName"
+            autoComplete="firstName"
             validations="minLength:3"
             validationErrors={{
               minLength: "Too short"
@@ -71,8 +80,8 @@ class Register extends Component {
           />
 
           <ValidateTextField
-            name="last_name"
-            autoComplete="last_name"
+            name="lastName"
+            autoComplete="lastName"
             validations="minLength:3"
             validationErrors={{
               minLength: "Too short"
@@ -109,11 +118,11 @@ class Register extends Component {
 
           <ValidateTextField
             type="password"
-            name="repeated_password"
+            name="repeatPassword"
             autoComplete="new-password"
             validations="equalsField:password"
             validationErrors={{
-              equalsField: "Needs to be the same password as above"
+              equalsField: "passwords must match"
             }}
             required
             className={classes.field}
@@ -124,11 +133,12 @@ class Register extends Component {
               <Checkbox
                 checked={admin}
                 onChange={this._handleCheck}
+                name ="isAdmin"
                 value="admin"
                 color="primary"
-
               />
             }
+            name ="isAdmin"
             label="Admin"
           />
           {
@@ -137,9 +147,7 @@ class Register extends Component {
 
           <div className={classes.actions}>
             <Button type="submit"
-              fullWidth
-              component={Link}
-              to={'/login'}
+              fullWidth             
               variant="contained" color="primary"
               disabled={!canSubmit}>Register</Button>
           </div>
@@ -156,12 +164,6 @@ class Register extends Component {
   enableSubmit = () => {
     this.setState({ canSubmit: true })
   };
-
-  submit = model => {
-    if (this.props.onRegister) {
-      this.props.onRegister(model);
-    }
-  }
 
 }
 

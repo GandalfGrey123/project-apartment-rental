@@ -18,8 +18,7 @@ const configureServer = () => {
     app.use('/listings', listingRouter);
     app.use('/messages', chatRouter);
     app.use('/users', userRouter);
-
-
+  
     app.listen(5000, '127.0.0.1', () => {
         console.log('Server is started on 127.0.0.1:5000');
     });

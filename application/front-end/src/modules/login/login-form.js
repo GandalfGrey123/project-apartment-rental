@@ -50,8 +50,8 @@ class LoginForm extends Component {
   }
 
 
-  submitLogin = (model) =>{
-    userLogin(model,(response) => {
+  submitLogin = (regForm) =>{
+    userLogin(regForm,(response) => {
        alert(response);
     }); 
   }

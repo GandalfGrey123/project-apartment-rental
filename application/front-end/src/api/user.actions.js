@@ -11,3 +11,14 @@ export const userLogin = (loginCredentials, respondToUser) => {
 		respondToUser(res.data.token);
 	});
 };
+
+
+export const userRegister = (regFormData, respondToUser) => {
+	axios({
+		method:'post',
+		url:`http://${api_config.environment}/users/register`,		
+		data: regFormData,
+	}).then((res)=>{
+		respondToUser(res.data.result);
+	});
+};
