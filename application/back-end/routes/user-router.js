@@ -17,42 +17,42 @@ router.post('/login',(req,res)=>{
     	 email: req.body.email,     
     	}
 	 }).then(async (user) => {	
-	  if(!user){
-	   res.status(200).json({token: null})	
-	  }
-
-      if(! await user.comparePassword(req.body.password)){
-      	res.status(200).json({token: null})	
+	
+      if(!user && !await user.comparePassword(req.body.password)){
+      	res.status(401).json({token: null, errorMessage:'failed!'})	
       }else{
       	let userSessionToken = generateSessionToken()
 		user.setDataValue('sessionToken', userSessionToken);
-		user.save();
-		res.status(200).json({token: userSessionToken});
+
+		user.save().then(()=>{
+   		 res.status(200).json({token: userSessionToken});
+   		});
       }
   	});
 });
 
 
 router.post('/register',(req,res) =>{
-	models.User.count({
+	models.User.findOne({
 		where:{
 		 email: req.body.email,
 		}
-	}).then((count) =>{
+	}).then((user) =>{
 		
 	  //if email is already being used
-		if(count != 0){		
-		  res.json({result: 'email is already used'})  
+		if(user){
+	      res.status(400).json({result: 'email is already used'})  		  			 
 		}
 
 		models.User.create({
-			email: req.body.email,
-			password: req.body.password,
-			firstName: req.body.firstName,
-			lastName: req.body.lastName,
-			isAdmin: req.body.isAdmin,
-			sessionToken: null
-		});
+		  	email: req.body.email,
+		  	password: req.body.password,
+		  	firstName: req.body.firstName,
+		  	lastName: req.body.lastName,
+		  	isAdmin: req.body.isAdmin,
+		  	sessionToken: null
+		 });	
+		
 	 res.status(200).json({result: 'success!'});	 
 	});
 });
@@ -69,8 +69,11 @@ router.post('/endSession',(req,res)=>{
   	 res.status(200).json({token: null})	
   	}
     user.setDataValue('sessionToken', null);
-    user.save();
-    res.send();
+    
+    user.save().then(()=>{
+     res.send(res.status(205).json({result: 'success!'}));
+    });
+    
   });
 });
 
