@@ -42,6 +42,7 @@ function convertSequilizeToObject(sequelizeResp){
 _buildSearchQuery = async (query) => {
   let searchQuery = {};
   let order = [];
+  
   if (query.type) {
     let types = await models.HousingType.findAll({
       where: {
