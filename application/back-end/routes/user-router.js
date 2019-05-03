@@ -17,15 +17,19 @@ router.post('/login',(req,res)=>{
     	 email: req.body.email,     
     	}
 	 }).then(async (user) => {	
-	
-      if(!user && !await user.comparePassword(req.body.password)){
-      	res.status(401).json({token: null, errorMessage:'failed!'})	
+
+	  if(!user){	
+	  	return res.status(401).json({token: null, errorMessage:'failed!'})
+      }
+
+      if(!await user.comparePassword(req.body.password)){
+      	return res.status(401).json({token: null, errorMessage:'failed!'})	
       }else{
       	let userSessionToken = generateSessionToken()
 		user.setDataValue('sessionToken', userSessionToken);
 
 		user.save().then(()=>{
-   		 res.status(200).json({token: userSessionToken});
+   		 return res.status(200).json({token: userSessionToken});
    		});
       }
   	});
@@ -41,7 +45,7 @@ router.post('/register',(req,res) =>{
 		
 	  //if email is already being used
 		if(user){
-	      res.status(400).json({result: 'email is already used'})  		  			 
+	      return res.status(400).json({result: 'email is already used'})  		  			 
 		}
 
 		models.User.create({
@@ -53,7 +57,7 @@ router.post('/register',(req,res) =>{
 		  	sessionToken: null
 		 });	
 		
-	 res.status(200).json({result: 'success!'});	 
+	 return res.status(200).json({result: 'success!'});	 
 	});
 });
 
@@ -66,12 +70,12 @@ router.post('/endSession',(req,res)=>{
     }
   }).then((user) => {
   	if(!user){
-  	 res.status(200).json({token: null})	
+  	 return res.status(200).json({token: null})	
   	}
     user.setDataValue('sessionToken', null);
     
     user.save().then(()=>{
-     res.send(res.status(205).json({result: 'success!'}));
+     return res.status(205).json({result: 'success!'});
     });
     
   });
