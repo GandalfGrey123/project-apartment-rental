@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { withStyles, FormControlLabel } from '@material-ui/core';
-import Formsy from 'formsy-react';
-import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
-import Checkbox from '@material-ui/core/Checkbox';
+import { 
+  withStyles, FormControlLabel,
+  Button, Checkbox, Grid
+} from '@material-ui/core';
+import Formsy from 'formsy-react';
 import ValidateTextField from '../registration/field-with-validation';
-
+import { Redirect } from 'react-router-dom';
 import {userLogin} from '../../api/user.actions';
-
+import qs from 'qs';
+import SnackBar from '../_global/component/snack-bar';
 
 const styles = theme => ({
   root: {
@@ -22,11 +24,22 @@ const styles = theme => ({
     marginTop: theme.spacing.unit,
     width: theme.spacing.unit*50
   },
-  actions: {
-    marginTop: theme.spacing.unit * 2
-  }
 });
 
+const snackBarConfig = {
+  REGISTRATION_SUCCESS: {
+    message: 'Account successfully created. Please login.',
+    type: 'success'
+  },
+  LOGIN_FAILED: {
+    message: 'Username or password is invalid',
+    type: 'error'
+  },
+  AUTHENTICATION_REQUIRED: {
+    message: 'Authentication required.',
+    type: 'error'
+  },
+}
 
 class LoginForm extends Component {
 
@@ -35,13 +48,27 @@ class LoginForm extends Component {
     this.state = {
       canSubmit: false,
       remember: false,
-
+      loginSuccess: false,
+      message: {
+        open: false,
+        type: null // Success or Failure
+      },
       loginCredentials:{
         email:'',
         password:'',
-      }
+      },
     }
     this._handleCheck = this._handleCheck.bind(this);
+  }
+
+  componentDidMount(){
+    const params = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
+    if(params.registration){
+      // Trigger to display a snack bar
+      this.setState({ message: { open: true, type: 'REGISTRATION_SUCCESS' } })
+    }else if (params.authentication){
+      this.setState({ message: { open: true, type: 'AUTHENTICATION_REQUIRED' } })
+    }
   }
 
   _handleCheck = () => {
@@ -51,70 +78,86 @@ class LoginForm extends Component {
 
 
   submitLogin = (regForm) =>{
-    userLogin(regForm,(response) => {
-       alert(response);
-    }); 
+    userLogin(regForm, (data) => {
+       sessionStorage.setItem('session', JSON.stringify(data))
+       this.setState({ loginSuccess: true })
+    }, () => this.setState({ message: { open: true, type: 'LOGIN_FAILED' } })); 
   }
 
   render() {
 
     const { classes } = this.props;
-    const { canSubmit, remember } = this.state;
+    const { canSubmit, remember, loginSuccess, message } = this.state;
+
+    if(loginSuccess){
+      return <Redirect to={'/profile'} />
+    }
 
     return (
       <div className={classes.root}>
-        <Formsy className={classes.form}
-          onValid={this.enableSubmit} 
-          onInvalid={this.disableSubmit}
-
-          onValidSubmit={this.submitLogin}>
-
-          <ValidateTextField
-            name="email"
-            autoComplete="email"
-            validations="minLength:3"
-            validationErrors={{
-              minLength: "Invalid Email"
-            }}            
-            required
-            className={classes.field}
-            label="Email"
-          />
-
-          <ValidateTextField
-            name="password"
-            autoComplete="password"
-            validations="minLength:3"
-            validationErrors={{
-              minLength: "Invalid Password"
-            }}            
-            required
-            className={classes.field}
-            label="Password"
-          />
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={remember}
-                onChange={this._handleCheck}
-                color="primary"
-              />
-            }
-            label="Remember Me"
-          />
-          
-         <Button disableFocusRipple disableRipple style={{ textTransform: "none" }} variant="text" color="primary">Forgot password ?</Button>
-
-          <div className={classes.actions}>
+        <Grid
+          container
+          justify={'center'}
+        >
+          <Formsy
+            className={classes.form}
+            onValid={this.enableSubmit}
+            onInvalid={this.disableSubmit}
+            onValidSubmit={this.submitLogin}
+          >
+            <ValidateTextField
+              name="email"
+              autoComplete="email"
+              validations="minLength:3"
+              validationErrors={{
+                minLength: "Invalid Email"
+              }}
+              required
+              className={classes.field}
+              label="Email"
+            />
+            <ValidateTextField
+              name="password"
+              type={'password'}
+              autoComplete="password"
+              required
+              className={classes.field}
+              label="Password"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={remember}
+                  onChange={this._handleCheck}
+                  color="primary"
+                />
+              }
+              label="Remember Me"
+            />
             <Button 
-              type="submit"
-              fullWidth 
-              variant="contained" color="primary"
-              disabled={!canSubmit}>Log In</Button>
-          </div>
-
-        </Formsy>
+              disableFocusRipple
+              disableRipple
+              style={{ textTransform: "none" }}
+              variant="text"
+              color="primary"
+            >
+              Forgot password ?
+            </Button>
+            <div className={classes.actions}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained" color="primary"
+                disabled={!canSubmit}>Log In</Button>
+            </div>
+          </Formsy>
+        </Grid>
+        { message.open && <SnackBar
+          open={message.open}
+          type={snackBarConfig[message.type].type}
+          message={snackBarConfig[message.type].message}
+          onClose={() => this.setState({ message: { open: false, type: null } })}
+        /> }
       </div>
     );
   }

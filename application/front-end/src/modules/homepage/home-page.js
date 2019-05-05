@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Drawer, withStyles, CssBaseline,
   TextField, InputAdornment,
-  Grid, Paper, Toolbar,
+  Grid, Paper, Toolbar, Typography,
   Hidden, IconButton, Button
 } from '@material-ui/core';
 
@@ -88,7 +88,7 @@ class HomePage extends Component {
   _toggleSortMenu = (event) => {
     const { sortMenuVisible } = this.state;
     let state = { sortMenuVisible: !sortMenuVisible };
-    if(event){
+    if (event) {
       state['anchorEl'] = event.currentTarget;
     }
     this.setState(state)
@@ -108,13 +108,13 @@ class HomePage extends Component {
       let selectedTypes = query.types;
       selectedTypes.forEach((value) => params.append("type", value));
     }
-    if(query.beds && query.beds !== '0'){
+    if (query.beds && query.beds !== '0') {
       params.append("beds", query.beds);
     }
-    if(query.sortBy){
+    if (query.sortBy) {
       params.append("sortBy", query.sortBy);
     }
-    if(query.text){
+    if (query.text) {
       params.append("text", encodeURI(query.text));
     }
     getListings(params, (data) => {
@@ -171,7 +171,7 @@ class HomePage extends Component {
   render() {
     const classes = this.props.classes;
     const { listings, columnView, sortMenuVisible,
-            anchorEl, searchTxt, detailId } = this.state;
+      anchorEl, searchTxt, detailId } = this.state;
 
     return (
       <Paper className={classes.main} elevation={1}>
@@ -222,6 +222,12 @@ class HomePage extends Component {
 
           <Grid item lg={9} md={9} sm={9} >
             <Grid item lg={11}>
+              <Typography
+                className={classes.title}
+                variant={'title'}
+              >
+                Welcome to GaterRooms
+              </Typography>
               <Toolbar className={classes.searchSection}>
                 <TextField
                   label="Listing Search"
@@ -238,7 +244,7 @@ class HomePage extends Component {
                     )
                   }}
                 />
-                <Button 
+                <Button
                   color="primary"
                   size="small"
                   variant="contained"
@@ -256,12 +262,12 @@ class HomePage extends Component {
                     <SortIcon fontSize={'large'} />
                   </IconButton>
                   <MenuPopUp
-                      items={SORT_ACTIONS}
-                      anchorEl={anchorEl}
-                      open={sortMenuVisible}
-                      onClose={this._toggleSortMenu}
-                      onItemClick={(itemId) => this.handleSortTxt(itemId)}
-                    />
+                    items={SORT_ACTIONS}
+                    anchorEl={anchorEl}
+                    open={sortMenuVisible}
+                    onClose={this._toggleSortMenu}
+                    onItemClick={(itemId) => this.handleSortTxt(itemId)}
+                  />
                 </div>
                 <IconButton
                   aria-label="Grid-View"

@@ -24,6 +24,7 @@ import Registration from './modules/registration/registration';
 import LoginForm from './modules/login/login-form';
 import ProfileDashboard from './modules/reguser/dashboard';
 import ContactPage from './modules/contact/contact-page'; 
+import { checkSession } from './api/user.actions';
 
 const styles = {
   root: {
@@ -36,16 +37,16 @@ const styles = {
 
 const PROFILE_MENU_ACTIONS = [
   {
-    id: 'profile',
+    id: '/profile',
     label: 'Profile'
   },
   {
-    id: 'postings',
-    label: 'Listings'
+    id: '/profile/listings',
+    label: 'My Listings'
   },
   {
-    id: 'new-posting',
-    label: 'New Posting'
+    id: '/profile/listings/new',
+    label: 'New Listing'
   }
 ];
 
@@ -71,6 +72,30 @@ class App extends Component {
       anchorEl: null
     }
     this._toggleProfileMenu = this._toggleProfileMenu.bind(this);
+    this._checkAuthentication = this._checkAuthentication.bind(this);
+  }
+
+  _checkAuthentication = () => {
+    const session = sessionStorage.getItem('session')
+		if(session && JSON.parse(session).token){
+			// validate session
+			const token = JSON.parse(session).token;
+      checkSession(token, 
+        (_) => this.setState({ isLoggedIn: true }),
+        () => this.setState({ isLoggedIn: false }));
+		}else{
+			this.setState({ isLoggedIn: false });
+		}
+  }
+
+  componentDidMount(){
+    this._checkAuthentication();
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if(prevState.isLoggedIn !== this.state.isLoggedIn){
+      this._checkAuthentication();
+    }
   }
 
   _toggleProfileMenu = (event) => {
@@ -95,7 +120,7 @@ class App extends Component {
     const { classes } = this.props;
     const { isLoggedIn, profileMenu,
             unauthenticatedMenu, anchorEl } = this.state;
-
+    
     return (
       <BrowserRouter>
         <div className={classes.root}>
