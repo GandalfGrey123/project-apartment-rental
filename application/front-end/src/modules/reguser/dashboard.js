@@ -12,6 +12,7 @@ import AdminListings from './pages/admin-listings';
 import Messages from '../contact/contact-page';
 import NewListingForm from '../listing/new-listing';
 import { Route, Switch, Redirect } from 'react-router-dom';
+import { checkSession } from '../../api/user.actions';
 
 class DashBoard extends Component {
 
@@ -20,8 +21,22 @@ class DashBoard extends Component {
 		this.state = {
 			from: '',
 			to: 'profile',
+			authenticationRequired: false,
+			admin: false
 		}
 		this.handleBarNavigation = this.handleBarNavigation.bind(this);
+	}
+
+	componentDidMount(){
+		const session = sessionStorage.getItem('session')
+		if(session && JSON.parse(session).token){
+			// validate session
+			const token = JSON.parse(session).token;
+			checkSession(token, (_) => { this.setState({ admin: JSON.parse(session).admin }) }, () => this.setState({ authenticationRequired: true }));
+		}else{
+			this.setState({ authenticationRequired: true });
+		}
+		this.setState({ to: window.location.pathname.substr(1) });
 	}
 
 	handleBarNavigation = (event, to) => {
@@ -37,8 +52,12 @@ class DashBoard extends Component {
 	};
 
 	render() {
-		const { from, to } = this.state;
+		const { from, to, authenticationRequired, admin } = this.state;
 		const { classes } = this.props;
+
+		if(authenticationRequired){
+			return <Redirect to={'/login?authentication=true'} />
+		}
 
 		return (
 			<Paper>
@@ -55,9 +74,9 @@ class DashBoard extends Component {
 						centered
 					>
 						<Tab label="Profile" value={'profile'} />
-						<Tab label="Listings" value={'profile/listings'} />
+						<Tab label="My Listings" value={'profile/listings'} />
 						<Tab label="Messages" value={'profile/messages'} />
-						<Tab label="Admin" value={'profile/admin'} />
+						{ admin && <Tab label="Admin" value={'profile/admin'} />} 
 					</Tabs>
 				</Grid>
 				<Divider light />
@@ -67,7 +86,7 @@ class DashBoard extends Component {
 						<Route path={'/profile/listings/new'} component={NewListingForm} />
 						<Route path={'/profile/listings'} component={ProfileListings} />
 						<Route path={'/profile/messages'} component={Messages} />
-						<Route path={'/profile/admin'} component={AdminListings} />
+						{ admin && <Route path={'/profile/admin'} component={AdminListings} />}
 						<Route path={'/profile'} component={ProfileForm} />
 					</Switch>
 				</div>
