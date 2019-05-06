@@ -3,38 +3,58 @@ var models = require('../models');
 const router = express.Router();
 const app = express();
 
-const Op = require('sequelize').Op;
 
-//when user goes to their DM , they get all chat objects back 
-router.get('/all', (req,res) =>{
-	models.User.findOne({ 
-		where: {email: req.body.email},
-		include: [models.Chat],
-	}).then(userChats => {
-  	   res.json(userChats);
+//clean up sequelize object
+function clearChat(chatRoom){
+  let chatObject = { 
+    "userOneEmail": chatRoom.Chat.userOneEmail,
+    "userTwoEmail": chatRoom.Chat.userTwoEmail,
+    "messages": []
+  }
+
+  chatRoom.Chat.getMessages().then((messages) =>{
+   messages.forEach(message => chatObject['messages'].push(
+    {'message': message.message, 'senderEmail': message.userEmail}
+   ))
+   console.log(chatObject)
+  })
+}
+
+function clearChats(chatRooms){
+  return chatRooms.map((nextChatRoom) => clearListing(nextChatRoom));
+}
+
+
+router.get('/inbox', (req,res) =>{
+    models.User.findOne({
+      where:{
+       sessionToken:123,
+      }, 
+      include:[ {
+        model: models.UserChat,
+        include:[models.Chat]
+      }]
+    }).then((user) =>{
+      
+      //session token error
+      if(!user){
+        console.log('not found!')
+        return;
+      }
+
+      res.status(200).send(clearChats(user.UserChats))       
     });
-});
+}); 
 
 
-//when user makes a new DM to another User,
-router.post('/new', (req,res) =>{
-
-});
-
-
-//when user sends next message in chat
 router.post('/send', (req,res) =>{
-   models.Chat.findOne({
-     where: { id: req.body.chatId }
-   }).then((chat)=>{
-   	 models.Message.create({
-   	 	message:req.body.message,
-   	 	UserId: req.body.user1Id,
-   	 	ChatId: chat.dataValues.id
-   	 });
+  //console.log(req.headers);
+}); 
 
-   	 res.send(chat);
-   });
-});
+router.post('/new', (req,res) =>{
+  //console.log(req.headers);
+}); 
+
+
 
 module.exports = router;
