@@ -6,7 +6,7 @@ const app = express();
 
 //clean up sequelize object
 function clearChat(chatRoom){
-  let chatObject = { 
+  let jsonChatObject = { 
     "userOneEmail": chatRoom.Chat.userOneEmail,
     "userTwoEmail": chatRoom.Chat.userTwoEmail,
     "messages": []
@@ -16,7 +16,7 @@ function clearChat(chatRoom){
    messages.forEach(message => chatObject['messages'].push(
     {'message': message.message, 'senderEmail': message.userEmail}
    ))
-   console.log(chatObject)
+    return jsonChatObject;
   })
 }
 
