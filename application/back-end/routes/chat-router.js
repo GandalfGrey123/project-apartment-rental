@@ -3,7 +3,6 @@ var models = require('../models');
 const router = express.Router();
 const app = express();
 
-
 //clean up sequelize object
 function clearChat(chatRoom){
   let jsonChatObject = { 
@@ -21,7 +20,9 @@ function clearChat(chatRoom){
 }
 
 function clearChats(chatRooms){
-  return chatRooms.map((nextChatRoom) => clearListing(nextChatRoom));
+  let allChats=[]
+  chatRooms.map((nextChatRoom) => allChats.push(clearChat(nextChatRoom)));
+  return allChats;
 }
 
 
@@ -42,10 +43,9 @@ router.get('/inbox', (req,res) =>{
         return;
       }
 
-      res.status(200).send(clearChats(user.UserChats))       
+      res.status(200).json(clearChats(user.UserChats))       
     });
 }); 
-
 
 router.post('/send', (req,res) =>{
   //console.log(req.headers);
@@ -54,7 +54,5 @@ router.post('/send', (req,res) =>{
 router.post('/new', (req,res) =>{
   //console.log(req.headers);
 }); 
-
-
 
 module.exports = router;
