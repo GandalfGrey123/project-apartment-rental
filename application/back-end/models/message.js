@@ -12,6 +12,5 @@ module.exports = (sequelize, DataTypes) => {
     Message.belongsTo(models.User);    
     Message.belongsTo(models.Chat);
   };
-
  return Message;
 };

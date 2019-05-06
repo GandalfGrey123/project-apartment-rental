@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     User.hasMany(models.Message);
-    User.hasMany(models.Chat);
+    User.hasMany(models.UserChat);
   };
   return User;
 };
