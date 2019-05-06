@@ -1,7 +1,6 @@
 import axios from "axios";
 import api_config from './config/api.config';
 
-
 export const userLogin = (loginCredentials, respondToUser) => {
 	axios({
 		method:'post',
@@ -11,7 +10,6 @@ export const userLogin = (loginCredentials, respondToUser) => {
 		respondToUser(res.data.token);
 	});
 };
-
 
 export const userRegister = (regFormData, respondToUser) => {
 	axios({
