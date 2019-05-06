@@ -13,17 +13,27 @@ import {
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
 import styles from './styles/contact-page';
 
+import { getInbox, sendMessage } from '../../api/message.actions';
+import { checkSession } from '../../api/user.actions';
+
 class ContactPage extends Component{
 
   constructor(props){
     super(props);
     this.state = {
+
+      //all chat ids
       allUsersChats: [],
       nextMessage:'',
     };
 
-    this.handleSendMessage = this.handleSendMessage.bind(this);
+    this.getChats = this.getChats.bind(this);
+    this.handleSendButton = this.handleSendButton.bind(this);      
   }
+
+  componentWillMount(){
+    this.getChats();
+  } 
 
   onChangeMessage = ({target: {value}}) =>{
     this.setState({
@@ -31,14 +41,28 @@ class ContactPage extends Component{
     });
   }
 
-
-  handleSendMessage = ()=>{    
+  handleSendButton = ()=>{
     this.setState({
      nextMessage: ''
     });
   }
 
+  getChats = () => {
+     sessionStorage.setItem('session', JSON.stringify({token: '1234', admin: true}))
+    let session = sessionStorage.getItem('session')
 
+    if(session && JSON.parse(session).token){
+      const token = JSON.parse(session).token;
+
+      getInbox(token, (inbox)=>{
+        this.setState({ allUsersChats: inbox || [] });
+        alert(inbox);
+      });
+    }
+    
+    // expired , redirect?
+    else {           }    
+  }
 
   chatsList = (chats) => {
     let chatListItems = [];
@@ -69,112 +93,6 @@ class ContactPage extends Component{
   }
 
 
-  generateFakeConvo(){
-    return(
-        <React.Fragment>
-          <ListItem alignItems="flex-start">
-           <ListItemAvatar>
-             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
-           </ListItemAvatar>
-           <ListItemText
-             primary="YourUsername123 - sent 12:00pm"
-             secondary={
-               <React.Fragment>
-                 <Typography component="span"  color="textPrimary">
-                 Hello I a m contacting you about this listing #Listing1235 , is it still for rent?
-                 </Typography>
-               
-               </React.Fragment>
-             }
-           />
-          </ListItem>
-
-
-          <ListItem alignItems="flex-start">
-           <ListItemAvatar>
-             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
-           </ListItemAvatar>
-           <ListItemText
-             primary="YourUsername123 - sent 12:03pm"
-             secondary={
-               <React.Fragment>
-                 <Typography component="span"  color="textPrimary">
-                my phone number is 415 1234567890 , you can give me a call anytime!!!
-                 </Typography>
-               
-               </React.Fragment>
-             }
-           />
-          </ListItem>
-
-
-
-
-          <ListItem alignItems="flex-start">
-           <ListItemAvatar>
-             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
-           </ListItemAvatar>
-           <ListItemText
-             primary="LandLordUsername123 - sent 1:00pm"
-             secondary={
-               <React.Fragment>
-                 <Typography component="span"  color="textPrimary">
-                 Hello YourUsername123, yes the apartment is still for rent, its only $10000 per month!!!
-                 </Typography>
-               
-               </React.Fragment>
-             }
-           />
-          </ListItem>
-
-          <ListItem >
-           <ListItemAvatar>
-             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
-           </ListItemAvatar>
-           <ListItemText
-             primary="LandLordUsername123 - sent 1:02pm"
-             secondary={
-               <React.Fragment>
-                 <Typography component="span"  color="textPrimary">
-                   and this is a very long message regarding the apartment details
-                     and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details
-                       and this is a very long message regarding the apartment details
-                         and this is a very long message regarding the apartment details  and this is a very long message regarding the apartmen
-                           and this is a very long message regarding the apartment details
-
-
-                 </Typography>
-                             
-               </React.Fragment>
-             }
-           />
-          </ListItem>
-
-
-           <ListItem alignItems="flex-start">
-           <ListItemAvatar>
-             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
-           </ListItemAvatar>
-           <ListItemText
-             primary="YourUsername123 - sent 2:00pm"
-             secondary={
-               <React.Fragment>
-                 <Typography component="span"  color="textPrimary">
-                 thank you for that very long detailed messsage
-                 </Typography>
-               
-               </React.Fragment>
-             }
-           />
-          </ListItem>
-
-
-        </React.Fragment>
-    );
-  }
-
-
-
   allMessages(classes){
       return(
         <React.Fragment>
@@ -197,7 +115,7 @@ class ContactPage extends Component{
 
             <List className={classes.chatBox}>             
            
-              {this.generateFakeConvo()}
+              {}
 
             </List>
 
@@ -219,7 +137,7 @@ class ContactPage extends Component{
                    variant="contained" 
                    color="primary" 
                    className={classes.button}
-                   onClick= {this.handleSendMessage}
+                   onClick= {this.handleSendButton}
                  >
                       Send 
                    <Icon className={classes.rightIcon}>send</Icon>
@@ -275,3 +193,110 @@ class ContactPage extends Component{
 }
 
 export default withStyles(styles, {withTheme:true}) (ContactPage);
+
+
+
+
+// generateFakeConvo(){
+//     return(
+//         <React.Fragment>
+//           <ListItem alignItems="flex-start">
+//            <ListItemAvatar>
+//              <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
+//            </ListItemAvatar>
+//            <ListItemText
+//              primary="YourUsername123 - sent 12:00pm"
+//              secondary={
+//                <React.Fragment>
+//                  <Typography component="span"  color="textPrimary">
+//                  Hello I a m contacting you about this listing #Listing1235 , is it still for rent?
+//                  </Typography>
+               
+//                </React.Fragment>
+//              }
+//            />
+//           </ListItem>
+
+
+//           <ListItem alignItems="flex-start">
+//            <ListItemAvatar>
+//              <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
+//            </ListItemAvatar>
+//            <ListItemText
+//              primary="YourUsername123 - sent 12:03pm"
+//              secondary={
+//                <React.Fragment>
+//                  <Typography component="span"  color="textPrimary">
+//                 my phone number is 415 1234567890 , you can give me a call anytime!!!
+//                  </Typography>
+               
+//                </React.Fragment>
+//              }
+//            />
+//           </ListItem>
+
+
+
+
+//           <ListItem alignItems="flex-start">
+//            <ListItemAvatar>
+//              <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
+//            </ListItemAvatar>
+//            <ListItemText
+//              primary="LandLordUsername123 - sent 1:00pm"
+//              secondary={
+//                <React.Fragment>
+//                  <Typography component="span"  color="textPrimary">
+//                  Hello YourUsername123, yes the apartment is still for rent, its only $10000 per month!!!
+//                  </Typography>
+               
+//                </React.Fragment>
+//              }
+//            />
+//           </ListItem>
+
+//           <ListItem >
+//            <ListItemAvatar>
+//              <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
+//            </ListItemAvatar>
+//            <ListItemText
+//              primary="LandLordUsername123 - sent 1:02pm"
+//              secondary={
+//                <React.Fragment>
+//                  <Typography component="span"  color="textPrimary">
+//                    and this is a very long message regarding the apartment details
+//                      and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details
+//                        and this is a very long message regarding the apartment details
+//                          and this is a very long message regarding the apartment details  and this is a very long message regarding the apartmen
+//                            and this is a very long message regarding the apartment details
+
+
+//                  </Typography>
+                             
+//                </React.Fragment>
+//              }
+//            />
+//           </ListItem>
+
+
+//            <ListItem alignItems="flex-start">
+//            <ListItemAvatar>
+//              <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
+//            </ListItemAvatar>
+//            <ListItemText
+//              primary="YourUsername123 - sent 2:00pm"
+//              secondary={
+//                <React.Fragment>
+//                  <Typography component="span"  color="textPrimary">
+//                  thank you for that very long detailed messsage
+//                  </Typography>
+               
+//                </React.Fragment>
+//              }
+//            />
+//           </ListItem>
+
+
+//         </React.Fragment>
+//     );
+//   }
