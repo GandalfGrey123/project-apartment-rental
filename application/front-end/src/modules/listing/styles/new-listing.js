@@ -21,6 +21,7 @@ const styles = theme => ({
   gridList: {
     width: '100%',
     backgroundColor:'grey',
+    margin:20,
   },
    actions: {
     display: 'flex',
@@ -31,7 +32,22 @@ const styles = theme => ({
     fontSize: 32,
     color:'white',
   },
- 
+
+  fileInput:{
+    padding: 10,
+    border: 10,
+    backgroundColor: 'lightgrey',
+    margin:20,
+  },
+
+  hide:{
+    marginLeft:'10000px',
+
+  },
+
+  margin:{
+    margin:20,
+  }
 
 });
 
