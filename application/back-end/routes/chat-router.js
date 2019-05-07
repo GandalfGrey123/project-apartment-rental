@@ -3,7 +3,7 @@ var models = require('../models');
 const router = express.Router();
 const app = express();
 
-//clean up sequelize object
+//clean up sequelize object , return chat
 function clearChat(chatRoom){
   let jsonChatObject = { 
     "userOneEmail": chatRoom.Chat.userOneEmail,
@@ -11,39 +11,54 @@ function clearChat(chatRoom){
     "messages": []
   }
 
-  chatRoom.Chat.getMessages().then((messages) =>{
-   messages.forEach(message => chatObject['messages'].push(
-    {'message': message.message, 'senderEmail': message.userEmail}
-   ))
-    return jsonChatObject;
+  chatRoom.Chat.Messages.forEach((message)=>{
+    jsonChatObject['messages'].push({
+      'message': message.message,
+      'senderEmail' : message.userEmail
+    });
   })
+
+  return jsonChatObject;
 }
 
+//fill array with chat objects
 function clearChats(chatRooms){
   let allChats=[]
-  chatRooms.map((nextChatRoom) => allChats.push(clearChat(nextChatRoom)));
+  
+  chatRooms.map((nextChatRoom) => allChats
+    .push(clearChat(nextChatRoom)));
+
   return allChats;
 }
 
 
 router.get('/inbox', (req,res) =>{
+
+  //find User include UserChats then include Chats with Messages
     models.User.findOne({
       where:{
        sessionToken:123,
       }, 
-      include:[ {
+
+      include:[ {        
+
         model: models.UserChat,
-        include:[models.Chat]
+  
+        include:[{ 
+            model: models.Chat, 
+            include:[models.Message] 
+        }],
+
       }]
+
     }).then((user) =>{
       
       //session token error
       if(!user){
         console.log('not found!')
         return;
-      }
-
-      res.status(200).json(clearChats(user.UserChats))       
+      }        
+       res.status(200).json(clearChats(user.UserChats))       
     });
 }); 
 
