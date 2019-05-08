@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import {
   TextField, FormGroup, FormControl,
-  Paper, withStyles,Typography,
+  Paper, withStyles, Typography,
 } from '@material-ui/core';
 import styles from './styles/new-listing';
 import Button from '@material-ui/core/Button';
@@ -13,35 +13,28 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 
-
-
 //image preview stuff
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverSharpIcon from '@material-ui/icons/DeleteForeverSharp';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 
-
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 
-
-
 // https://stackoverflow.com/questions/36280818/how-to-convert-file-to-base64-in-javascript
 
-class NewListing extends Component{
-  
-  constructor(props){
+class NewListing extends Component {
+
+  constructor(props) {
     super(props);
     this.state = {
       form: {
-        images: [],        
+        images: [],
         address: {}
       },
-      imagesPreviews:[],
+      imagesPreviews: [],
       submitSuccess: false
     }
     this.addFile = this.addFile.bind(this);
@@ -57,46 +50,46 @@ class NewListing extends Component{
     let { form } = this.state;
     let files = Array.from(event.target.files);
 
-  
-    for(let i = 0; i < files.length; i++){
-         this.state.imagesPreviews.push(URL.createObjectURL(files[i]));
-         this.getBase64(files[i])
-          .then((data) => {
-            let encoded = data.replace(/^data:(.*;base64,)?/, '');     
-            form.images.push(encoded);
-          });
+
+    for (let i = 0; i < files.length; i++) {
+      this.state.imagesPreviews.push(URL.createObjectURL(files[i]));
+      this.getBase64(files[i])
+        .then((data) => {
+          let encoded = data.replace(/^data:(.*;base64,)?/, '');
+          form.images.push(encoded);
+        });
     }
     this.setState({ form: form });
-  }; 
+  };
 
-  formValidate=(name,value)=>{
+  formValidate = (name, value) => {
 
-    if(['price','zipcode'].includes(name.toLowerCase())){
-      if(/[a-zA-Z]/.test(value)){
+    if (['price', 'zipcode'].includes(name.toLowerCase())) {
+      if (/[a-zA-Z]/.test(value)) {
         alert("must only contain digits");
         //undo the change
-        this.setState({ 
-          form:{
+        this.setState({
+          form: {
             ...this.state.form,
             [name]: value.slice(0, -1)
-          } 
-         });
+          }
+        });
       }
     }
   }
 
-  handleFormChange = name => ({target: {value}}) => {   
-    this.setState({ 
-      form:{
+  handleFormChange = name => ({ target: { value } }) => {
+    this.setState({
+      form: {
         ...this.state.form,
-        [name]: value 
-      } 
+        [name]: value
+      }
     });
-    this.formValidate(name,value);
+    this.formValidate(name, value);
   };
 
-  handleAddressChange = name => ({target: {value}}) => {
-    this.formValidate(name,value);
+  handleAddressChange = name => ({ target: { value } }) => {
+    this.formValidate(name, value);
     const { form } = this.state
     form.address[name] = value;
     this.setState({ form: form });
@@ -112,16 +105,16 @@ class NewListing extends Component{
   }
 
   onSubmitClick = () => {
-      const { form } = this.state;
-      if(Object.keys(form).length != 8){
-        alert('you must fill out all form fields');
-      }else{
-        createPosting(form, () => {
+    const { form } = this.state;
+    if (Object.keys(form).length != 8) {
+      alert('you must fill out all form fields');
+    } else {
+      createPosting(form, () => {
 
-          //if response is good then redirect-render new page
-          this.setState({ submitSuccess: true })
-        })
-      }
+        //if response is good then redirect-render new page
+        this.setState({ submitSuccess: true })
+      })
+    }
   };
 
   onResetClick = () => {
@@ -130,263 +123,263 @@ class NewListing extends Component{
         address: {},
         images: []
       },
-      imagesPreviews:[],
+      imagesPreviews: [],
     })
   }
 
-removeImage =(imageIndex) => {
-  
-  this.state.imagesPreviews.splice(imageIndex,1);
-  console.log(this.state.imagesPreviews)
-  this.forceUpdate();
-}
+  removeImage = (imageIndex) => {
 
-  render(){
+    this.state.imagesPreviews.splice(imageIndex, 1);
+    console.log(this.state.imagesPreviews)
+    this.forceUpdate();
+  }
 
-  const { form, submitSuccess } = this.state;
-  const { classes } = this.props;
-  
-  let previews = this.state.imagesPreviews.map((image,imageIndex) => {
-    let index=parseInt(imageIndex);
-     return (
-        <GridListTile 
-           key={"preview image " + index} 
-           cols={1} 
-           style={{ height: 'auto' }}
+  render() {
+
+    const { form, submitSuccess } = this.state;
+    const { classes } = this.props;
+
+    let previews = this.state.imagesPreviews.map((image, imageIndex) => {
+      let index = parseInt(imageIndex);
+      return (
+        <GridListTile
+          key={"preview image " + index}
+          cols={1}
+          style={{ height: 'auto' }}
         >
-           <Card className={classes.card}>         
-             <CardMedia
-               className={classes.media}
-               image= {image}
-               alt= {"previewImage" + index}  
-               title={"Uploaded Image " + index} 
-             />              
-           </Card>
+          <Card className={classes.card}>
+            <CardMedia
+              className={classes.media}
+              image={image}
+              alt={"previewImage" + index}
+              title={"Uploaded Image " + index}
+            />
+          </Card>
 
-           <GridListTileBar
-              actionIcon={
-                 <IconButton className={classes.deletePreview} onClick={() => this.removeImage(imageIndex)}>
-                    <DeleteForeverSharpIcon className={classes.icon} />
-                 </IconButton>
-              }
-           />
+          <GridListTileBar
+            actionIcon={
+              <IconButton className={classes.deletePreview} onClick={() => this.removeImage(imageIndex)}>
+                <DeleteForeverSharpIcon className={classes.icon} />
+              </IconButton>
+            }
+          />
         </GridListTile>
 
-     );
-   }); 
+      );
+    });
 
-   if(submitSuccess){
-     return <Redirect to={'/profile/listings'} />
-   }
-   
-   return(
-    <Paper className={classes.root}>
-      <Typography 
-       variant="h5" 
-       component="h3"
-      >
+    if (submitSuccess) {
+      return <Redirect to={'/profile/listings'} />
+    }
+
+    return (
+      <Paper className={classes.root}>
+        <Typography
+          variant="h5"
+          component="h3"
+        >
           Create New Listing
       </Typography>
-     
-       <FormGroup className={classes.formGroup} >
+
+        <FormGroup className={classes.formGroup} >
           <FormControl>
-           <TextField
-             label="Title"
-             value={form.title}
-             onChange={this.handleFormChange('title')}             
-             margin="normal"
-           />
+            <TextField
+              label="Title"
+              value={form.title}
+              onChange={this.handleFormChange('title')}
+              margin="normal"
+            />
 
-         </FormControl>
+          </FormControl>
 
-         <FormControl>
-           <TextField
-             label="Price"
-             value={form.price}
-             onChange={this.handleFormChange('price')}
-             margin="normal"
-           />
-         </FormControl>
+          <FormControl>
+            <TextField
+              label="Price"
+              value={form.price}
+              onChange={this.handleFormChange('price')}
+              margin="normal"
+            />
+          </FormControl>
 
-         <FormControl>
-           <TextField
-             label="Address"
-             value={form.address.line1}
-             onChange={this.handleAddressChange('line1')}
-             margin="normal"
-           />
-         </FormControl>
-
-
-         <FormControl>
-           <TextField
-             label="City"
-             value={form.address.city}
-             onChange={this.handleAddressChange('city')}
-             margin="normal"
-           />
-         </FormControl>
+          <FormControl>
+            <TextField
+              label="Address"
+              value={form.address.line1}
+              onChange={this.handleAddressChange('line1')}
+              margin="normal"
+            />
+          </FormControl>
 
 
-         <FormControl>
-           <TextField
-             label="State"
-             value={form.address.state}
-             onChange={this.handleAddressChange('state')}
-             margin="normal"
-           />
-         </FormControl>
+          <FormControl>
+            <TextField
+              label="City"
+              value={form.address.city}
+              onChange={this.handleAddressChange('city')}
+              margin="normal"
+            />
+          </FormControl>
+
+
+          <FormControl>
+            <TextField
+              label="State"
+              value={form.address.state}
+              onChange={this.handleAddressChange('state')}
+              margin="normal"
+            />
+          </FormControl>
 
 
 
-         <FormControl>
-           <TextField
-             label="Zip"
-             value={form.address.zipCode}
-             onChange={this.handleAddressChange('zipCode')}
-             margin="normal"
-           />
-         </FormControl>
-         <FormControl>
-           <TextField
-             multiline
-             rows="6"
-             label="Description"
-             value={form.description}
-             onChange={this.handleFormChange('description')}
-             margin="normal"
-           />
-         </FormControl>
-
-
-          <br /> 
-          <FormControl variant="outlined">
-             <InputLabel
-               ref={ref => {
-                 this.InputLabelRef = ref;
-               }}
-             >
-               Housing Type
-             </InputLabel>
-             <Select
-               native
-               value={form.housingType}
-               onChange={this.handleFormChange('housingType')}
-               input={
-                 <OutlinedInput
-                   name="Housing Type"              
-                   id="outlined-age-native-simple"
-                   labelWidth={'Housing Type'.length}
-                 />
-               }
-             >
-               <option value="" />
-               <option value={"Apartment"}>Apartment</option>
-               <option value={"House"}>House</option>
-               <option value={"Room"}>Room</option>
-               <option value={"Studio"}>Studio</option>
-               <option value={"Townhome"}>Townhome</option>
-
-             </Select>  
+          <FormControl>
+            <TextField
+              label="Zip"
+              value={form.address.zipCode}
+              onChange={this.handleAddressChange('zipCode')}
+              margin="normal"
+            />
+          </FormControl>
+          <FormControl>
+            <TextField
+              multiline
+              rows="6"
+              label="Description"
+              value={form.description}
+              onChange={this.handleFormChange('description')}
+              margin="normal"
+            />
           </FormControl>
 
 
           <br />
           <FormControl variant="outlined">
-             <InputLabel
-               ref={ref => {
-                 this.InputLabelRef = ref;
-               }}
-               htmlFor="outlined-age-native-simple"
-             >
+            <InputLabel
+              ref={ref => {
+                this.InputLabelRef = ref;
+              }}
+            >
+              Housing Type
+             </InputLabel>
+            <Select
+              native
+              value={form.housingType}
+              onChange={this.handleFormChange('housingType')}
+              input={
+                <OutlinedInput
+                  name="Housing Type"
+                  id="outlined-age-native-simple"
+                  labelWidth={'Housing Type'.length}
+                />
+              }
+            >
+              <option value="" />
+              <option value={"Apartment"}>Apartment</option>
+              <option value={"House"}>House</option>
+              <option value={"Room"}>Room</option>
+              <option value={"Studio"}>Studio</option>
+              <option value={"Townhome"}>Townhome</option>
+
+            </Select>
+          </FormControl>
+
+
+          <br />
+          <FormControl variant="outlined">
+            <InputLabel
+              ref={ref => {
+                this.InputLabelRef = ref;
+              }}
+              htmlFor="outlined-age-native-simple"
+            >
               Bed rooms
              </InputLabel>
-             <Select
-               native
-               value={form.bedrooms}
-               onChange={this.handleFormChange('bedrooms')}
-               input={
-                 <OutlinedInput
-                   name="bedrooms"              
-                   id="outlined-age-native-simple"
-                   labelWidth={'bedrooms'.length}
-                 />
-               }
-             >
-               <option value="" />
-               <option value={1}>1</option>
-               <option value={2}>2</option>
-               <option value={3}>3</option>
-             </Select>  
+            <Select
+              native
+              value={form.bedrooms}
+              onChange={this.handleFormChange('bedrooms')}
+              input={
+                <OutlinedInput
+                  name="bedrooms"
+                  id="outlined-age-native-simple"
+                  labelWidth={'bedrooms'.length}
+                />
+              }
+            >
+              <option value="" />
+              <option value={1}>1</option>
+              <option value={2}>2</option>
+              <option value={3}>3</option>
+            </Select>
           </FormControl>
 
           <br />
           <FormControl variant="outlined">
-             <InputLabel
-               ref={ref => {
-                 this.InputLabelRef = ref;
-               }}
-               htmlFor="outlined-age-native-simple"
-             >
-               Bathrooms
+            <InputLabel
+              ref={ref => {
+                this.InputLabelRef = ref;
+              }}
+              htmlFor="outlined-age-native-simple"
+            >
+              Bathrooms
              </InputLabel>
-             <Select
-               native
-               value={form.bathrooms}
-               onChange={this.handleFormChange('bathrooms')}
-               input={
-                 <OutlinedInput
-                   name="bathrooms"              
-                   id="outlined-age-native-simple"
-                   labelWidth={'bathrooms'.length}
-                 />
-               }
-             >
-               <option value="" />
-               <option value={1}>1</option>
-               <option value={2}>2</option>
-               <option value={3}>3</option>
-             </Select>  
+            <Select
+              native
+              value={form.bathrooms}
+              onChange={this.handleFormChange('bathrooms')}
+              input={
+                <OutlinedInput
+                  name="bathrooms"
+                  id="outlined-age-native-simple"
+                  labelWidth={'bathrooms'.length}
+                />
+              }
+            >
+              <option value="" />
+              <option value={1}>1</option>
+              <option value={2}>2</option>
+              <option value={3}>3</option>
+            </Select>
           </FormControl>
 
 
-        
-         <FormControl>
-              <input 
-                multiple
-                accept="image/png, image/jpeg"
-                type = "file"
-                onChange={this.addFile}              
-              />  
-         </FormControl>
 
-         <GridList cellHeight={160} className={classes.gridList} cols={3}>
-         {previews}
-        </GridList>
+          <FormControl>
+            <input
+              multiple
+              accept="image/png, image/jpeg"
+              type="file"
+              onChange={this.addFile}
+            />
+          </FormControl>
 
-          
-         <div>
-           <Button 
+          <GridList cellHeight={160} className={classes.gridList} cols={3}>
+            {previews}
+          </GridList>
+
+
+          <div>
+            <Button
               variant="contained"
               size="small"
               color="primary"
               type="reset"
               onClick={this.onResetClick}
-           >
-             RESET
+            >
+              RESET
            </Button>
-           <Button
+            <Button
               variant="contained"
               size="small"
               color="primary"
               onClick={this.onSubmitClick}
             >
-             SUBMIT
+              SUBMIT
             </Button>
-         </div>
-       </FormGroup>              
-     </Paper>
-   );
+          </div>
+        </FormGroup>
+      </Paper>
+    );
   }
 }
 

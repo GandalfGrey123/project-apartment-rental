@@ -28,10 +28,14 @@ export const getHouseTypes = (handleResponse) => {
 };
 
 export const createPosting = (body, handleResponse) => {
+  let session = JSON.parse(sessionStorage.getItem('session'))
   axios({
     method: 'post',
     url: `http://${api_config.environment}/listings/new`,
-    data: body
+    data: body,
+    headers: {
+      'Session': session.token
+    },
   }).then((res) => {
     handleResponse();
   });

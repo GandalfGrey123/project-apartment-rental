@@ -36,6 +36,13 @@ function convertSequilizeToObject(sequelizeResp){
   return JSON.parse(body);
 }
 
+const _findUserBySession = async (req) => {
+  const sessionToken = req.header['Session'];
+  return models.User.findOne({
+    sessionToken: sessionToken
+  })
+} 
+
 /*    
   newest, bedrooms, cheapest
 */
@@ -129,7 +136,13 @@ router.get('/types', (_, res) => {
 });
 
 //create new listing
-router.post('/new', (req, res) =>{
+router.post('/new', async (req, res) => {
+
+  const user = await _findUserBySession(req);
+  if(!user){
+    res.status(401).send();
+    return;
+  }
 
   models.HousingType
     .findOne({ where: { type: req.body.housingType } })
@@ -143,7 +156,8 @@ router.post('/new', (req, res) =>{
         isApproved: false,
         bathrooms: req.body.bathrooms,
         bedrooms: req.body.bedrooms,
-        HousingTypeId: housingType.dataValues.id
+        HousingTypeId: housingType.dataValues.id,
+        UserId: user.id
       }).then((createdListing) => {
         // Save Images
         const images = req.body.images;
