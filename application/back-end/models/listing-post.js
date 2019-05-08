@@ -19,13 +19,11 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: false
   });
   ListingPost.associate = function(models) {
-  
     ListingPost.belongsTo(models.User);  
     ListingPost.belongsTo(models.HousingType);
     ListingPost.hasMany(models.ListingImage, {
       onDelete: 'CASCADE'
     });
-
   };
   return ListingPost;
 };

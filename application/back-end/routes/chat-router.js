@@ -6,13 +6,14 @@ const app = express();
 //clean up sequelize object , return chat
 function clearChat(chatRoom){
   let jsonChatObject = { 
+    "listing": chatRoom.listingId,
     "userOneEmail": chatRoom.Chat.userOneEmail,
     "userTwoEmail": chatRoom.Chat.userTwoEmail,
     "messages": []
   }
 
   chatRoom.Chat.Messages.forEach((message)=>{
-    jsonChatObject['messages'].push({
+    jsonChatObject['messages'].push({     
       'message': message.message,
       'senderEmail' : message.userEmail
     });
@@ -37,10 +38,11 @@ router.get('/inbox', (req,res) =>{
   //find User include UserChats then include Chats with Messages
     models.User.findOne({
       where:{
+       //sessionToken:req.headers.sessionToken,
        sessionToken:123,
       }, 
 
-      include:[ {        
+      include:[{        
 
         model: models.UserChat,
   

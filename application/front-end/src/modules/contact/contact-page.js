@@ -13,7 +13,7 @@ import {
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
 import styles from './styles/contact-page';
 
-import { getInbox, sendMessage } from '../../api/message.actions';
+import { getInbox } from '../../api/message.actions';
 import { checkSession } from '../../api/user.actions';
 
 class ContactPage extends Component{
@@ -48,15 +48,15 @@ class ContactPage extends Component{
   }
 
   getChats = () => {
-     sessionStorage.setItem('session', JSON.stringify({token: '1234', admin: true}))
+    sessionStorage.setItem('session', JSON.stringify({token: 123, admin: false}))
     let session = sessionStorage.getItem('session')
 
     if(session && JSON.parse(session).token){
-      const token = JSON.parse(session).token;
+      let token = JSON.parse(session).token;
 
       getInbox(token, (inbox)=>{
-        this.setState({ allUsersChats: inbox || [] });
-        alert(inbox);
+        console.log(inbox);
+        //this.setState({ allUsersChats: inbox || [] });
       });
     }
     
