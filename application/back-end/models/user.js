@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
     isAdmin: DataTypes.BOOLEAN,
-    sessionToken: DataTypes.BIGINT,
+    sessionToken: DataTypes.STRING,
   }, {
     createdAt: false,
     updatedAt: false

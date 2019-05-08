@@ -5,6 +5,7 @@ import {
     Button,
     FormGroup
 } from '@material-ui/core';
+import { getUserProfile } from '../../../api/user.actions';
 
 const styles = theme => ({
     container: {
@@ -27,16 +28,22 @@ class ProfileForm extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            password: '*********'
+            profile: {}
         }
     }
 
+    componentDidMount(){
+        getUserProfile((res) => this.setState({ profile: res.data }));
+    }
+
     handleChange = name => event => {
-        this.setState({ [name]: event.target.value });
+        let { profile } = this.state;
+        profile[name] = event.target.value
+        this.setState({ profile });
     };
 
     render(){
-
+        const { profile } = this.state;
         const { classes } = this.props;
 
         return (
@@ -44,35 +51,50 @@ class ProfileForm extends React.Component {
                 <FormGroup>
                     <TextField
                         id="standard-name"
+                        autoFocus
                         label="First Name"
                         className={classes.textField}
-                        value={this.state.firstName}
+                        value={profile.firstName}
                         onChange={this.handleChange('firstName')}
                         margin="normal"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
                     <TextField
                         id="standard-name"
                         label="Last Name"
+                        autoFocus
                         className={classes.textField}
-                        value={this.state.lastName}
+                        value={profile.lastName}
                         onChange={this.handleChange('lastName')}
                         margin="normal"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
                     <TextField
                         id="standard-name"
                         label="Email"
+                        autoFocus
                         className={classes.textField}
-                        value={this.state.email}
+                        value={profile.email}
                         onChange={this.handleChange('email')}
                         margin="normal"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
                     <TextField
                         id="standard-password"
                         label="Password"
                         className={classes.textField}
-                        value={this.state.password}
+                        value={profile.password || '**********'}
                         onChange={this.handleChange('password')}
                         margin="normal"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
                     <div>
                         <Button variant="contained" color="primary" className={classes.button}>

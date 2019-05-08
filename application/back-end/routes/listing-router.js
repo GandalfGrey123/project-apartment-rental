@@ -1,48 +1,14 @@
 const express = require('express');
 var models = require('../models');
 const router = express.Router();
-const _ = require('lodash');
-const app = express();
+
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const { clearListing, convertSequilizeToObject, findUserBySession } = require('../utils/index');
 
-// sequelize returns a json that needs to be cleaned up a bit
-function clearListing(listing){
-   delete listing['HousingTypeId']
-   listing['housingType'] = listing['HousingType'] ? listing['HousingType'].type : null;
-   delete listing['HousingType'];
-   if(listing['ListingImages'] && _.isArray(listing['ListingImages'])){
-     let images = listing['ListingImages']
-       .map((value) => value.imageFile);
-     delete listing['ListingImages'];
-     listing['images'] = images;
-   }
-   else{
-     delete listing['ListingImages'];
-     listing['images'] = [];
-   }
-   listing['datePosted'] = (new Date(listing['datePosted'])).toLocaleString('en-us', { month: 'long' ,day:'numeric' });   
-   return listing;
+function clearListings(listings) {
+  return listings.map((l) => clearListing(l));
 }
-
-function clearListings(listings){
- return listings.map((l) => clearListing(l));
-}
-
-function convertSequilizeToObject(sequelizeResp){
-  var replacer = app.get('json replacer');
-  var spaces = app.get('json spaces');
-  var body = JSON.stringify(sequelizeResp, replacer, spaces);
-  return JSON.parse(body);
-}
-
-const _findUserBySession = async (req) => {
-  const sessionToken = req.header['Session'];
-  return models.User.findOne({
-    sessionToken: sessionToken
-  })
-} 
-
 /*    
   newest, bedrooms, cheapest
 */
@@ -73,13 +39,18 @@ _buildSearchQuery = async (query) => {
     let txt = decodeURI(query.text);
     searchQuery[Op.or] = [
       {
-        title: {
-          [Op.like]: `%${txt}%`
+        city: {
+          [Op.iLike]: `%${txt}%`
         }
       },
       {
-        description: {
-          [Op.like]: `%${txt}%`
+        zipCode: {
+          [Op.iLike]: `%${txt}%`
+        }
+      },
+      {
+        state: {
+          [Op.iLike]: `%${txt}%`
         }
       }
     ]
@@ -138,7 +109,7 @@ router.get('/types', (_, res) => {
 //create new listing
 router.post('/new', async (req, res) => {
 
-  const user = await _findUserBySession(req);
+  const user = await findUserBySession(req);
   if(!user){
     res.status(401).send();
     return;

@@ -23,6 +23,14 @@ export const userRegister = (regFormData, respondToUser) => {
 	});
 };
 
+export const getUserProfile = (onSuccess) => {
+	axios.get(`http://${api_config.environment}/users/profile`, {
+		headers: {
+			'Session': JSON.parse(sessionStorage.getItem('session')).token
+		}
+	}).then(onSuccess)
+}
+
 export const checkSession = (token, onSuccess, onError = () => {}) => {
 	axios.get(`http://${api_config.environment}/users/session/${token}/validate`)
 	.then(onSuccess)
