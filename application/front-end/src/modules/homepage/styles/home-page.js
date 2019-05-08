@@ -59,6 +59,10 @@ const styles = theme => ({
   radioGroup: {
     margin: `${theme.spacing.unit/2}px 0`,
   },
+  title: {
+    paddingTop: theme.spacing.unit*2,
+    paddingLeft: theme.spacing.unit*2
+  },
 });
 
 export default styles;

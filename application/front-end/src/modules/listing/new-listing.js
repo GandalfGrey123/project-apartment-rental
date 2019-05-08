@@ -4,16 +4,19 @@ import {
   TextField, FormGroup, FormControl,
   Paper, withStyles,Typography,
 } from '@material-ui/core';
+
 import styles from './styles/new-listing';
 import Button from '@material-ui/core/Button';
 import { Redirect } from 'react-router-dom';
+
 //use axios for posting 
 import { createPosting } from '../../api/listings.actions';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 
-
+import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
 
 //image preview stuff
 import Card from '@material-ui/core/Card';
@@ -24,11 +27,8 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverSharpIcon from '@material-ui/icons/DeleteForeverSharp';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 
-
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-
-
 
 // https://stackoverflow.com/questions/36280818/how-to-convert-file-to-base64-in-javascript
 
@@ -49,7 +49,7 @@ class NewListing extends Component{
     this.onSubmitClick = this.onSubmitClick.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
     this.handleAddressChange = this.handleAddressChange.bind(this);
-    this.formValidate = this.formValidate.bind(this);
+    this.inputIsValid = this.inputIsValid.bind(this);
     this.removeImage = this.removeImage.bind(this);
   }
 
@@ -57,7 +57,6 @@ class NewListing extends Component{
     let { form } = this.state;
     let files = Array.from(event.target.files);
 
-  
     for(let i = 0; i < files.length; i++){
          this.state.imagesPreviews.push(URL.createObjectURL(files[i]));
          this.getBase64(files[i])
@@ -69,20 +68,14 @@ class NewListing extends Component{
     this.setState({ form: form });
   }; 
 
-  formValidate=(name,value)=>{
-
+  inputIsValid=(name,value)=>{
     if(['price','zipcode'].includes(name.toLowerCase())){
       if(/[a-zA-Z]/.test(value)){
-        alert("must only contain digits");
-        //undo the change
-        this.setState({ 
-          form:{
-            ...this.state.form,
-            [name]: value.slice(0, -1)
-          } 
-         });
+        alert(`${name} only contains letters`);
+        return false;
       }
     }
+   return true;
   }
 
   handleFormChange = name => ({target: {value}}) => {   
@@ -92,14 +85,26 @@ class NewListing extends Component{
         [name]: value 
       } 
     });
-    this.formValidate(name,value);
+
+    if(!this.inputIsValid(name,value)){     
+     this.setState({ 
+      form:{
+        ...this.state.form,
+        [name]: value.slice(0, value.length-1)
+      } 
+    });
+    }
   };
 
-  handleAddressChange = name => ({target: {value}}) => {
-    this.formValidate(name,value);
+  handleAddressChange = name => ({target: {value}}) => {    
     const { form } = this.state
     form.address[name] = value;
     this.setState({ form: form });
+
+    if(!this.inputIsValid(name,value)){ 
+      form.address[name] = value.slice(0, value.length-1);
+      this.setState({ form: form });
+    }    
   };
 
   getBase64 = (file) => {
@@ -113,15 +118,19 @@ class NewListing extends Component{
 
   onSubmitClick = () => {
       const { form } = this.state;
-      if(Object.keys(form).length != 8){
-        alert('you must fill out all form fields');
-      }else{
-        createPosting(form, () => {
+      Object.keys(form).forEach(value =>{
+        console.log(form[value]);
+      })
 
-          //if response is good then redirect-render new page
-          this.setState({ submitSuccess: true })
-        })
-      }
+      //if(Object.keys(form).length != 8){
+      //  alert('you must fill out all form fields');
+      //}else{
+      //  createPosting(form, () => {
+//
+      //    //if response is good then redirect-render new page
+      //    this.setState({ submitSuccess: true })
+      //  })
+      //}
   };
 
   onResetClick = () => {
@@ -134,8 +143,7 @@ class NewListing extends Component{
     })
   }
 
-removeImage =(imageIndex) => {
-  
+removeImage =(imageIndex) => {  
   this.state.imagesPreviews.splice(imageIndex,1);
   console.log(this.state.imagesPreviews)
   this.forceUpdate();
@@ -350,25 +358,47 @@ removeImage =(imageIndex) => {
           </FormControl>
 
 
+  
+
         
-         <FormControl>
-              <input 
-                multiple
-                accept="image/png, image/jpeg"
-                type = "file"
-                onChange={this.addFile}              
-              />  
-         </FormControl>
+         <FormControl>             
+          <Grid container justify = "center">
+              <input                 
+                id="fileInput"    
+                multiple 
+                type="file" 
+                onChange={this.addFile}
+                accept="image/png, image/jpeg"    
+                className={classes.hide}
+                onChange={this.addFile}                     
+              /> 
+              <label htmlFor="fileInput"> 
+                <Button raised 
+                  component="span" 
+                 className={classes.fileInput}
+                 > 
+                  + Upload Images
+                </Button> 
+              </label> 
+            </Grid>
+          </FormControl>
+
 
          <GridList cellHeight={160} className={classes.gridList} cols={3}>
-         {previews}
-        </GridList>
+          {previews}
+          </GridList>
 
-          
-         <div>
-           <Button 
+           <Divider light />
+       
+       </FormGroup>   
+   <Grid 
+   className={classes.margin}
+   container
+   justify = "center"
+     >
+       <Button 
               variant="contained"
-              size="small"
+              className={classes.margin}
               color="primary"
               type="reset"
               onClick={this.onResetClick}
@@ -377,15 +407,18 @@ removeImage =(imageIndex) => {
            </Button>
            <Button
               variant="contained"
-              size="small"
+              className={classes.margin}
               color="primary"
               onClick={this.onSubmitClick}
             >
              SUBMIT
-            </Button>
-         </div>
-       </FormGroup>              
+            </Button> 
+            </Grid>          
      </Paper>
+
+
+           
+      
    );
   }
 }
