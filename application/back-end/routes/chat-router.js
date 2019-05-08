@@ -98,6 +98,13 @@ router.post('/send', (req,res) =>{
 
 }); 
 
+
+
+
+
+//NEED TO DETERMINE - 
+// .. WHICH USER IS THE LANDLORD AND WHICH IS THE STUDENT
+//WE NEED TO BUILD A FORM TO MAKE A API CALL TO THIS ENDPOINT
 router.post('/new', (req,res) =>{
       
       //this query needs clean up or refactor
@@ -146,7 +153,7 @@ router.post('/new', (req,res) =>{
                     res.status(400).send('error');
                   }
                   res.status(200).send('success');
-                  
+
                 });
             });
           });
