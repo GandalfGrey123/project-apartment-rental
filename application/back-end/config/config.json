@@ -1,21 +1,21 @@
 {
   "development": {
-    "username": "test",
-    "password": "password",
+    "username": "root",
+    "password": "helpme",
     "database": "apartment_rentals",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
-    "username": "test",
-    "password": "password",
+    "username": "root",
+    "password": "helpme",
     "database": "apartment_rentals",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
-    "username": "test",
-    "password": "password",
+    "username": "root",
+    "password": "helpme",
     "database": "apartment_rentals",
     "host": "127.0.0.1",
     "dialect": "mysql"
