@@ -14,8 +14,7 @@ import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
 import styles from './styles/contact-page';
 
 import { getInbox,sendMessage } from '../../api/message.actions';
-//import { checkSession, getSessionToken } from '../../api/user.actions';
-import { getSessionToken } from '../../api/local-session';
+import { checkSession } from '../../api/user.actions';
 
 class ContactPage extends Component{
 
