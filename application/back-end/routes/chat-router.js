@@ -3,6 +3,9 @@ var models = require('../models');
 const router = express.Router();
 const app = express();
 
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
 //clean up sequelize object , return chat
 function clearChat(chatRoom){
   let jsonChatObject = { 
@@ -20,7 +23,7 @@ function clearChat(chatRoom){
     });
   })
 
-  return jsonChatObject;
+ return jsonChatObject;
 }
 
 //fill array with chat objects
@@ -96,7 +99,58 @@ router.post('/send', (req,res) =>{
 }); 
 
 router.post('/new', (req,res) =>{
-   
+      
+      //this query needs clean up or refactor
+      models.User.findAll({
+         where:{
+          [Op.or]: [
+             {sessionToken: req.headers.sessiontoken}, 
+             {email: req.body.landLordEmail},
+           ]
+         }
+      }).then((users)=>{
+
+          //if(!users.length !== 2){error}
+          models.Chat.create({
+            userOneEmail: users[0].email,
+            userTwoEmail: users[1].email,
+          }).then((newChat)=>{
+
+            models.UserChat.bulkCreate([
+              
+              {
+              // listingTitle: req.body.title, <- not included yet
+               listingId: req.body.listingId,
+               UserId: users[0].id,
+               ChatId:newChat.id,
+              },
+              
+              {
+              // listingTitle: req.body.title, <- not included yet
+               listingId: req.body.listingId,
+               UserId: users[1].id,
+               ChatId:newChat.id,
+              }
+
+            ]).then((chatRoom)=>{
+
+                models.Message.create({
+                    userEmail: users[0].email, // <- not sure if the sender will be users[0]
+                    message: req.body.message,
+                    ChatId: newChat.id,
+                    UserId: users[0].id, // <- not sure if the sender will be users[0]
+                }).then((message, err)=>{
+
+
+                  if(err){
+                    res.status(400).send('error');
+                  }
+                  res.status(200).send('success');
+                  
+                });
+            });
+          });
+      })
 }); 
 
 module.exports = router;

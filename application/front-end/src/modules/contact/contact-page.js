@@ -58,20 +58,19 @@ class ContactPage extends Component{
   }
 
   handleSendButton = ()=>{
-  sessionStorage.setItem('session', JSON.stringify({token: 123, admin: false}))
-   let sessionToken = getSessionToken()   
+   let sessionToken = JSON.parse(sessionStorage.getItem('session')).token   
 
    let messagePacket ={
     'chatId': this.state.allUsersChats[this.state.currentChatIndex].chatId,
     'message': this.state.nextMessage,
    }
 
-     sendMessage(sessionToken,messagePacket, (resp)=>{                
-        this.getChats(); //not optimal shouldnt have to call getChats again.
-        this.setState({
-         nextMessage: ''
-        });     
-     });
+    sendMessage(sessionToken,messagePacket, (resp)=>{                
+       this.getChats(); //not optimal shouldnt have to call getChats again.
+       this.setState({
+        nextMessage: ''
+       });     
+    });
   }
 
   //select a chat to show
@@ -81,11 +80,9 @@ class ContactPage extends Component{
     });
   } 
 
-  getChats = () => {
-   sessionStorage.setItem('session', JSON.stringify({token: 123, admin: false}))
-   let sessionToken = getSessionToken()   
+  getChats = () => {  
+    let sessionToken = JSON.parse(sessionStorage.getItem('session')).token
 
-  //if (checkSession(session))
     if(sessionToken){
       getInbox(sessionToken, (chatObj)=>{              
         this.setState({ 
@@ -94,9 +91,8 @@ class ContactPage extends Component{
          });     
       });
     }
-
-    // expired token, redirect?
-    else {  }    
+   
+   else {}    
   }
 
   
@@ -116,7 +112,10 @@ class ContactPage extends Component{
                 onClick={() => this.setState({ currentChatIndex: index }) }
               >
               <ListItemAvatar>
-                 <Avatar alt="dm user avatar${i}" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
+                 <Avatar
+                   alt="dm view avatar${i}" 
+                   src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" 
+                 />
               </ListItemAvatar>
                 
                <ListItemText
