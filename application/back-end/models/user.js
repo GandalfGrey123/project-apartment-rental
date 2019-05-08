@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
 
     password: {
@@ -44,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     User.hasMany(models.Message);
-    User.hasMany(models.Chat);
+    User.hasMany(models.UserChat);
   };
   return User;
 };

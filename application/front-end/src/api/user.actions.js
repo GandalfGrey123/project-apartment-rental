@@ -1,7 +1,6 @@
 import axios from "axios";
 import api_config from './config/api.config';
 
-
 export const userLogin = (loginCredentials, respondToUser, onError = () => {}) => {
 	axios({
 		method:'post',
@@ -11,7 +10,6 @@ export const userLogin = (loginCredentials, respondToUser, onError = () => {}) =
 		respondToUser(res.data);
 	}).catch(onError)
 };
-
 
 export const userRegister = (regFormData, respondToUser) => {
 	axios({
