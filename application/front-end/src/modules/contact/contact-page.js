@@ -13,7 +13,7 @@ import {
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
 import styles from './styles/contact-page';
 
-import { getInbox,sendMessage } from '../../api/message.actions';
+import { getInbox,sendMessage,chatConnect } from '../../api/message.actions';
 import { checkSession } from '../../api/user.actions';
 
 class ContactPage extends Component{
@@ -34,11 +34,11 @@ class ContactPage extends Component{
     this.scrollToBottom = this.scrollToBottom.bind(this);
   }
 
-   latestMessage = React.createRef()
+  latestMessage = React.createRef()
 
   componentDidMount(){  
     this.getChats();
-    this.scrollToBottom();
+    this.scrollToBottom();   
   } 
 
   componentDidUpdate() {
@@ -49,27 +49,29 @@ class ContactPage extends Component{
     this.latestMessage.current.scrollIntoView({ behavior: "smooth" });
   }
 
-
   onChangeMessage = ({target: {value}}) =>{
     this.setState({
       nextMessage: value
     });
   }
 
-  handleSendButton = ()=>{
-   let sessionToken = JSON.parse(sessionStorage.getItem('session')).token   
+  handleSendButton = () =>{
+      if(this.state.nextMessage == ''){
+        return
+      }
 
-   let messagePacket ={
-    'chatId': this.state.allUsersChats[this.state.currentChatIndex].chatId,
-    'message': this.state.nextMessage,
-   }
-
-    sendMessage(sessionToken,messagePacket, (resp)=>{                
-       this.getChats(); //not optimal shouldnt have to call getChats again.
-       this.setState({
-        nextMessage: ''
-       });     
-    });
+      let sessionToken = JSON.parse(sessionStorage.getItem('session')).token      
+      let messagePacket ={
+       'chatId': this.state.allUsersChats[this.state.currentChatIndex].chatId,
+       'message': this.state.nextMessage,
+      }
+      
+       sendMessage(sessionToken,messagePacket, (resp)=>{                
+          this.getChats();
+          this.setState({
+           nextMessage: ''
+          });    
+       });
   }
 
   //select a chat to show
@@ -87,10 +89,10 @@ class ContactPage extends Component{
         this.setState({ 
           allUsersChats: chatObj.inbox || [],
           userEmail: chatObj.userEmail,
-         });     
+         });
       });
     }
-   
+
    else {}    
   }
 
@@ -173,6 +175,8 @@ class ContactPage extends Component{
 
 
   showMessageBox(classes){
+
+
       return(
         <React.Fragment>
 
