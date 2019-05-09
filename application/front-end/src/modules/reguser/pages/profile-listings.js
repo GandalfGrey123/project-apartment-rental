@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import {
   withStyles, Grid, Paper,
-  CardActions, Button
+  CardActions, Button, Typography,
+  Fab
 } from '@material-ui/core';
+import { Add as AddIcon } from '@material-ui/icons';
 import ListingCard from '../../_global/component/listing-card';
 import styles from '../styles/styles';
 import _ from 'lodash';
@@ -130,12 +132,40 @@ class ProfileListings extends Component {
 
     return (
       <Paper className={classes.main} elevation={1}>
-        <Button size="small" color="primary" component={Link} to={'/profile/listings/new'} >
+        <Button size="small" color="primary" style={{
+          display: listings.length === 0 ? 'none' : 'flex'
+        }} component={Link} to={'/profile/listings/new'} >
           Create Listing
         </Button>
         <Grid container style={{ width: '100%' }} >
+          <Typography className={classes.title} variant={'h5'} >Your Listings</Typography>
           <Grid item lg={12} md={12} sm={12} >
-            {this.displayListings(listings, columnView)}
+            {listings.length > 0 ?
+              this.displayListings(listings, columnView) :
+              <div className={classes.profileListings} >
+                <Grid
+                  container
+                  alignItems={'center'}
+                  justify={'center'}
+                  direction={'column'}
+                >
+                  <Typography variant={'display1'} >
+                    You don't have any listings posted
+                </Typography>
+                  <Fab
+                    variant="extended"
+                    color="primary"
+                    aria-label="Add"
+                    className={classes.margin}
+                    component={Link}
+                    to={'/profile/listings/new'}
+                  >
+                    <AddIcon className={classes.extendedIcon} />
+                    Add Listing
+                  </Fab>
+                </Grid>
+              </div>
+            }
           </Grid>
         </Grid>
       </Paper>

@@ -65,9 +65,6 @@ export const deleteListing = (id, onSuccess) => {
     url: `http://${api_config.environment}/listings/one/${id}`,
     headers: {
       'Session': session.token
-    },
-    params: {
-      approve: approve
     }
   }).then(onSuccess);
 }

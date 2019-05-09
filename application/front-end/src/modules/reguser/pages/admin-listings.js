@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {
   withStyles, Grid, Paper, Button,
-  CardActions
+  CardActions, Typography, Drawer,
+  CssBaseline, Checkbox,
+  List, ListItem, ListSubheader, ListItemText
 } from '@material-ui/core';
 import ListingCard from '../../_global/component/listing-card';
 import styles from '../styles/styles';
@@ -135,8 +137,44 @@ class AdminListings extends Component {
     return (
       <Paper className={classes.main} elevation={1}>
         <Grid container style={{ width: '100%' }} >
-          <Grid item lg={12} md={12} sm={12} >
-            {this.displayListings(listings, columnView)}
+        <Grid item lg={2} md={3} sm={3} >
+            <CssBaseline />
+            <Drawer
+                className={classes.drawer}
+                variant='permanent'
+                classes={{ paper: classes.drawerPaper }}
+                anchor="left"
+                open
+              >
+                <List subheader={<ListSubheader> Admin Types</ListSubheader>} className={classes.subList}>
+                    {[ 'Approved', 'Not Approved' ].map((text, index) => (
+                        <ListItem button key={`item-${index}`}>
+                            <Checkbox
+                                checked={false}
+                            />
+                            <ListItemText primary={text} />
+                        </ListItem>
+                    ))}
+                </List>
+              </Drawer>
+          </Grid>
+          <Grid item lg={10} md={9} sm={9} >
+          <Typography className={classes.title} variant={'h5'} >Admin</Typography>
+          {listings.length > 0 ?
+              this.displayListings(listings, columnView) :
+              <div className={classes.profileListings} >
+                <Grid
+                  container
+                  alignItems={'center'}
+                  justify={'center'}
+                  direction={'column'}
+                >
+                  <Typography variant={'display1'} >
+                    No Listings To Verify
+                  </Typography>
+                </Grid>
+              </div>
+            }
           </Grid>
         </Grid>
       </Paper>
