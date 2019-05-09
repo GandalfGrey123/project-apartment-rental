@@ -135,6 +135,16 @@ router.put('/one/:listingId', async (req, res) => {
   });
 });
 
+router.delete('/one/:listingId', async (req, res) => {
+  models.ListingPost.findOne({
+    where: { id: req.params.listingId }
+  }).then(listing => {
+    if (listing) {
+      listing.destroy().then(() => res.status(204).send());
+    }
+  });
+});
+
 //return all housing types that website provides
 router.get('/types', (_, res) => {
   models.HousingType

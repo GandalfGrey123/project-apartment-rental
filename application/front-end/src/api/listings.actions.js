@@ -57,3 +57,17 @@ export const approveListing = (id, approve, handleResponse) => {
     handleResponse();
   });
 }
+
+export const deleteListing = (id, onSuccess) => {
+  let session = JSON.parse(sessionStorage.getItem('session'))
+  axios({
+    method: 'delete',
+    url: `http://${api_config.environment}/listings/one/${id}`,
+    headers: {
+      'Session': session.token
+    },
+    params: {
+      approve: approve
+    }
+  }).then(onSuccess);
+}

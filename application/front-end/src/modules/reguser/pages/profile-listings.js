@@ -6,10 +6,10 @@ import {
 import ListingCard from '../../_global/component/listing-card';
 import styles from '../styles/styles';
 import _ from 'lodash';
-import { getListings } from '../../../api/listings.actions';
+import { getListings, deleteListing } from '../../../api/listings.actions';
 import { Link } from 'react-router-dom';
 
-const FormRow = ({ listings, columnView = true }) => {
+const FormRow = ({ listings, columnView = true, refresh }) => {
   return (
     <React.Fragment>
       {
@@ -26,7 +26,11 @@ const FormRow = ({ listings, columnView = true }) => {
               listing={value}
               actions={(
                 <CardActions>
-                  <Button size="small" color="secondary">
+                  <Button
+                    size="small"
+                    color="secondary"
+                    onClick={() => deleteListing(value.id, refresh)}
+                  >
                     Delete
                   </Button>
                 </CardActions>
@@ -103,6 +107,7 @@ class ProfileListings extends Component {
             listings={listings.slice(i, i + 3)}
             props={this.props}
             columnView={columnView}
+            refresh={() => this.getListings()}
           />
         </Grid>
       );
