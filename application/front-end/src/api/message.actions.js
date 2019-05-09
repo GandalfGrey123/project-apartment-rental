@@ -21,7 +21,6 @@ export const getInbox = (token, handleResponse) => {
    });
 };
 
-
 //messagePacket has multiple fields
 // messagePacket.chatId
 // messagePacket.senderEmail
@@ -38,6 +37,22 @@ export const sendMessage = (token,messagePacket, handleResponse) => {
          'sessionToken': token,
       },
    
+   }).then((res) => {
+       //http response returns array of json chat objects
+       handleResponse(res.data);
+   });
+};
+
+export const sendNewMessage = (token,messagePacket, handleResponse) => {
+   axios({
+      method: 'post',
+      url: `http://${api_config.environment}/messages/new`,
+      data:{
+         'messagePacket': messagePacket,
+      },
+      headers:{
+         'sessionToken': token,
+      },
    }).then((res) => {
        //http response returns array of json chat objects
        handleResponse(res.data);
