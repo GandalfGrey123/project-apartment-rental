@@ -37,6 +37,7 @@ function clearChats(chatRooms){
 
 
 router.get('/inbox', (req,res) =>{  
+
   //find User include UserChats then include Chats with Messages
     models.User.findOne({
       where:{
@@ -60,7 +61,7 @@ router.get('/inbox', (req,res) =>{
         console.log('not found!')
         // session token error , 
         // user not found send unauthorized status response
-       res.status(401).json(chatObj)       
+       res.status(401).json('error')       
       }       
 
       let chatObj={
@@ -73,7 +74,6 @@ router.get('/inbox', (req,res) =>{
 }); 
 
 router.post('/send', (req,res) =>{
-
     models.User.findOne({
       where:{
         sessionToken: req.headers.sessiontoken,
@@ -95,7 +95,6 @@ router.post('/send', (req,res) =>{
       });  
       res.status(200).send()
     })
-
 }); 
 
 
