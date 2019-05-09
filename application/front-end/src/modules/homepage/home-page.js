@@ -104,6 +104,7 @@ class HomePage extends Component {
 
   getListings = (query = {}) => {
     let params = new URLSearchParams();
+    params.append('approved', true);
     if (query.types && !_.isEmpty(query.types)) {
       let selectedTypes = query.types;
       selectedTypes.forEach((value) => params.append("type", value));

@@ -6,9 +6,9 @@ import {
 import ListingCard from '../../_global/component/listing-card';
 import styles from '../styles/styles';
 import _ from 'lodash';
-import { getListings } from '../../../api/listings.actions';
+import { getListings, approveListing } from '../../../api/listings.actions';
 
-const FormRow = ({ listings, columnView = true }) => {
+const FormRow = ({ listings, columnView = true, refresh = () => {} }) => {
   return (
     <React.Fragment>
       {
@@ -25,10 +25,18 @@ const FormRow = ({ listings, columnView = true }) => {
               listing={value}
               actions={(
                 <CardActions>
-                  <Button size="small" color="primary">
+                  <Button 
+                    size="small"
+                    color="primary"
+                    onClick={() => approveListing(value.id, true, refresh)}
+                  >
                     Approve
                   </Button>
-                  <Button size="small" color="secondary">
+                  <Button
+                    size="small"
+                    color="secondary"
+                    onClick={() => approveListing(value.id, false, refresh)}
+                  >
                     Reject
                   </Button>
                 </CardActions>
@@ -72,6 +80,7 @@ class AdminListings extends Component {
 
   getListings = (query = {}) => {
     let params = new URLSearchParams();
+    params.append('approved', false);
     if (query.types && !_.isEmpty(query.types)) {
       let selectedTypes = query.types;
       selectedTypes.forEach((value) => params.append("type", value));
@@ -102,6 +111,7 @@ class AdminListings extends Component {
             listings={listings.slice(i, i + 3)}
             props={this.props}
             columnView={columnView}
+            refresh={() => this.getListings()}
           />
         </Grid>
       );

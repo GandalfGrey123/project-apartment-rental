@@ -70,6 +70,7 @@ class ProfileListings extends Component {
 
   getListings = (query = {}) => {
     let params = new URLSearchParams();
+    params.append('profile', 'true');
     if (query.types && !_.isEmpty(query.types)) {
       let selectedTypes = query.types;
       selectedTypes.forEach((value) => params.append("type", value));
@@ -85,6 +86,8 @@ class ProfileListings extends Component {
     }
     getListings(params, (data) => {
       this.setState({ listings: data || [] })
+    }, {
+      'Session': JSON.parse(sessionStorage.getItem('session')).token
     })
   }
 

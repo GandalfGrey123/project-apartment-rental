@@ -12,9 +12,10 @@ function clearListings(listings) {
 /*    
   newest, bedrooms, cheapest
 */
-_buildSearchQuery = async (query) => {
+_buildSearchQuery = async (req) => {
   let searchQuery = {};
   let order = [];
+  const query = req.query
   
   if (query.type) {
     let types = await models.HousingType.findAll({
@@ -29,6 +30,21 @@ _buildSearchQuery = async (query) => {
     searchQuery['HousingTypeId'] = types;
   }
 
+  console.log('Query: ', query);
+
+  if(query.approved){
+    searchQuery['isApproved'] = {
+      [Op.eq]: query.approved.toLowerCase() === 'true' ? 1 : 0
+    };
+  }
+
+  if(query.profile){
+    const profile = await findUserBySession(req);
+    searchQuery['UserId'] = {
+      [Op.eq]: profile.id
+    };
+  }
+
   if(query.beds){
     searchQuery['bedrooms'] = {
       [Op.gte]: query.beds
@@ -38,21 +54,23 @@ _buildSearchQuery = async (query) => {
   if(query.text){
     let txt = decodeURI(query.text);
     searchQuery[Op.or] = [
-      {
-        city: {
-          [Op.iLike]: `%${txt}%`
+      Sequelize.where(
+        Sequelize.fn('lower', Sequelize.col('city')),
+        {
+          [Op.like]: `%${txt}%`
         }
-      },
+      ),
       {
         zipCode: {
-          [Op.iLike]: `%${txt}%`
+          [Op.like]: `%${txt}`
         }
       },
-      {
-        state: {
-          [Op.iLike]: `%${txt}%`
+      Sequelize.where(
+        Sequelize.fn('lower', Sequelize.col('state')),
+        {
+          [Op.like]: `%${txt}%`
         }
-      }
+      )
     ]
   }
 
@@ -76,7 +94,7 @@ _buildSearchQuery = async (query) => {
 
 //get listings route
 router.get('/', async (req,res) => {
-  let result = await _buildSearchQuery(req.query);
+  let result = await _buildSearchQuery(req);
   models.ListingPost.findAll({
     include: [models.HousingType,models.ListingImage],
     exclude: [models.Chat],
@@ -96,6 +114,24 @@ router.get('/one/:listingId', async (req,res) => {
   }).then(listing =>{     
     var body = convertSequilizeToObject(listing);       
     res.json(clearListing(body));
+  });
+});
+
+router.put('/one/:listingId', async (req, res) => {
+  models.ListingPost.findOne({
+    where: { id: req.params.listingId }
+  }).then(listing => {
+    if (!listing.isApproved) {
+      let isApproved = req.query.approve === 'true';
+      if (isApproved) {
+        listing.update({
+          isApproved: isApproved
+        }).then(() => res.status(204).send());
+      } else {
+        // delete
+        listing.destroy().then(() => res.status(204).send());
+      }
+    }
   });
 });
 
