@@ -118,19 +118,16 @@ class NewListing extends Component{
 
   onSubmitClick = () => {
       const { form } = this.state;
-      Object.keys(form).forEach(value =>{
-        console.log(form[value]);
-      })
+      
+      if(Object.keys(form).length != 8){
+       alert('you must fill out all form fields');
+      }else{
+       createPosting(form, () => {
 
-      //if(Object.keys(form).length != 8){
-      //  alert('you must fill out all form fields');
-      //}else{
-      //  createPosting(form, () => {
-//
-      //    //if response is good then redirect-render new page
-      //    this.setState({ submitSuccess: true })
-      //  })
-      //}
+         //if response is good then redirect-render new page
+         this.setState({ submitSuccess: true })
+       })
+      }
   };
 
   onResetClick = () => {
