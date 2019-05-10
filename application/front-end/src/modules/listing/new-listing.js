@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 
 import {
   TextField, FormGroup, FormControl,
-  Paper, withStyles,Typography,
+  Paper, withStyles,Typography, Grid,
+  Divider, InputLabel, Select, OutlinedInput,
+  Card, CardMedia, IconButton, GridListTileBar,
+  GridList, GridListTile
 } from '@material-ui/core';
 
 import styles from './styles/new-listing';
@@ -11,22 +14,9 @@ import { Redirect } from 'react-router-dom';
 
 //use axios for posting 
 import { createPosting } from '../../api/listings.actions';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
 
 //image preview stuff
-import Card from '@material-ui/core/Card';
-import CardMedia from '@material-ui/core/CardMedia';
-import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverSharpIcon from '@material-ui/icons/DeleteForeverSharp';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
 
 // https://stackoverflow.com/questions/36280818/how-to-convert-file-to-base64-in-javascript
 
@@ -120,15 +110,15 @@ class NewListing extends Component{
         console.log(form[value]);
       })
 
-      //if(Object.keys(form).length != 8){
+      // if(Object.keys(form).length != 8){
       //  alert('you must fill out all form fields');
-      //}else{
-      //  createPosting(form, () => {
-//
-      //    //if response is good then redirect-render new page
-      //    this.setState({ submitSuccess: true })
-      //  })
-      //}
+      // }else{
+       createPosting(form, () => {
+
+         //if response is good then redirect-render new page
+         this.setState({ submitSuccess: true })
+       })
+      // }
   };
 
   onResetClick = () => {

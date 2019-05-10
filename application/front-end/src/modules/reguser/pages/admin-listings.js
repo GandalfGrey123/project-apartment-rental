@@ -59,7 +59,8 @@ class AdminListings extends Component {
       listings: [],
       sortMenuVisible: false,
       anchorEl: null,
-      sortBy: null
+      sortBy: null,
+      approved: null
     };
     this.getListings = this.getListings.bind(this);
     this.handleSortTxt = this.handleSortTxt.bind(this);
@@ -75,14 +76,24 @@ class AdminListings extends Component {
     this.setState(state)
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getListings();
   }
 
+  componentDidUpdate(prevProps, prevState){
+    if(prevState.approved !== this.state.approved){
+      if(this.state.approved !== null){
+        this.getListings({
+          approved: `${this.state.approved}`
+        })
+      }else{
+        this.getListings();
+      }
+    }
+  }
 
   getListings = (query = {}) => {
     let params = new URLSearchParams();
-    params.append('approved', false);
     if (query.types && !_.isEmpty(query.types)) {
       let selectedTypes = query.types;
       selectedTypes.forEach((value) => params.append("type", value));
@@ -95,6 +106,9 @@ class AdminListings extends Component {
     }
     if(query.text){
       params.append("text", encodeURI(query.text));
+    }
+    if(query.approved){
+      params.append("approved", query.approved);
     }
     getListings(params, (data) => {
       this.setState({ listings: data || [] })
@@ -130,6 +144,22 @@ class AdminListings extends Component {
     }));
   };
 
+  isChecked = (text) => {
+    return (text === 'All' && this.state.approved === null)
+      || (text === 'Approved' && this.state.approved)
+      || (text === 'Not Approved' && this.state.approved === false)
+  }
+
+  selectListings = text => event =>{
+    if(text === 'All'){
+      this.setState({ approved: null })
+    }else if(text === 'Approved'){
+      this.setState({ approved: true })
+    }else{
+      this.setState({ approved: false })
+    }
+  }
+
   render() {
     const classes = this.props.classes;
     const { listings, columnView } = this.state;
@@ -147,10 +177,11 @@ class AdminListings extends Component {
                 open
               >
                 <List subheader={<ListSubheader> Admin Types</ListSubheader>} className={classes.subList}>
-                    {[ 'Approved', 'Not Approved' ].map((text, index) => (
+                    {[ 'All', 'Approved', 'Not Approved' ].map((text, index) => (
                         <ListItem button key={`item-${index}`}>
                             <Checkbox
-                                checked={false}
+                                checked={this.isChecked(text)}
+                                onChange={this.selectListings(text)}
                             />
                             <ListItemText primary={text} />
                         </ListItem>
