@@ -8,7 +8,7 @@ const Op = Sequelize.Op;
 
 //clean up sequelize object , return chat
 function clearChat(chatRoom){
-  let jsonChatObject = { 
+  let chatObj = { 
     "chatId": chatRoom.Chat.id,
     "listing": chatRoom.listingId,
     "userOneEmail": chatRoom.Chat.userOneEmail,
@@ -17,13 +17,13 @@ function clearChat(chatRoom){
   }
 
   chatRoom.Chat.Messages.forEach((message)=>{
-    jsonChatObject['messages'].push({         
+    chatObj['messages'].push({         
       'message': message.message,
       'senderEmail' : message.userEmail
     });
   })
 
- return jsonChatObject;
+ return chatObj;
 }
 
 //fill array with chat objects
@@ -37,18 +37,15 @@ function clearChats(chatRooms){
 
 
 router.get('/inbox', (req,res) =>{  
-
+   const token = req.headers.session;
   //find User include UserChats then include Chats with Messages
     models.User.findOne({
       where:{
-       sessionToken:req.headers.sessiontoken,
-       //sessionToken:123,
+       sessionToken: token,
       }, 
 
       include:[{        
-
-        model: models.UserChat,
-  
+        model: models.UserChat,  
         include:[{ 
             model: models.Chat, 
             include:[models.Message] 
@@ -59,24 +56,28 @@ router.get('/inbox', (req,res) =>{
           
       if(!user){
         console.log('not found!')
-        // session token error , 
-        // user not found send unauthorized status response
-       res.status(401).json('error')       
+       res.status(401).json('error')
+       return       
       }       
 
-      let chatObj={
-       'userEmail':user.email,
-       'inbox': clearChats(user.UserChats)
+      if(user.UserChats.length == 0){
+       res.status(200).json('no messages')
+       return
       }
+
+     let chatObj={
+      'userEmail':user.email,
+      'inbox': clearChats(user.UserChats)
+     }
     
-       res.status(200).json(chatObj)       
+      res.status(200).json(chatObj)       
     });
 }); 
 
 router.post('/send', (req,res) =>{
     models.User.findOne({
       where:{
-        sessionToken: req.headers.sessiontoken,
+        sessionToken: req.headers.session,
       }
     }).then((user)=>{
 
@@ -110,7 +111,7 @@ router.post('/new', (req,res) =>{
       models.User.findAll({
          where:{
           [Op.or]: [
-             {sessionToken: req.headers.sessiontoken}, 
+             {sessionToken: req.headers.session}, 
              {email: req.body.landLordEmail},
            ]
          }
