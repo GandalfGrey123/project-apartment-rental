@@ -39,12 +39,9 @@ const styles = theme => ({
     backgroundColor: 'lightgrey',
     margin:20,
   },
-
   hide:{
-    marginLeft:'10000px',
-
+   display: 'none'
   },
-
   margin:{
     margin:20,
   }
