@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import {
   withStyles, Grid, Paper,
-  CardActions, Button
+  CardActions, Button, Typography,
+  Fab
 } from '@material-ui/core';
+import { Add as AddIcon } from '@material-ui/icons';
 import ListingCard from '../../_global/component/listing-card';
 import styles from '../styles/styles';
 import _ from 'lodash';
-import { getListings } from '../../../api/listings.actions';
+import { getListings, deleteListing } from '../../../api/listings.actions';
 import { Link } from 'react-router-dom';
 
-const FormRow = ({ listings, columnView = true }) => {
+const FormRow = ({ listings, columnView = true, refresh }) => {
   return (
     <React.Fragment>
       {
@@ -26,7 +28,11 @@ const FormRow = ({ listings, columnView = true }) => {
               listing={value}
               actions={(
                 <CardActions>
-                  <Button size="small" color="secondary">
+                  <Button
+                    size="small"
+                    color="secondary"
+                    onClick={() => deleteListing(value.id, refresh)}
+                  >
                     Delete
                   </Button>
                 </CardActions>
@@ -70,6 +76,7 @@ class ProfileListings extends Component {
 
   getListings = (query = {}) => {
     let params = new URLSearchParams();
+    params.append('profile', 'true');
     if (query.types && !_.isEmpty(query.types)) {
       let selectedTypes = query.types;
       selectedTypes.forEach((value) => params.append("type", value));
@@ -85,6 +92,8 @@ class ProfileListings extends Component {
     }
     getListings(params, (data) => {
       this.setState({ listings: data || [] })
+    }, {
+      'Session': JSON.parse(sessionStorage.getItem('session')).token
     })
   }
 
@@ -100,6 +109,7 @@ class ProfileListings extends Component {
             listings={listings.slice(i, i + 3)}
             props={this.props}
             columnView={columnView}
+            refresh={() => this.getListings()}
           />
         </Grid>
       );
@@ -122,12 +132,40 @@ class ProfileListings extends Component {
 
     return (
       <Paper className={classes.main} elevation={1}>
-        <Button size="small" color="primary" component={Link} to={'/profile/listings/new'} >
+        <Button size="small" color="primary" style={{
+          display: listings.length === 0 ? 'none' : 'flex'
+        }} component={Link} to={'/profile/listings/new'} >
           Create Listing
         </Button>
         <Grid container style={{ width: '100%' }} >
+          <Typography className={classes.title} variant={'h5'} >Your Listings</Typography>
           <Grid item lg={12} md={12} sm={12} >
-            {this.displayListings(listings, columnView)}
+            {listings.length > 0 ?
+              this.displayListings(listings, columnView) :
+              <div className={classes.profileListings} >
+                <Grid
+                  container
+                  alignItems={'center'}
+                  justify={'center'}
+                  direction={'column'}
+                >
+                  <Typography variant={'display1'} >
+                    You don't have any listings posted
+                </Typography>
+                  <Fab
+                    variant="extended"
+                    color="primary"
+                    aria-label="Add"
+                    className={classes.margin}
+                    component={Link}
+                    to={'/profile/listings/new'}
+                  >
+                    <AddIcon className={classes.extendedIcon} />
+                    Add Listing
+                  </Fab>
+                </Grid>
+              </div>
+            }
           </Grid>
         </Grid>
       </Paper>

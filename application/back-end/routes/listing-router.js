@@ -1,47 +1,21 @@
 const express = require('express');
 var models = require('../models');
 const router = express.Router();
-const _ = require('lodash');
-const app = express();
+
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const { clearListing, convertSequilizeToObject, findUserBySession } = require('../utils/index');
 
-// sequelize returns a json that needs to be cleaned up a bit
-function clearListing(listing){
-   delete listing['HousingTypeId']
-   listing['housingType'] = listing['HousingType'] ? listing['HousingType'].type : null;
-   delete listing['HousingType'];
-   if(listing['ListingImages'] && _.isArray(listing['ListingImages'])){
-     let images = listing['ListingImages']
-       .map((value) => value.imageFile);
-     delete listing['ListingImages'];
-     listing['images'] = images;
-   }
-   else{
-     delete listing['ListingImages'];
-     listing['images'] = [];
-   }
-   listing['datePosted'] = (new Date(listing['datePosted'])).toLocaleString('en-us', { month: 'long' ,day:'numeric' });   
-   return listing;
+function clearListings(listings) {
+  return listings.map((l) => clearListing(l));
 }
-
-function clearListings(listings){
- return listings.map((l) => clearListing(l));
-}
-
-function convertSequilizeToObject(sequelizeResp){
-  var replacer = app.get('json replacer');
-  var spaces = app.get('json spaces');
-  var body = JSON.stringify(sequelizeResp, replacer, spaces);
-  return JSON.parse(body);
-}
-
 /*    
   newest, bedrooms, cheapest
 */
-_buildSearchQuery = async (query) => {
+_buildSearchQuery = async (req) => {
   let searchQuery = {};
   let order = [];
+  const query = req.query
   
   if (query.type) {
     let types = await models.HousingType.findAll({
@@ -56,6 +30,21 @@ _buildSearchQuery = async (query) => {
     searchQuery['HousingTypeId'] = types;
   }
 
+  console.log('Query: ', query);
+
+  if(query.approved){
+    searchQuery['isApproved'] = {
+      [Op.eq]: query.approved.toLowerCase() === 'true' ? 1 : 0
+    };
+  }
+
+  if(query.profile){
+    const profile = await findUserBySession(req);
+    searchQuery['UserId'] = {
+      [Op.eq]: profile.id
+    };
+  }
+
   if(query.beds){
     searchQuery['bedrooms'] = {
       [Op.gte]: query.beds
@@ -65,16 +54,23 @@ _buildSearchQuery = async (query) => {
   if(query.text){
     let txt = decodeURI(query.text);
     searchQuery[Op.or] = [
-      {
-        title: {
+      Sequelize.where(
+        Sequelize.fn('lower', Sequelize.col('city')),
+        {
           [Op.like]: `%${txt}%`
+        }
+      ),
+      {
+        zipCode: {
+          [Op.like]: `%${txt}`
         }
       },
-      {
-        description: {
+      Sequelize.where(
+        Sequelize.fn('lower', Sequelize.col('state')),
+        {
           [Op.like]: `%${txt}%`
         }
-      }
+      )
     ]
   }
 
@@ -98,7 +94,7 @@ _buildSearchQuery = async (query) => {
 
 //get listings route
 router.get('/', async (req,res) => {
-  let result = await _buildSearchQuery(req.query);
+  let result = await _buildSearchQuery(req);
   models.ListingPost.findAll({
     include: [models.HousingType,models.ListingImage],
     exclude: [models.Chat],
@@ -121,6 +117,34 @@ router.get('/one/:listingId', async (req,res) => {
   });
 });
 
+router.put('/one/:listingId', async (req, res) => {
+  models.ListingPost.findOne({
+    where: { id: req.params.listingId }
+  }).then(listing => {
+    if (!listing.isApproved) {
+      let isApproved = req.query.approve === 'true';
+      if (isApproved) {
+        listing.update({
+          isApproved: isApproved
+        }).then(() => res.status(204).send());
+      } else {
+        // delete
+        listing.destroy().then(() => res.status(204).send());
+      }
+    }
+  });
+});
+
+router.delete('/one/:listingId', async (req, res) => {
+  models.ListingPost.findOne({
+    where: { id: req.params.listingId }
+  }).then(listing => {
+    if (listing) {
+      listing.destroy().then(() => res.status(204).send());
+    }
+  });
+});
+
 //return all housing types that website provides
 router.get('/types', (_, res) => {
   models.HousingType
@@ -129,7 +153,13 @@ router.get('/types', (_, res) => {
 });
 
 //create new listing
-router.post('/new', (req, res) =>{
+router.post('/new', async (req, res) => {
+
+  const user = await findUserBySession(req);
+  if(!user){
+    res.status(401).send();
+    return;
+  }
 
   models.HousingType
     .findOne({ where: { type: req.body.housingType } })
@@ -143,7 +173,8 @@ router.post('/new', (req, res) =>{
         isApproved: false,
         bathrooms: req.body.bathrooms,
         bedrooms: req.body.bedrooms,
-        HousingTypeId: housingType.dataValues.id
+        HousingTypeId: housingType.dataValues.id,
+        UserId: user.id
       }).then((createdListing) => {
         // Save Images
         const images = req.body.images;

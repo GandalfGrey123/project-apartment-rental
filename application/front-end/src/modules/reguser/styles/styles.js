@@ -18,6 +18,36 @@ const styles = theme => ({
   justContent: {
     justifyContent: 'center'
   },
+  profileListings: {
+    margin: theme.spacing.unit * 5
+  },
+  margin: {
+    margin: theme.spacing.unit * 3,
+  },
+  extendedIcon: {
+    marginRight: theme.spacing.unit,
+  },
+  title: {
+    padding: theme.spacing.unit * 3
+  },
+  drawer: {
+    flexGrow: 1,
+     [theme.breakpoints.up('sm')]: {      
+      flexShrink: 0,
+    },   
+  },
+  drawerPaper: {    
+    position:'relative',
+    height: '100%',
+  },
+  subList: {
+    width: '100%',
+    maxWidth: 300,
+    backgroundColor: theme.palette.background.paper,
+    position: 'relative',
+    overflow: 'auto',
+    maxHeight: 280,
+  },
 });
 
 export default styles;

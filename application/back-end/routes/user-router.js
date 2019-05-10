@@ -1,14 +1,8 @@
 const express = require('express');
 var models = require('../models');
 const router = express.Router();
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
-
-var uniqueFactor = 0;
-const generateSessionToken = () => {
-	uniqueFactor += 1;
-	return Math.floor((Math.random() * 100000) + 100000) + uniqueFactor;
-};
+const { generateSessionToken,
+	findUserBySession, convertSequilizeToObject } = require('../utils/index');
 
 router.post('/login', (req, res) => {
 
@@ -55,6 +49,17 @@ router.post('/register', (req, res) => {
 		return res.status(200).json({ result: 'success!' });
 	});
 });
+
+router.get('/profile', async (req, res) => {
+	let user = await findUserBySession(req);
+	if(user){
+		user = convertSequilizeToObject(user);
+		delete user['password']
+		res.json(user);
+	}else{
+		res.status(401).send();
+	}
+})
 
 router.get('/session/:token/validate', (req, res) => {
 	models.User.findOne({

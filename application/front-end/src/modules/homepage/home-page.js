@@ -3,9 +3,8 @@ import {
   Drawer, withStyles, CssBaseline,
   TextField, InputAdornment,
   Grid, Paper, Toolbar, Typography,
-  Hidden, IconButton, Button
+  Hidden, IconButton, Button,
 } from '@material-ui/core';
-
 import {
   SearchOutlined as SearchIcon,
   ViewListOutlined as ViewListIcon,
@@ -104,6 +103,7 @@ class HomePage extends Component {
 
   getListings = (query = {}) => {
     let params = new URLSearchParams();
+    params.append('approved', true);
     if (query.types && !_.isEmpty(query.types)) {
       let selectedTypes = query.types;
       selectedTypes.forEach((value) => params.append("type", value));
@@ -176,7 +176,7 @@ class HomePage extends Component {
     return (
       <Paper className={classes.main} elevation={1}>
         <Grid container style={{ width: '100%' }} >
-          <Grid item lg={3} md={3} sm={3} >
+          <Grid item lg={2} md={3} sm={3} >
             <CssBaseline />
 
             <IconButton
@@ -228,60 +228,74 @@ class HomePage extends Component {
               >
                 Welcome to GaterRooms
               </Typography>
-              <Toolbar className={classes.searchSection}>
-                <TextField
-                  label="Listing Search"
-                  className={classes.searchTextField}
-                  name="listingSearch"
-                  value={searchTxt}
-                  onChange={this.handleSearchTxt}
-                  placeholder={'Enter city or state or zip code '}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    )
-                  }}
-                />
-                <Button
-                  color="primary"
-                  size="small"
-                  variant="contained"
-                  className={classes.searchButton}
-                  onClick={this.onSearchClick}
-                >
-                  Search
+              <Hidden xsDown implementation="css">
+                <Toolbar className={classes.searchSection}>
+                  <TextField
+                    label="Listing Search"
+                    className={classes.searchTextField}
+                    name="listingSearch"
+                    value={searchTxt}
+                    onChange={this.handleSearchTxt}
+                    placeholder={'Enter city or state or zip code '}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                  <Button
+                    color="primary"
+                    size="small"
+                    variant="contained"
+                    className={classes.searchButton}
+                    onClick={this.onSearchClick}
+                  >
+                    Search
                 </Button>
-                <div>
+                  <div>
+                    <IconButton
+                      aria-label="Grid-View"
+                      className={classes.iconButton}
+                      onClick={this._toggleSortMenu}
+                    >
+                      <SortIcon fontSize={'large'} />
+                    </IconButton>
+                    <MenuPopUp
+                      items={SORT_ACTIONS}
+                      anchorEl={anchorEl}
+                      open={sortMenuVisible}
+                      onClose={this._toggleSortMenu}
+                      onItemClick={(itemId) => this.handleSortTxt(itemId)}
+                    />
+                  </div>
                   <IconButton
                     aria-label="Grid-View"
                     className={classes.iconButton}
-                    onClick={this._toggleSortMenu}
+                    onClick={() => this.setState({ columnView: !columnView })}
                   >
-                    <SortIcon fontSize={'large'} />
+                    {columnView ?
+                      <ViewColumnIcon fontSize="large" /> :
+                      <ViewListIcon fontSize="large" />
+                    }
                   </IconButton>
-                  <MenuPopUp
-                    items={SORT_ACTIONS}
-                    anchorEl={anchorEl}
-                    open={sortMenuVisible}
-                    onClose={this._toggleSortMenu}
-                    onItemClick={(itemId) => this.handleSortTxt(itemId)}
-                  />
-                </div>
-                <IconButton
-                  aria-label="Grid-View"
-                  className={classes.iconButton}
-                  onClick={() => this.setState({ columnView: !columnView })}
-                >
-                  {columnView ?
-                    <ViewColumnIcon fontSize="large" /> :
-                    <ViewListIcon fontSize="large" />
-                  }
-                </IconButton>
-              </Toolbar>
+                </Toolbar>
+              </Hidden>
             </Grid>
-            {this.displayListings(listings, columnView)}
+            {
+              listings.length > 0 ?
+              this.displayListings(listings, columnView) :
+                <Grid
+                  container
+                  alignItems={'center'}
+                  justify={'center'}
+                >
+                  <Typography variant={'display2'} >
+                    No Listings Found
+                  </Typography>
+                </Grid>
+            }
           </Grid>
         </Grid>
         <ListingDetail
