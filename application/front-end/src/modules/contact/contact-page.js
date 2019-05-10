@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 
 import { 
-  Grid,Paper,AppBar,Toolbar,withStyles,
+  Grid,Paper,withStyles,
   Button,TextField, Typography, 
   Icon,IconButton,
   List,ListItem,Divider,
-  ListItemIcon, ListItemText, ListItemSecondaryAction,ListItemAvatar,
+  ListItemText, ListItemSecondaryAction,ListItemAvatar,
   Avatar, 
   FormGroup,FormControl
  } from '@material-ui/core';
@@ -13,8 +13,10 @@ import {
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
 import styles from './styles/contact-page';
 
-import { getInbox,sendMessage,chatConnect } from '../../api/message.actions';
+import { getInbox,sendMessage } from '../../api/message.actions';
 import { checkSession } from '../../api/user.actions';
+
+import MessageBox from './component/message-box';
 
 class ContactPage extends Component{
 
@@ -26,27 +28,29 @@ class ContactPage extends Component{
       currentChatIndex:0,
       nextMessage:'',
       userEmail:'',
+
+      viewMessage:[],
     };
 
     this.getChats = this.getChats.bind(this);
     this.selectChat = this.selectChat.bind(this);
-    this.handleSendButton = this.handleSendButton.bind(this);   
-    this.scrollToBottom = this.scrollToBottom.bind(this);
+    this.handleSendButton = this.handleSendButton.bind(this);       
+    this.getChatMessages = this.getChatMessages.bind(this);
   }
 
-  latestMessage = React.createRef()
 
   componentDidMount(){  
-    this.getChats();
-    this.scrollToBottom();   
+    this.getChats();   
   } 
 
-  componentDidUpdate() {
-    this.scrollToBottom();
-  }
-
-  scrollToBottom = () =>{
-    this.latestMessage.current.scrollIntoView({ behavior: "smooth" });
+ //get data from API enpoint 
+ getChats = () => {  
+      getInbox( (chatObj)=>{              
+        this.setState({ 
+          allUsersChats: chatObj.inbox || [],
+          userEmail: chatObj.userEmail,
+         });
+      });   
   }
 
   onChangeMessage = ({target: {value}}) =>{
@@ -56,22 +60,22 @@ class ContactPage extends Component{
   }
 
   handleSendButton = () =>{
-      if(this.state.nextMessage == ''){
-        return
-      }
+    //if nothing to send dont send
+    if(this.state.nextMessage == ''){
+      return
+    }
 
-      let sessionToken = JSON.parse(sessionStorage.getItem('session')).token      
-      let messagePacket ={
-       'chatId': this.state.allUsersChats[this.state.currentChatIndex].chatId,
-       'message': this.state.nextMessage,
-      }
-      
-       sendMessage(sessionToken,messagePacket, (resp)=>{                
-          this.getChats();
-          this.setState({
-           nextMessage: ''
-          });    
-       });
+    let messagePacket ={
+     'chatId': this.state.allUsersChats[this.state.currentChatIndex].chatId,
+     'message': this.state.nextMessage,
+    }
+    
+    sendMessage(messagePacket, (resp)=>{                
+       this.getChats();
+       this.setState({
+        nextMessage: ''
+       });    
+    });
   }
 
   //select a chat to show
@@ -81,22 +85,13 @@ class ContactPage extends Component{
     });
   } 
 
-  getChats = () => {  
-    let sessionToken = JSON.parse(sessionStorage.getItem('session')).token
-
-    if(sessionToken){
-      getInbox(sessionToken, (chatObj)=>{              
-        this.setState({ 
-          allUsersChats: chatObj.inbox || [],
-          userEmail: chatObj.userEmail,
-         });
-      });
-    }
-
-   else {}    
+  getChatMessages = (chatIndex) =>{
+     if(this.state.allUsersChats.length ==0){
+       return [];
+     }
+     return this.state.allUsersChats[chatIndex].messages;
   }
 
-  
 
   chatsList = () => {
     if(this.state.allUsersChats.length ==0) 
@@ -110,11 +105,12 @@ class ContactPage extends Component{
 
              <ListItem 
                button 
+               //change to use selectChat() for onClick
                 onClick={() => this.setState({ currentChatIndex: index }) }
               >
               <ListItemAvatar>
                  <Avatar
-                   alt="dm view avatar${i}" 
+                   alt="dm user avatar${i}" 
                    src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" 
                  />
               </ListItemAvatar>
@@ -126,114 +122,24 @@ class ContactPage extends Component{
                   secondary={chat.listing}                 
                />
     
-          <ListItemSecondaryAction>
-                <IconButton aria-label="Delete">
-                  <DeleteForeverRoundedIcon />
-                </IconButton>
-          </ListItemSecondaryAction>
-       </ListItem>
+                  <ListItemSecondaryAction>
+                        <IconButton aria-label="Delete">
+                          <DeleteForeverRoundedIcon />
+                        </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
 
-       <Divider light />
-
+              <Divider light />
            </div>
         );
     });
   
-    return chatListItems;
+   return chatListItems;
   }
-
-
-//REFRACTOR- make displayMessages() its own component and pass Chat object as the props
-  displayMessages = () => {
-  if(this.state.allUsersChats.length ==0) 
-      return;
-
-  let messages = [];
-   this.state.allUsersChats[this.state.currentChatIndex].messages.forEach(message =>{
-      messages.push(
-        <React.Fragment>
-          <ListItem alignItems="flex-start">
-           <ListItemAvatar>
-             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
-           </ListItemAvatar>
-           <ListItemText
-             primary={`${message.senderEmail} `}// - sent 12:00pm`}
-             secondary={
-               <React.Fragment>
-                 <Typography component="span"  color="textPrimary">
-                 {message.message}
-                 </Typography>               
-               </React.Fragment>
-             }
-           />
-          </ListItem>
-        </React.Fragment>
-      );
-    });
-    return messages;
-  }
-
-
-  showMessageBox(classes){
-
-
-      return(
-        <React.Fragment>
-
-      <ListItem 
-        button 
-        selected = {true}
-      > 
-         <ListItemAvatar className={classes.contactAvatar}>
-            <Avatar alt="contact user's avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
-         </ListItemAvatar>
-    
-          <ListItemText
-             primary={ "Conversation with - LandLordUsername123"}
-             secondary={"About Listing - #ListingPost123"}                 
-          />        
-       </ListItem>
-
-         <Paper>
-
-            <List className={classes.chatBox}>                                 
-              {this.displayMessages()}
-               <div ref={this.latestMessage} />
-            </List>
-
-            <FormGroup>
-            <FormControl fullWidth className={classes.margin}>
-           
-                 <TextField
-                     id="standard-full-width"
-                     onChange={this.onChangeMessage}
-                     label="Type message"        
-                     variant="outlined"
-                     multiline="true"
-                     fullWidth 
-                    value={this.state.nextMessage}
-                   />
-                         
-            </FormControl>
-                <Button 
-                   variant="contained" 
-                   color="primary" 
-                   className={classes.button}
-                   onClick= {this.handleSendButton}
-                 >
-                      Send 
-                   <Icon className={classes.rightIcon}>send</Icon>
-                 </Button>
-            </FormGroup>
-         </Paper>
-        </React.Fragment>
-   );
-  }
-
 
   render() {
     const {classes,theme} = this.props;
-    const {allUsersChats,currentChatIndex} = this.state;
+    const {currentChatIndex} = this.state;
     
     return(
      <div>      
@@ -261,10 +167,47 @@ class ContactPage extends Component{
                  square='true'
                  elevation='1'
                 >
-                   {this.showMessageBox(classes)}
-                </Paper>                   
-            </Grid>
+                   
+                <MessageBox
+                  messages={
+                    this.getChatMessages(currentChatIndex)
+                  }
+                  chatInfo={{
+                    landLordEmail:'landlord@yahoo',
+                    listingTitle: 'listing 1',
+                  }}
+                 />
 
+                </Paper>
+
+                <Paper>
+                  <FormGroup>
+                    <FormControl fullWidth className={classes.margin}>                 
+                         <TextField
+                             id="standard-full-width"
+                             onChange={this.onChangeMessage}
+                             label="Type message"        
+                             variant="outlined"
+                             multiline="true"
+                             fullWidth 
+                            value={this.state.nextMessage}
+                           />                               
+                    </FormControl>
+
+                    <Button 
+                     variant="contained" 
+                     color="primary" 
+                     className={classes.button}
+                     onClick= {this.handleSendButton}
+                     >
+                        Send 
+                    <Icon className={classes.rightIcon}>send</Icon>
+                    </Button>
+
+                  </FormGroup>
+                </Paper>                   
+
+            </Grid>
           </Grid>        
         </div>       
      );
@@ -273,5 +216,3 @@ class ContactPage extends Component{
 }
 
 export default withStyles(styles, {withTheme:true}) (ContactPage);
-
-
