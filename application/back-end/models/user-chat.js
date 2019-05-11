@@ -2,7 +2,6 @@
 module.exports = (sequelize, DataTypes) => {
 
 const UserChat = sequelize.define('UserChat', {
-    listingId: DataTypes.INTEGER, //each user chat conversation is linked to one listing
 }, {
     createdAt: 'dateSent',
     updatedAt: false
