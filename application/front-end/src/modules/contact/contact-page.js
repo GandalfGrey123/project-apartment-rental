@@ -28,8 +28,6 @@ class ContactPage extends Component{
       currentChatIndex:0,
       nextMessage:'',
       userEmail:'',
-
-      viewMessage:[],
     };
 
     this.getChats = this.getChats.bind(this);
@@ -93,10 +91,23 @@ class ContactPage extends Component{
   }
 
 
+  getChatInfo = (chatIndex) =>{
+    if(this.state.allUsersChats.length ==0){
+       return {};
+     }
+  return {
+      listingTitle: this.state.allUsersChats[chatIndex].listingTitle,
+      chatingWith: this.state.allUsersChats[chatIndex].chatingWith
+    };
+  }
+
+
+
   chatsList = () => {
     if(this.state.allUsersChats.length ==0) 
       return;
 
+    console.log(this.state.userEmail)
     let chatListItems = [];
     this.state.allUsersChats.forEach((chat, index)=>{
     
@@ -117,9 +128,11 @@ class ContactPage extends Component{
                 
                <ListItemText
                   primary={
-                    chat.userOneEmail === this.state.userEmail? chat.userTwoEmail : chat.userOneEmail
+                   chat.chatingWith
                   }
-                  secondary={chat.listing}                 
+                  secondary={
+                    `Listing \" ${chat.listingTitle} \"`
+                  }                 
                />
     
                   <ListItemSecondaryAction>
@@ -172,10 +185,9 @@ class ContactPage extends Component{
                   messages={
                     this.getChatMessages(currentChatIndex)
                   }
-                  chatInfo={{
-                    landLordEmail:'landlord@yahoo',
-                    listingTitle: 'listing 1',
-                  }}
+                  chatInfo={
+                    this.getChatInfo(currentChatIndex)
+                  }
                  />
 
                 </Paper>
@@ -215,4 +227,4 @@ class ContactPage extends Component{
 
 }
 
-export default withStyles(styles, {withTheme:true}) (ContactPage);
+export default withStyles(styles, {withTheme:true}) (ContactPage); 

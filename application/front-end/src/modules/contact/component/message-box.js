@@ -90,8 +90,10 @@ class MessageBox extends Component{
            </ListItemAvatar>
             
            <ListItemText           	
-             primary={chatInfo.landLordEmail}
-             secondary={chatInfo.listingTitle}                 
+             primary={chatInfo.chatingWith}
+             secondary={ 
+              `Listing title - ${chatInfo.listingTitle}`
+            }                 
            />           
 	    </ListItem>
         
