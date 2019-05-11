@@ -6,13 +6,14 @@ const app = express();
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-//clean up sequelize object , return chat
-function clearChat(chatRoom){
+//extract info from sequelize object , return chat object
+function clearChat(chatRoom,yourEmail){
+  let chatingWith = chatRoom.Chat.userTwoEmail === yourEmail? chatRoom.Chat.userOneEmail : chatRoom.Chat.userTwoEmail
+
   let chatObj = { 
     "chatId": chatRoom.Chat.id,
-    "listing": chatRoom.listingId,
-    "userOneEmail": chatRoom.Chat.userOneEmail,
-    "userTwoEmail": chatRoom.Chat.userTwoEmail,
+    "listingTitle": chatRoom.Chat.ListingPost.title,
+    "chatingWith": chatingWith,
     "messages": []
   }
 
@@ -26,19 +27,21 @@ function clearChat(chatRoom){
  return chatObj;
 }
 
+//go through each UserChat and get data to create chat object
 //fill array with chat objects
-function clearChats(chatRooms){
+function clearUserChats(user){
   let allChats=[]
   
-  chatRooms.map((nextChatRoom) => allChats
-    .push(clearChat(nextChatRoom)));
-  return allChats;
+  user.UserChats.map((nextChatRoom) => allChats
+    .push(clearChat(nextChatRoom,user.email))
+  );
+
+ return allChats;
 }
 
 
 router.get('/inbox', (req,res) =>{  
-   const token = req.headers.session;
-  //find User include UserChats then include Chats with Messages
+   const token = req.headers.session;  
     models.User.findOne({
       where:{
        sessionToken: token,
@@ -48,14 +51,13 @@ router.get('/inbox', (req,res) =>{
         model: models.UserChat,  
         include:[{ 
             model: models.Chat, 
-            include:[models.Message] 
+            include:[models.Message, models.ListingPost] 
         }],
       }]
 
     }).then((user) =>{
           
       if(!user){
-        console.log('not found!')
        res.status(401).json('error')
        return       
       }       
@@ -67,7 +69,7 @@ router.get('/inbox', (req,res) =>{
 
      let chatObj={
       'userEmail':user.email,
-      'inbox': clearChats(user.UserChats)
+      'inbox': clearUserChats(user)
      }
     
       res.status(200).json(chatObj)       
@@ -81,10 +83,7 @@ router.post('/send', (req,res) =>{
       }
     }).then((user)=>{
 
-      if(!user){
-        console.log('not found!')
-        // session token error , 
-        // user not found send unauthorized status response
+      if(!user){              
        res.status(401).json('error')       
       }   
 
@@ -100,64 +99,58 @@ router.post('/send', (req,res) =>{
 
 
 
-
-
-//NEED TO DETERMINE - 
-// .. WHICH USER IS THE LANDLORD AND WHICH IS THE STUDENT
-//WE NEED TO BUILD A FORM TO MAKE A API CALL TO THIS ENDPOINT
 router.post('/new', (req,res) =>{
-      
-      //this query needs clean up or refactor
-      models.User.findAll({
-         where:{
-          [Op.or]: [
-             {sessionToken: req.headers.session}, 
-             {email: req.body.landLordEmail},
-           ]
-         }
-      }).then((users)=>{
+ const token = req.headers.session;
+     
+  models.User.findOne({
+     where:{sessionToken: token},          
+  }).then( (user)=>{
 
-          //if(!users.length !== 2){error}
-          models.Chat.create({
-            userOneEmail: users[0].email,
-            userTwoEmail: users[1].email,
-          }).then((newChat)=>{
+
+    if(!user){
+      res.status(401).json('error')
+    return       
+    } 
+
+    models.ListingPost.findOne({
+      
+      where:{ id: req.listingId },
+      include:[{ model: models.User }]
+
+    }).then((listing)=>{
+
+
+        if(!listing){
+          res.status(204).json('error')
+        return       
+        } 
+   
+      models.Chat.create({
+        //always put the first email as the landlord's email
+         userOneEmail: listing.User.email,
+         userTwoEmail: user.email,
+         ListingPostId: listing.id
+      }).then((newChat)=>{
 
             models.UserChat.bulkCreate([
+                 {
+                  UserId: listing.User.id,
+                  ChatId: newChat.id,
+                 },
               
-              {
-              // listingTitle: req.body.title, <- not included yet
-               listingId: req.body.listingId,
-               UserId: users[0].id,
-               ChatId:newChat.id,
-              },
-              
-              {
-              // listingTitle: req.body.title, <- not included yet
-               listingId: req.body.listingId,
-               UserId: users[1].id,
-               ChatId:newChat.id,
-              }
-
-            ]).then((chatRoom)=>{
-
-                models.Message.create({
-                    userEmail: users[0].email, // <- not sure if the sender will be users[0]
-                    message: req.body.message,
-                    ChatId: newChat.id,
-                    UserId: users[0].id, // <- not sure if the sender will be users[0]
-                }).then((message, err)=>{
-
-
-                  if(err){
-                    res.status(400).send('error');
-                  }
-                  res.status(200).send('success');
-
-                });
+                 {
+                  UserId: user.id,
+                  ChatId: newChat.id,
+                 },
+            ]).then(()=>{
+              res.status(200).send('created');
             });
-          });
-      })
+
+      });
+    }); 
+ 
+  });
 }); 
 
 module.exports = router;
+
