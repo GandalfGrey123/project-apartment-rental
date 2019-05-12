@@ -90,7 +90,6 @@ class ContactPage extends Component{
      return this.state.allUsersChats[chatIndex].messages;
   }
 
-
   getChatInfo = (chatIndex) =>{
     if(this.state.allUsersChats.length ==0){
        return {};
@@ -100,8 +99,6 @@ class ContactPage extends Component{
       chatingWith: this.state.allUsersChats[chatIndex].chatingWith
     };
   }
-
-
 
   chatsList = () => {
     if(this.state.allUsersChats.length ==0) 

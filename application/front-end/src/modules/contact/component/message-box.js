@@ -53,7 +53,7 @@ class MessageBox extends Component{
              <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
            </ListItemAvatar>
            <ListItemText
-             primary={`${message.senderEmail} `}// - sent 12:00pm`}
+             primary={`${message.senderEmail} `}
              secondary={
                <React.Fragment>
                  <Typography component="span"  color="textPrimary">

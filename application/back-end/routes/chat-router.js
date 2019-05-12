@@ -97,8 +97,6 @@ router.post('/send', (req,res) =>{
     })
 }); 
 
-
-
 router.post('/new', (req,res) =>{
  const token = req.headers.session;
      

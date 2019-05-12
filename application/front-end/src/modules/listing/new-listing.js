@@ -228,8 +228,6 @@ removeImage =(imageIndex) => {
            />
          </FormControl>
 
-
-
          <FormControl>
            <TextField
              label="Zip"
@@ -238,6 +236,7 @@ removeImage =(imageIndex) => {
              margin="normal"
            />
          </FormControl>
+
          <FormControl>
            <TextField
              multiline
@@ -248,7 +247,6 @@ removeImage =(imageIndex) => {
              margin="normal"
            />
          </FormControl>
-
 
           <br /> 
           <FormControl variant="outlined">

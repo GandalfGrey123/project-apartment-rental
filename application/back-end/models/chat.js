@@ -13,6 +13,5 @@ const Chat = sequelize.define('Chat', {
     Chat.hasMany(models.Message);
     Chat.belongsTo(models.ListingPost);
   };
-
  return Chat;
 };

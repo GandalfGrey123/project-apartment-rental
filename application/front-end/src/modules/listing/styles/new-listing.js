@@ -1,16 +1,15 @@
 const styles = theme => ({
   root: {
-      flexGrow: 1,
-      padding: 10,
-      margin: 20,
-      width: '70%',
-   	  marginLeft: '15%',
+    flexGrow: 1,
+    padding: 10,
+    margin: 20,
+    width: '80%',
+   	marginLeft: '10%',
   },
   formGroup: {
-    width: '100%'
-
+ 
   },
-   card: {
+  card: {
     maxWidth: 400,
   },
   media: {
@@ -45,7 +44,6 @@ const styles = theme => ({
   margin:{
     margin:20,
   }
-
 });
 
 export default styles;
