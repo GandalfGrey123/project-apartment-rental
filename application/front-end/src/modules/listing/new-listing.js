@@ -106,6 +106,7 @@ class NewListing extends Component{
 
   onSubmitClick = () => {
       const { form } = this.state;
+
       if(Object.keys(form).length != 8){
        alert('you must fill out all form fields');
       }else{
