@@ -3,6 +3,11 @@ import {
     Menu, MenuItem
 } from '@material-ui/core';
 
+/**
+ * A PopUp menu with click which is used to display the actions.
+ * Like for Sorting ( by distance, newest ... )
+ * Also this allows handle the click
+ */
 const AppBarMenu = ({ 
     items,
     open,

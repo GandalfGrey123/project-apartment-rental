@@ -24,6 +24,9 @@ const styles = theme => ({
   margin: {
     margin: theme.spacing.unit * 3,
   },
+  addBtnMargin: {
+    margin: theme.spacing.unit * 1,
+  },
   extendedIcon: {
     marginRight: theme.spacing.unit,
   },

@@ -25,6 +25,7 @@ const FormRow = ({ listings, columnView = true, refresh = () => {} }) => {
           >
             <ListingCard
               listing={value}
+              displayBadge={true}
               actions={(
                 <CardActions>
                   <Button 

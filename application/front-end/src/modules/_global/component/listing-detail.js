@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-    withStyles,
-    Dialog,
-    Divider,
-    AppBar,
-    Toolbar,
-    IconButton,
-    Typography,
-    Slide,
-    Grid
+    withStyles,Dialog, AppBar,
+    Toolbar, IconButton, Typography,
+    Slide, Grid, Button
 } from '@material-ui/core';
 import {
     Close as CloseIcon,
 } from '@material-ui/icons';
+import MapView from '../../googlemaps/maps';
+import LandloardContactDialog from '../../_global/component/message-dialog';
+import { checkSession } from '../../../api/user.actions';
 import { getListing } from '../../../api/listings.actions';
 // import ReactImages from 'react-images'; // doesn't work for some reason
 
+/**
+ * A dialog which pops up to display the listing information
+ */
 const Transition = (props) => {
     return <Slide direction="up" {...props} />
 }
@@ -30,8 +30,13 @@ const styles = theme => ({
     },
     image: {
         padding: 10,
-        width: theme.spacing.unit * 50,
+        width: '100%',
         height: theme.spacing.unit * 50,
+    },
+    map: {
+        padding: 10,
+        width: '200px',
+        height: '200px',
     },
     infoContainer: {
         padding: 10
@@ -39,6 +44,9 @@ const styles = theme => ({
     txtContainer: {
         paddingLeft: 5
     },
+    contactButton: {
+        padding: theme.spacing.unit*1,
+    }
 });
 
 class ListingDetailDialog extends Component{
@@ -51,9 +59,17 @@ class ListingDetailDialog extends Component{
             },
             imageContainer: {
                 open: false
-            }
+            },
+            isLoggedIn: false,
+            contactDialogOpen: false
         }
+        this._contactLandloard = this._contactLandloard.bind(this);
+        this._checkAuthentication = this._checkAuthentication.bind(this);
         this._updateImgContainerState = this._updateImgContainerState.bind(this);
+    }
+
+    componentDidMount(){
+        this._checkAuthentication()
     }
 
     componentDidUpdate(prevProps){
@@ -65,15 +81,37 @@ class ListingDetailDialog extends Component{
         }
     }
 
+    _checkAuthentication = () => {
+        const session = sessionStorage.getItem('session')
+            if(session && JSON.parse(session).token){
+                // validate session
+                const token = JSON.parse(session).token;
+          checkSession(token, 
+            (_) => this.setState({ isLoggedIn: true }),
+            () => this.setState({ isLoggedIn: false }));
+            }else{
+                this.setState({ isLoggedIn: false });
+            }
+      }
+
     _updateImgContainerState = (key, value) => {
         let { imageContainer } = this.state;
         imageContainer[key] = value;
         this.setState({ imageContainer });
     }
 
+    _contactLandloard = () => {
+        const { isLoggedIn, contactDialogOpen } = this.state;
+        if(isLoggedIn){
+            this.setState({ contactDialogOpen: !contactDialogOpen })
+        }else{
+            alert('You need to log in order to contact landloard.')
+        }
+    }
+
     render(){
         
-        const { listing, imageContainer } = this.state;
+        const { listing, contactDialogOpen } = this.state;
         const { open, onClose, classes } = this.props;
 
         const images = listing
@@ -88,25 +126,35 @@ class ListingDetailDialog extends Component{
                 TransitionComponent={Transition}
             >
                 <AppBar className={classes.appBar} >
-                    <Toolbar>
-                        <IconButton
-                            color={'inherit'}
-                            onClick={onClose}
-                            aria-label={'Close'}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    </Toolbar>    
+                    <Grid
+                        container
+                        direction={'row'}
+                        justify={'flex-end'}
+                    >
+                        <Toolbar>
+                            <IconButton
+                                color={'inherit'}
+                                onClick={onClose}
+                                aria-label={'Close'}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </Toolbar>
+                    </Grid>
                 </AppBar>
                 <div className={classes.content} >
-                    <Grid container >
-                        <Grid item xs={3} >
+                    <Grid container style={{ width: '100%' }} >
+                        <Grid item lg={6} md={6} sm={6} >
                             <img
                                 className={classes.image}
                                 src={images.length > 0 ? images[0].src : null}
                             />
+                            <MapView
+                                mapContainer={classes.map}
+                                address={`${listing.line1} ${listing.city} ${listing.state} ${listing.zipCode}`}
+                            />
                         </Grid>
-                        <Grid item xs={5} >
+                        <Grid item lg={6} md={6} sm={6} >
                             <div className={classes.infoContainer} >
                                 <Grid
                                     container
@@ -147,16 +195,36 @@ class ListingDetailDialog extends Component{
                                                 <Typography variant="h6" >Date Posted: {listing.datePosted}</Typography>
                                             </div>
                                         </Grid>
-                                    </Grid>  
+                                    </Grid>   
+                                    <Grid item xs={12}>
+                                        <Grid 
+                                            container
+                                            direction={'row'}
+                                            justify={'flex-start'}
+                                        >
+                                            <Button
+                                                color="primary"
+                                                size="small"
+                                                variant="contained"
+                                                className={classes.contactButton}
+                                                onClick={() => this._contactLandloard()}
+                                            >
+                                                Contact Landloard
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
                             </div>
                         </Grid>
                     </Grid>
                 </div>
+                <LandloardContactDialog
+                    open={contactDialogOpen}
+                    onClose={() => this.setState({ contactDialogOpen: !contactDialogOpen })}
+                />
             </Dialog>
         )
-    } 
-    
+    }
 }
 
 ListingDetailDialog.propTypes = {

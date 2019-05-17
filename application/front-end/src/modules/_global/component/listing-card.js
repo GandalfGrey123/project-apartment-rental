@@ -21,8 +21,13 @@ const styles = theme => ({
   },
 });
 
+/**
+ * A listing card which is used to show the image, date, and title of the listing.
+ * Reused accross all the compoents.
+ * @param {*} props - properties passed to the component
+ */
 const ListingCard = (props) => {
-  const { classes, listing, actions, onListingPress } = props;
+  const { classes, listing, actions, onListingPress, displayBadge = false } = props;
   const image = _.isArray(listing.images) && listing.images.length > 0 ? 
       "data:image/png;base64," + listing.images[0] :
       null;
@@ -50,11 +55,15 @@ const ListingCard = (props) => {
           <Typography component="p">
             {listing.description}
           </Typography>
-          <Badge
-            className={classes.badge}
-            badgeContent={listing.isApproved ? 'Approved': 'Not Approved'}
-            color={listing.isApproved ? 'primary' : 'secondary'}
-          />
+          {
+            displayBadge && (
+              <Badge
+                className={classes.badge}
+                badgeContent={listing.isApproved ? 'Approved' : 'Not Approved'}
+                color={listing.isApproved ? 'primary' : 'secondary'}
+              />
+            )
+          }
         </CardContent>
       </CardActionArea>
       {actions}
