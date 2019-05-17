@@ -20,6 +20,7 @@ function clearUserChats(chats, excludeEmail){
       chat.Messages.forEach((message)=>{
         chatObj['messages'].push({         
           'message': message.message,
+          'sentTime': message.dateSent,
           'senderEmail' : message.userEmail
         });
       })
