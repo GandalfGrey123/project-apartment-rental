@@ -1,9 +1,8 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
 
-const Chat = sequelize.define('Chat', {
-	userOneEmail: DataTypes.STRING,
-	userTwoEmail: DataTypes.STRING,	
+const Chat = sequelize.define('Chat', {	
+	
 }, {
     createdAt: 'dateSent',
     updatedAt: false
@@ -11,7 +10,18 @@ const Chat = sequelize.define('Chat', {
 
   Chat.associate = (models) => {          
     Chat.hasMany(models.Message);
-    Chat.belongsTo(models.ListingPost);
+    Chat.belongsTo(models.ListingPost);    
+    
+    Chat.belongsTo(models.User, {
+    	as: 'lesseeChatUser',
+    	foreignKey:'lesseeChatFk',
+    });
+
+    Chat.belongsTo(models.User, {
+    	as:'landLordChatUser',
+    	foreignKey:'landLordChatFk',
+    });
   };
+
  return Chat;
 };

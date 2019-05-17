@@ -16,6 +16,7 @@ class MessageBox extends Component{
     super(props);
     this.displayMessages = this.displayMessages.bind(this);
     this.scrollToBottom = this.scrollToBottom.bind(this);
+    this.formatUtcTime = this.formatUtcTime.bind(this);
   }
 
   latestMessage = React.createRef()
@@ -28,15 +29,17 @@ class MessageBox extends Component{
     this.scrollToBottom();
   }
 
+  formatUtcTime = (utcTimeStamp)=>{
+    let date = new Date(utcTimeStamp)
+
+
+    return date.toString().replace('GMT-0700 (PDT)','')
+  }
+
   scrollToBottom = () =>{
     this.latestMessage.current.scrollIntoView({ behavior: "smooth" });
   }
 
-  onChangeMessage = ({target: {value}}) =>{
-    this.setState({
-      nextMessage: value
-    });
-  }
 
   displayMessages =() =>{
 
@@ -53,13 +56,15 @@ class MessageBox extends Component{
              <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
            </ListItemAvatar>
            <ListItemText
-             primary={`${message.senderEmail} `}
+             primary={ `${message.senderEmail} sent - ${this.formatUtcTime(message.sentTime) }` }
              secondary={
                <React.Fragment>
                  <Typography component="span"  color="textPrimary">
                  {message.message}
                  </Typography>               
                </React.Fragment>
+
+
              }
            />
           </ListItem>
