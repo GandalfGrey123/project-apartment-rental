@@ -15,7 +15,7 @@ import {
 import ListingCard from '../_global/component/listing-card';
 import MenuPopUp from '../_global/component/appbar-menu';
 import ListingDetail from '../_global/component/listing-detail';
-
+import qs from 'qs';
 import styles from './styles/home-page';
 
 import _ from 'lodash';
@@ -95,6 +95,20 @@ class HomePage extends Component {
 
   componentWillMount() {
     this.getListings();
+  }
+
+  componentDidMount(){
+    const params = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
+    if(params.refresh){
+      // work-arround in order for a profile icon to show up after successfull
+      // login
+      window.history.pushState({}, document.title, "/");
+      window.location.reload();
+    }else if(params.logout){
+      sessionStorage.removeItem('session');
+      window.history.pushState({}, document.title, "/");
+      window.location.reload();
+    }
   }
 
   onDrawerSelection = (query = {}) => {

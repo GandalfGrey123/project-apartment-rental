@@ -4,10 +4,14 @@ import {
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
+/**
+ * App Bar Menu just shows the items, no clicked supported.
+ */
 const AppBarMenu = ({ 
     items,
     open,
     onClose,
+    onClick,
     anchorEl,
 }) => {
     return (
@@ -31,6 +35,9 @@ const AppBarMenu = ({
                         component={Link}
                         key={`menu-item-${index+1}`}
                         to={value.id}
+                        onClick={() => {
+                            if(onClick) onClick(value.id);
+                        }}
                     >
                         {value.label}
                     </MenuItem>

@@ -90,7 +90,7 @@ class LoginForm extends Component {
     const { canSubmit, remember, loginSuccess, message } = this.state;
 
     if(loginSuccess){
-      return <Redirect to={'/profile'} />
+      return <Redirect to={'/?refresh=true'} />
     }
 
     return (
