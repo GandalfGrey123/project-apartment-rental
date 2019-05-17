@@ -2,92 +2,122 @@ import React, { Component } from 'react';
 
 //adding google maps
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
+import { getGeocodingInfo } from '../../api/google.geocoding';
 
+const API_KEY = 'AIzaSyCiI9shqkKiKx8rs57v02JoWtKfP2aSyHk';
+const MAP_SIZE = {
+  width: '400px',
+  height: '400px',
+  padding: '20px'
+}
 
 class Maps extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-    showingInfoWindow: false,  //Hides or the shows the infoWindow
-    activeMarker: {},          //Shows the active marker upon click
-    selectedPlace: {}          //Shows the infoWindow to the selected place upon a marker
-  }
-   //binding to event handler functions
+      showingInfoWindow: false,  //Hides or the shows the infoWindow
+      activeMarker: {},          //Shows the active marker upon click
+      selectedPlace: {},          //Shows the infoWindow to the selected place upon a marker
+      location: {
+        lat: 0,
+        lng: 0
+      },
+      loaded: false
+    }
+    //binding to event handler functions
     this.onMarkerClick = this.onMarkerClick.bind(this);
     this.onMapClick = this.onMapClick.bind(this);
-  
+
   }
 
-    onMarkerClick = (props, marker, e) => {
-        this.setState({
-          selectedPlace: props,
-          activeMarker: marker,
-          showingInfoWindow: true
-        });
-	}
+  componentWillMount(){
+    const { address } = this.props;
+    getGeocodingInfo(API_KEY, address, (res) => {
+      console.log('response:', res.data.results[0].geometry);
+      this.setState({ location: res.data.results.length > 0 ? res.data.results[0].geometry.location : {
+        lat: 0,
+        lng: 0
+      }, loaded: true })
+    })
+  }
 
-    onClose = props => {
-        if (this.state.showingInfoWindow) {
-            this.setState({
-                showingInfoWindow: false,
-                activeMarker: null
-            });
-        }
-    };
+  onMarkerClick = (props, marker, e) => {
+    this.setState({
+      selectedPlace: props,
+      activeMarker: marker,
+      showingInfoWindow: true
+    });
+  }
 
-  	onMapClick = (props) => {
-	    if (this.state.showingInfoWindow) {
-	        this.setState({
-		    showingInfoWindow: false,
-		    activeMarker: null
-		    });
-	    }
-  	}
+  onClose = props => {
+    if (this.state.showingInfoWindow) {
+      this.setState({
+        showingInfoWindow: false,
+        activeMarker: null
+      });
+    }
+  };
 
-//for maps
- 
+  onMapClick = (props) => {
+    if (this.state.showingInfoWindow) {
+      this.setState({
+        showingInfoWindow: false,
+        activeMarker: null
+      });
+    }
+  }
+
+  //for maps
+
   render() {
 
-    const { classes } = this.props;
+    const { location, loaded } = this.state;
+    const { mapContainer, address } = this.props;
 
-	const mapStyles = {
-	  width: '100%',
-	  height: '100%'
-	};
-
-
-    return (
-      //<div className={classes.root}>
-
-      < Map
-        google={this.props.google}
-        onClick ={this.onMapClick}
-        zoom={14}
-        style={mapStyles}
-        initialCenter={{lat: 37.7212,
-         lng: -122.476844}}
-      >
-	    <Marker
-          onClick={this.onMarkerClick}
-          name={'San Francisco State University'}
-        />
-        <InfoWindow
-          marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow}
-          onClose={this.onClose}
+    if (loaded) {
+      return (
+        <div
+          style={MAP_SIZE}
         >
-   	    <div>
-            <h4>{this.state.selectedPlace.name}</h4>
-   	    </div>
-        </InfoWindow>
-      </Map>
-      //</div>
-    );
+          < Map
+            google={this.props.google}
+            onClick={this.onMapClick}
+            zoom={14}
+            style={MAP_SIZE}
+            initialCenter={{
+              lat: location.lat,
+              lng: location.lng
+            }}
+            loaded={loaded}
+          >
+            <Marker
+              onClick={this.onMarkerClick}
+              mapCenter={{
+                lat: location.lat,
+                lng: location.lng
+              }}
+              name={address}
+            />
+            <InfoWindow
+              marker={this.state.activeMarker}
+              visible={this.state.showingInfoWindow}
+              onClose={this.onClose}
+            >
+              <div>
+                <h4>{this.state.selectedPlace.name}</h4>
+              </div>
+            </InfoWindow>
+          </Map>
+        </div>
+      )
+    }else{
+      return <div />
+    }
   }
 }
 
 export default GoogleApiWrapper({
-  apiKey: 'AIzaSyCiI9shqkKiKx8rs57v02JoWtKfP2aSyHk'
+  apiKey: API_KEY
 })(Maps);
 

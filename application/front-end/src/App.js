@@ -47,6 +47,10 @@ const PROFILE_MENU_ACTIONS = [
   {
     id: '/profile/listings/new',
     label: 'New Listing'
+  },
+  {
+    id: '/?logout=true',
+    label: 'Log Out'
   }
 ];
 
@@ -153,6 +157,13 @@ class App extends Component {
                       items={PROFILE_MENU_ACTIONS}
                       anchorEl={anchorEl}
                       open={profileMenu}
+                      onClick={(id) => {
+                        if(id.indexOf('logout') > 0){
+                          sessionStorage.removeItem('session');
+                          window.history.pushState({}, document.title, "/");
+                          window.location.reload();
+                        }
+                      }}
                       onClose={this._toggleProfileMenu}
                     />
                   </div>):

@@ -11,6 +11,10 @@ import {
   CheckCircle as CheckCircleIcon
 } from '@material-ui/icons'
 
+/*
+ * Snack Bar is a component that is used to display an error message when the log in is invalid.
+ * And when enrollment was successfull.  
+ */
 const variantIcon = {
   success: CheckCircleIcon,
   warning: WarningIcon,

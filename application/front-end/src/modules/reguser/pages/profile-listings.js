@@ -26,6 +26,7 @@ const FormRow = ({ listings, columnView = true, refresh }) => {
           >
             <ListingCard
               listing={value}
+              displayBadge={true}
               actions={(
                 <CardActions>
                   <Button
@@ -63,7 +64,7 @@ class ProfileListings extends Component {
   _toggleSortMenu = (event) => {
     const { sortMenuVisible } = this.state;
     let state = { sortMenuVisible: !sortMenuVisible };
-    if(event){
+    if (event) {
       state['anchorEl'] = event.currentTarget;
     }
     this.setState(state)
@@ -81,20 +82,20 @@ class ProfileListings extends Component {
       let selectedTypes = query.types;
       selectedTypes.forEach((value) => params.append("type", value));
     }
-    if(query.beds && query.beds !== '0'){
+    if (query.beds && query.beds !== '0') {
       params.append("beds", query.beds);
     }
-    if(query.sortBy){
+    if (query.sortBy) {
       params.append("sortBy", query.sortBy);
     }
-    if(query.text){
+    if (query.text) {
       params.append("text", encodeURI(query.text));
     }
     getListings(params, (data) => {
       this.setState({ listings: data || [] })
     }, {
-      'Session': JSON.parse(sessionStorage.getItem('session')).token
-    })
+        'Session': JSON.parse(sessionStorage.getItem('session')).token
+      })
   }
 
   displayListings = (listings, columnView) => {
@@ -132,11 +133,27 @@ class ProfileListings extends Component {
 
     return (
       <Paper className={classes.main} elevation={1}>
-        <Button size="small" color="primary" style={{
-          display: listings.length === 0 ? 'none' : 'flex'
-        }} component={Link} to={'/profile/listings/new'} >
-          Create Listing
-        </Button>
+        <Grid
+          container
+          direction={'row'}
+          justify={'flex-end'}
+        >
+          <Fab
+            variant="extended"
+            color="primary"
+            aria-label="Add"
+            className={classes.addBtnMargin}
+            component={Link}
+            to={'/profile/listings/new'}
+            style={{
+              display: listings.length === 0 ? 'none' : 'flex',
+              width: '200px'
+            }}
+          >
+            <AddIcon className={classes.extendedIcon} />
+            Add Listing
+        </Fab>
+        </Grid>
         <Grid container style={{ width: '100%' }} >
           <Typography className={classes.title} variant={'h5'} >Your Listings</Typography>
           <Grid item lg={12} md={12} sm={12} >
