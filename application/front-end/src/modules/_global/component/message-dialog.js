@@ -8,8 +8,6 @@ import {
 } from '@material-ui/core';
 
 import {sendNewMessage} from '../../../api/message.actions.js';
-
-
 /**
  * A dialog which is show when the user pressed
  * "Contact Landloard buttton"
@@ -63,9 +61,6 @@ class LandLoardContactDialog extends React.Component {
 
     return (
       <div>
-
-  
-
         <Dialog
           open={open}
           onClose={onClose}
@@ -107,4 +102,3 @@ LandLoardContactDialog.propTypes = {
 }
 
 export default LandLoardContactDialog;
-

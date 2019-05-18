@@ -71,7 +71,6 @@ class Maps extends Component {
   //for maps
 
   render() {
-
     const { location, loaded } = this.state;
     const { address } = this.props;
 
