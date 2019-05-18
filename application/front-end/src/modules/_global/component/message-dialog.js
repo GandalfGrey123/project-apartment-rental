@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {
     Button, TextField, Dialog,
     DialogActions, DialogContent,
-    DialogContentText, DialogTitle
+    DialogContentText, DialogTitle,
 } from '@material-ui/core';
 
 import {sendNewMessage} from '../../../api/message.actions.js';
@@ -22,7 +22,7 @@ class LandLoardContactDialog extends React.Component {
         submitSuccess: false,
         newMessage: '',  
       }
-      this.changeMessage = this.changeMessage.bind(this)
+      this.changeMessage = this.changeMessage(this)
       this.send = this.send.bind(this)
   }
 
@@ -54,7 +54,7 @@ class LandLoardContactDialog extends React.Component {
 
   render() {
 
-    const { open, onClose, changeMessage } = this.props;
+    const { open, onClose, changeMessage} = this.props;
     const {submitSuccess} = this.state;
 
     if(submitSuccess){
@@ -63,6 +63,9 @@ class LandLoardContactDialog extends React.Component {
 
     return (
       <div>
+
+  
+
         <Dialog
           open={open}
           onClose={onClose}
@@ -79,7 +82,7 @@ class LandLoardContactDialog extends React.Component {
               margin="dense"
               id="message"
               label="Enter Message"
-              onChange={changeMessage()}
+              onChange={changeMessage}
               type="text"
               fullWidth
             />

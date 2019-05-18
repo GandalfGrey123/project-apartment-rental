@@ -1,4 +1,4 @@
-const styles = () => ({
+const styles = (theme) => ({
 
   contactAvatar: {
   width: 100,
@@ -9,8 +9,19 @@ const styles = () => ({
 
   chatBox:{
     height:360,
-     overflow:'auto',
+    overflow:'auto',
   },
+
+  card: {
+    margin:'0 auto',
+    maxWidth: '80%',
+  },
+  media: {
+    objectFit: 'cover',
+  },
+  blankSpace:{
+    height:20,
+  }
 
 });
 

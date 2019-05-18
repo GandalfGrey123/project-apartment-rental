@@ -9,10 +9,11 @@ const Op = Sequelize.Op;
 function clearUserChats(chats, excludeEmail){
   let allChats=[]
   chats.forEach((chat)=>{
-
+    console.log(chat.ListingPost.title)
      let chatObj = {
        "chatId": chat.id,
        "listingTitle": chat.ListingPost.title,
+       "listingId":chat.ListingPost.id,
        "chatingWith": '',
        "contactsAvatar": '',       
       }

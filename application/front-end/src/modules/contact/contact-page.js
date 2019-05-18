@@ -33,6 +33,7 @@ class ContactPage extends Component{
         chatInfo:{
           chatingWith: '',
           listingTitle: '',
+          listingId: null,
           contactsAvatar: '',
         },
         messages:[],
@@ -97,10 +98,7 @@ class ContactPage extends Component{
 
   //select a chat to show
   selectChat = (chatIndex) =>{
-    console.log('hello')
-    if(this.state.allUsersChats[chatIndex] == null){
-      return;
-    }
+    if(this.state.allUsersChats[chatIndex] == null){return;}
 
     getChat(this.state.allUsersChats[chatIndex].chatId, (messagesObject)=>{
       let chat = this.state.allUsersChats[chatIndex];
@@ -110,6 +108,7 @@ class ContactPage extends Component{
           chatInfo:{
            chatingWith: chat.chatingWith,
            listingTitle: chat.listingTitle,          
+           listingId: chat.listingId,
            contactsAvatar: chat.contactsAvatar,
           },
           messages: messagesObject.messages,
@@ -182,6 +181,9 @@ class ContactPage extends Component{
 
     return(
      <div>      
+
+
+
       <Grid container>       
 
           <Grid item xs={12} md={4} lg={4}>
@@ -201,12 +203,13 @@ class ContactPage extends Component{
         
 
            <Grid item xs={12} md={8} lg={8}>
+
                <Paper 
                  className={classes.messagePaper}
                  elevation='1'
                 >
                            
-                <MessageBox
+                <MessageBox                
                   defaultBox={noChatSelected}
                   refreshHandler={()=>{ this.selectChat(this.state.currentChatIndex) }}
                   messages={currentChat.messages}
