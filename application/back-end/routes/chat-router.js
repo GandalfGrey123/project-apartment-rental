@@ -73,6 +73,15 @@ router.get('/inbox',(req,res)=>{
     })
 });
 
+router.delete('/trash/:chatId' , async (req,res)=>{
+  models.Chat.findOne({
+    where:{id: req.params.chatId}
+  }).then((chat)=>{
+    chat.destroy();
+  }).then(()=>{
+    res.status(200).send();
+  })
+})
 
 router.post('/send', (req,res) =>{
     models.User.findOne({
@@ -97,7 +106,7 @@ router.post('/send', (req,res) =>{
 
 router.post('/new', (req,res) =>{
  const token = req.headers.session;
-     
+
   models.User.findOne({
      where:{sessionToken: token},          
   }).then( (user)=>{
@@ -110,26 +119,38 @@ router.post('/new', (req,res) =>{
 
     models.ListingPost.findOne({
       
-      where:{ id: req.listingId },
+      where:{ id: req.body.messagePacket.listingId },
       include:[{ model: models.User }]
 
     }).then((listing)=>{
 
-
         if(!listing){
           res.status(204).json('error')
         return       
-        } 
-   
-        models.Chat.create({                                    
-            ListingPostId:listing.id,            
-            landLordChatFk: listing.UserId,
-            lesseeChatFk: user.id,
-         }).then((chat)=>{
+        }   
 
-          //return chat id so that front end can redirect to conversation in contact page
-           res.status(200).json({"chatId":chat.id})
-         })
+        models.Chat.findOne({
+          where:{ ListingPostId: listing.id}
+        }).then((chat)=>{
+          if(chat){
+            res.status(200).json('youve already contacted this landlord');
+          }else{
+            models.Chat.create({                                    
+               ListingPostId:listing.id,            
+               landLordChatFk: listing.UserId,
+               lesseeChatFk: user.id,
+            }).then((chat)=>{
+               models.Message.create({
+                 UserId: user.id,              
+                 ChatId: chat.id,
+                 userEmail: user.email,
+                 message: req.body.messagePacket.message,
+               });
+             //return chat id so that front end can redirect to conversation in contact page
+              res.status(200).json({"chatId":chat.id})
+            })
+          }
+        })
     }); 
   });
 }); 

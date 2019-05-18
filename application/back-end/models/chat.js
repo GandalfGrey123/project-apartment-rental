@@ -9,7 +9,11 @@ const Chat = sequelize.define('Chat', {
   });
 
   Chat.associate = (models) => {          
-    Chat.hasMany(models.Message);
+
+    Chat.hasMany(models.Message, {
+      onDelete: 'CASCADE'
+    });
+
     Chat.belongsTo(models.ListingPost);    
     
     Chat.belongsTo(models.User, {
