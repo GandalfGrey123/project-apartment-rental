@@ -6,17 +6,21 @@ import {
   List,ListItem,
   ListItemText,ListItemAvatar,
   Avatar, 
+  IconButton,
  } from '@material-ui/core';
 
 import styles from '../styles/message-box';
+import {formatUtcMessageTime} from '../../../utils/messages'
 
 class MessageBox extends Component{
 
   constructor(props){
     super(props);
+
     this.displayMessages = this.displayMessages.bind(this);
     this.scrollToBottom = this.scrollToBottom.bind(this);
     this.formatUtcTime = this.formatUtcTime.bind(this);
+    this.displayTitle = this.displayTitle.bind(this);
   }
 
   latestMessage = React.createRef()
@@ -30,20 +34,56 @@ class MessageBox extends Component{
   }
 
   formatUtcTime = (utcTimeStamp)=>{
-    let date = new Date(utcTimeStamp)
-
-
-    return date.toString().replace('GMT-0700 (PDT)','')
+    return formatUtcMessageTime(utcTimeStamp)
   }
 
   scrollToBottom = () =>{
     this.latestMessage.current.scrollIntoView({ behavior: "smooth" });
   }
 
+  displayTitle = (classes, chatInfo, defaultBox) =>{
+    if(defaultBox){
+      return(
+       <Typography component="h2" variant="display2" gutterBottom>
+          No chat selected 
+        </Typography>
+      )
+    }
+
+    return(
+           <ListItem 
+          button 
+          selected = {true}
+        > 
+           <ListItemAvatar 
+            className={classes.contactAvatar}
+            >
+              <Avatar 
+                alt="contact user's avatar"               
+                src={chatInfo.contactsAvatar} 
+              />
+           </ListItemAvatar>
+            
+           <ListItemText            
+             primary={chatInfo.chatingWith}
+             secondary={ 
+              `Listing title - ${chatInfo.listingTitle}`
+            }                 
+           />     
+
+            <IconButton 
+              aria-label="Delete"
+              onClick={this.props.refreshHandler}                          
+             >
+                Refresh
+            </IconButton>      
+      </ListItem>
+    );
+  }
 
   displayMessages =() =>{
 
-  	if(this.props.messages.length == 0){
+  	if(this.props.messages.length === 0){
       return;
     }
 
@@ -53,7 +93,7 @@ class MessageBox extends Component{
         <React.Fragment>
           <ListItem alignItems="flex-start">
            <ListItemAvatar>
-             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
+             <Avatar alt="your avatar" src={message.senderAvatar} />
            </ListItemAvatar>
            <ListItemText
              primary={ `${message.senderEmail} sent - ${this.formatUtcTime(message.sentTime) }` }
@@ -63,8 +103,6 @@ class MessageBox extends Component{
                  {message.message}
                  </Typography>               
                </React.Fragment>
-
-
              }
            />
           </ListItem>
@@ -74,33 +112,16 @@ class MessageBox extends Component{
 
     return messages;
   }
+
       
-  render() {
-  	const {classes, messages, chatInfo} = this.props;
+  render() {    
+  	const {classes, chatInfo, defaultBox} = this.props;
 
    return(
   	 <React.Fragment>
 
-        <ListItem 
-          button 
-          selected = {true}
-        > 
-           <ListItemAvatar 
-           	className={classes.contactAvatar}
-            >
-              <Avatar 
-                alt="contact user's avatar"               
-                src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" 
-              />
-           </ListItemAvatar>
-            
-           <ListItemText           	
-             primary={chatInfo.chatingWith}
-             secondary={ 
-              `Listing title - ${chatInfo.listingTitle}`
-            }                 
-           />           
-	    </ListItem>
+      {this.displayTitle(classes, chatInfo, defaultBox)}
+
         
 	    <Paper>    
 	      <List className={classes.chatBox}>                                 

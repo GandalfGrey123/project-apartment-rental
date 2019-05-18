@@ -13,8 +13,8 @@ import {
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
 import styles from './styles/contact-page';
 
-import { getInbox,sendMessage, deleteChat } from '../../api/message.actions';
-import { checkSession } from '../../api/user.actions';
+import { getInbox, getChat, sendMessage, deleteChat } from '../../api/message.actions';
+
 
 import MessageBox from './component/message-box';
 
@@ -28,6 +28,17 @@ class ContactPage extends Component{
       currentChatIndex:0,
       nextMessage:'',
       userEmail:'',
+
+      currentChat:{
+        chatInfo:{
+          chatingWith: '',
+          listingTitle: '',
+          contactsAvatar: '',
+        },
+        messages:[],
+       },
+
+       noChatSelected: true,
     };
 
     this.getChats = this.getChats.bind(this);
@@ -35,6 +46,7 @@ class ContactPage extends Component{
     this.handleSendButton = this.handleSendButton.bind(this);       
     this.getChatMessages = this.getChatMessages.bind(this);
     this.deleteConversation = this.deleteConversation.bind(this);
+
   }
 
 
@@ -66,7 +78,7 @@ class ContactPage extends Component{
 
   handleSendButton = () =>{
     //if nothing to send dont send
-    if(this.state.nextMessage == ''){
+    if(this.state.nextMessage === ''){
       return
     }
 
@@ -76,7 +88,7 @@ class ContactPage extends Component{
     }
     
     sendMessage(messagePacket, (resp)=>{                
-       this.getChats();
+       this.selectChat(this.state.currentChatIndex);
        this.setState({
         nextMessage: ''
        });    
@@ -85,33 +97,38 @@ class ContactPage extends Component{
 
   //select a chat to show
   selectChat = (chatIndex) =>{
-    this.setState({
-     currentChatIndex: chatIndex
-    });
+    console.log('hello')
+    if(this.state.allUsersChats[chatIndex] == null){
+      return;
+    }
+
+    getChat(this.state.allUsersChats[chatIndex].chatId, (messagesObject)=>{
+      let chat = this.state.allUsersChats[chatIndex];
+      this.setState({
+        noChatSelected:false,
+        currentChat: {
+          chatInfo:{
+           chatingWith: chat.chatingWith,
+           listingTitle: chat.listingTitle,          
+           contactsAvatar: chat.contactsAvatar,
+          },
+          messages: messagesObject.messages,
+        }
+      });
+    })   
   } 
 
   getChatMessages = (chatIndex) =>{
-     if(this.state.allUsersChats.length ==0){
+     if(this.state.allUsersChats.length === 0){
        return [];
      }
      return this.state.allUsersChats[chatIndex].messages;
   }
 
-  getChatInfo = (chatIndex) =>{
-    if(this.state.allUsersChats.length ==0){
-       return {};
-     }
-  return {
-      listingTitle: this.state.allUsersChats[chatIndex].listingTitle,
-      chatingWith: this.state.allUsersChats[chatIndex].chatingWith
-    };
-  }
 
   chatsList = () => {
-    if(this.state.allUsersChats.length ==0) 
+    if(this.state.allUsersChats.length === 0) 
       return;
-
-    console.log(this.state.userEmail)
     let chatListItems = [];
     this.state.allUsersChats.forEach((chat, index)=>{
     
@@ -119,14 +136,13 @@ class ContactPage extends Component{
            <div>
 
              <ListItem 
-               button 
-               //change to use selectChat() for onClick
-                onClick={() => this.setState({ currentChatIndex: index }) }
+               button           
+                onClick={() => this.selectChat(index) }
               >
               <ListItemAvatar>
                  <Avatar
-                   alt="dm user avatar${i}" 
-                   src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" 
+                   alt={`dm user avatar${index}`}
+                   src={chat.contactsAvatar} 
                  />
               </ListItemAvatar>
                 
@@ -135,7 +151,7 @@ class ContactPage extends Component{
                    chat.chatingWith
                   }
                   secondary={
-                    `Listing \" ${chat.listingTitle} \"`
+                    `Listing - ${chat.listingTitle} `
                   }                 
                />
     
@@ -157,10 +173,13 @@ class ContactPage extends Component{
    return chatListItems;
   }
 
+
+
   render() {
-    const {classes,theme} = this.props;
-    const {currentChatIndex} = this.state;
-    
+    const {classes} = this.props;
+    const {currentChat, noChatSelected} = this.state;
+
+
     return(
      <div>      
       <Grid container>       
@@ -184,17 +203,14 @@ class ContactPage extends Component{
            <Grid item xs={12} md={8} lg={8}>
                <Paper 
                  className={classes.messagePaper}
-                 square='true'
                  elevation='1'
                 >
-                   
+                           
                 <MessageBox
-                  messages={
-                    this.getChatMessages(currentChatIndex)
-                  }
-                  chatInfo={
-                    this.getChatInfo(currentChatIndex)
-                  }
+                  defaultBox={noChatSelected}
+                  refreshHandler={()=>{ this.selectChat(this.state.currentChatIndex) }}
+                  messages={currentChat.messages}
+                  chatInfo={currentChat.chatInfo}
                  />
 
                 </Paper>
