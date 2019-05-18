@@ -10,7 +10,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
-
+    avatarUrl:{
+      type:DataTypes.STRING,
+      defaultValue: 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png'
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,

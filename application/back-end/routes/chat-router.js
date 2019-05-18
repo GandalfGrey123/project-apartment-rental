@@ -13,21 +13,37 @@ function clearUserChats(chats, excludeEmail){
      let chatObj = {
        "chatId": chat.id,
        "listingTitle": chat.ListingPost.title,
-       "chatingWith": chat.lesseeChatUser.email === excludeEmail? chat.landLordChatUser.email :chat.lesseeChatUser.email,
-       "messages":[]
+       "chatingWith": '',
+       "contactsAvatar": '',       
       }
 
-      chat.Messages.forEach((message)=>{
-        chatObj['messages'].push({         
-          'message': message.message,
-          'sentTime': message.dateSent,
-          'senderEmail' : message.userEmail
-        });
-      })
+      if(chat.lesseeChatUser.email === excludeEmail){
+        chatObj['chatingWith']=chat.landLordChatUser.email;
+        chatObj['contactsAvatar']=chat.landLordChatUser.avatarUrl;
+      }
+
+      else{
+        chatObj['chatingWith']= chat.lesseeChatUser.email;
+        chatObj['contactsAvatar']= chat.lesseeChatUser.avatarUrl;
+      }
 
     allChats.push( chatObj )
   })
  return allChats;
+}
+
+function getChatsMessages(chat){
+  let chatMessages=[]
+     chat.Messages.forEach((message)=>{
+        chatMessages.push({         
+          'message': message.message,
+          'sentTime': message.dateSent,
+          'senderEmail': message.userEmail,      
+          'senderAvatar': message.User.avatarUrl,
+        });
+     })
+
+  return chatMessages
 }
 
 
@@ -72,6 +88,38 @@ router.get('/inbox',(req,res)=>{
       })
     })
 });
+
+
+router.get('/one/:chatId' , async (req,res)=>{
+  const token = req.headers.session; 
+
+  models.User.findOne({
+    where:{sessionToken: token}
+  }).then((user)=>{
+
+      if(!user){
+       res.status(401).json('error')
+       return
+      }
+
+      models.Chat.findOne({
+         where:{id: req.params.chatId},
+         include:[{
+          model: models.Message,
+          include:[models.User]          
+         }],
+         order:[[
+         {model: models.Message},
+         'dateSent','ASC'
+         ]]
+      }).then((chat)=>{
+        let chatMessages={     
+          'messages': getChatsMessages(chat)
+        }    
+       res.status(200).json(chatMessages);
+      });
+  })
+})
 
 router.delete('/trash/:chatId' , async (req,res)=>{
   models.Chat.findOne({

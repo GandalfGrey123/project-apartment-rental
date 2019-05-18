@@ -29,6 +29,21 @@ export const getUserProfile = (onSuccess) => {
 	}).then(onSuccess)
 }
 
+export const updateProfile = (profile, handleResponse) => {	
+   axios({
+      method: 'post',
+      url: `http://${api_config.environment}/users/profile`,
+      data:{
+         'profileInfo': profile,
+      },
+      headers:{
+         'Session': JSON.parse(sessionStorage.getItem('session')).token,
+      },
+   }).then((res) => {       
+       handleResponse();
+   });
+};
+
 export const checkSession = (token, onSuccess, onError = () => {}) => {
 	axios.get(`http://${api_config.environment}/users/session/${token}/validate`)
 	.then(onSuccess)

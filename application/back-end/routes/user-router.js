@@ -61,6 +61,23 @@ router.get('/profile', async (req, res) => {
 	}
 })
 
+//update user profile data
+router.post('/profile', async (req, res) => {	
+    let user = await findUserBySession(req);
+	if(user){
+		user.update({
+		  email:req.body.profileInfo.email,
+		  avatarUrl:req.body.profileInfo.avatarUrl,
+		  firstName:req.body.profileInfo.firstName,
+		  lastName:req.body.profileInfo.lastName,
+		}).then(() => {
+		 res.status(200).send()
+		});
+	}else{
+		res.status(401).send();
+	}
+})
+
 router.get('/session/:token/validate', (req, res) => {
 	models.User.findOne({
 		where: {

@@ -17,6 +17,20 @@ export const getInbox = (handleResponse) => {
    });
 };
 
+export const getChat = (id,handleResponse) => {
+  let sessionToken = JSON.parse(sessionStorage.getItem('session')).token
+   axios({
+      method: 'get',
+      url: `http://${api_config.environment}/messages/one/${id}`,
+      headers:{
+        'Session': sessionToken
+      },
+   }).then((res) => {  
+   //http response returns array of json messages  
+     handleResponse(res.data);
+   });
+};
+
 export const deleteChat = (id, handleResponse)=>{
   let sessionToken = JSON.parse(sessionStorage.getItem('session')).token
    axios({
