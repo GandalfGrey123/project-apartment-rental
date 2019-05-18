@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core';
 
 import {
-  Menu as MenuIcon,
   Info as InfoIcon,
   AccountCircle as AccountCircleIcon,
   MoreVert as MoreIcon

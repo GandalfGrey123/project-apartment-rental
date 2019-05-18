@@ -22,8 +22,6 @@ class LandLoardContactDialog extends React.Component {
         submitSuccess: false,
         newMessage: '',  
       }
-
-      
       this.changeMessage = this.changeMessage.bind(this)
       this.send = this.send.bind(this)
   }
@@ -57,10 +55,10 @@ class LandLoardContactDialog extends React.Component {
   render() {
 
     const { open, onClose, changeMessage } = this.props;
-    const {submitSuccess, newMessage} = this.state;
+    const {submitSuccess} = this.state;
 
     if(submitSuccess){
-      return <Redirect to={'/contact'} />
+      return <Redirect to={'/profile/messages'} />
     }
 
     return (
@@ -81,7 +79,7 @@ class LandLoardContactDialog extends React.Component {
               margin="dense"
               id="message"
               label="Enter Message"
-              onChange={this.changeMessage()}
+              onChange={changeMessage()}
               type="text"
               fullWidth
             />

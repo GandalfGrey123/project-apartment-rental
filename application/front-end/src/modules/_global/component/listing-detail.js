@@ -147,6 +147,7 @@ class ListingDetailDialog extends Component{
                         <Grid item lg={6} md={6} sm={6} >
                             <img
                                 className={classes.image}
+                                alt="img"
                                 src={images.length > 0 ? images[0].src : null}
                             />
                             <MapView

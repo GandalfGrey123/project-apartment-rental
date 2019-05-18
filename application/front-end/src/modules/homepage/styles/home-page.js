@@ -1,7 +1,4 @@
-const drawerWidth = 240;
-
 const styles = theme => ({
-
  
   main:{
       ...theme.mixins.gutters(),   

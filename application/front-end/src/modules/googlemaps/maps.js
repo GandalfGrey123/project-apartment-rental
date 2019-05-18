@@ -73,7 +73,7 @@ class Maps extends Component {
   render() {
 
     const { location, loaded } = this.state;
-    const { mapContainer, address } = this.props;
+    const { address } = this.props;
 
     if (loaded) {
       return (

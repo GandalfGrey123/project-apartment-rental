@@ -107,7 +107,7 @@ class NewListing extends Component{
   onSubmitClick = () => {
       const { form } = this.state;
 
-      if(Object.keys(form).length != 8){
+      if(Object.keys(form).length !== 8){
        alert('you must fill out all form fields');
       }else{
        createPosting(form, () => {
@@ -351,8 +351,7 @@ removeImage =(imageIndex) => {
                 type="file" 
                 onChange={this.addFile}
                 accept="image/png, image/jpeg"    
-                className={classes.hide}
-                onChange={this.addFile}                     
+                className={classes.hide}                  
               /> 
               <label htmlFor="fileInput"> 
                 <Button raised 
