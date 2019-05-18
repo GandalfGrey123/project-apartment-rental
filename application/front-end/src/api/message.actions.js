@@ -17,6 +17,19 @@ export const getInbox = (handleResponse) => {
    });
 };
 
+export const deleteChat = (id, handleResponse)=>{
+  let sessionToken = JSON.parse(sessionStorage.getItem('session')).token
+   axios({
+     method: 'delete',
+     url: `http://${api_config.environment}/messages/trash/${id}`,
+     headers:{
+         'Session': sessionToken,
+     },
+   }).then(() => {
+     handleResponse();
+   });
+};
+
 
 export const sendMessage = (messagePacket, handleResponse) => {
   let sessionToken = JSON.parse(sessionStorage.getItem('session')).token
@@ -37,6 +50,7 @@ export const sendMessage = (messagePacket, handleResponse) => {
 };
 
 export const sendNewMessage = (messagePacket, handleResponse) => {
+
   let sessionToken = JSON.parse(sessionStorage.getItem('session')).token
    axios({
       method: 'post',

@@ -220,6 +220,7 @@ class ListingDetailDialog extends Component{
                 </div>
                 <LandloardContactDialog
                     open={contactDialogOpen}
+                    listingId={this.state.listing.id}
                     onClose={() => this.setState({ contactDialogOpen: !contactDialogOpen })}
                 />
             </Dialog>

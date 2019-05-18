@@ -13,7 +13,7 @@ import {
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
 import styles from './styles/contact-page';
 
-import { getInbox,sendMessage } from '../../api/message.actions';
+import { getInbox,sendMessage, deleteChat } from '../../api/message.actions';
 import { checkSession } from '../../api/user.actions';
 
 import MessageBox from './component/message-box';
@@ -34,6 +34,7 @@ class ContactPage extends Component{
     this.selectChat = this.selectChat.bind(this);
     this.handleSendButton = this.handleSendButton.bind(this);       
     this.getChatMessages = this.getChatMessages.bind(this);
+    this.deleteConversation = this.deleteConversation.bind(this);
   }
 
 
@@ -54,6 +55,12 @@ class ContactPage extends Component{
   onChangeMessage = ({target: {value}}) =>{
     this.setState({
       nextMessage: value
+    });
+  }
+
+  deleteConversation = (chatId) =>{
+    deleteChat( chatId, () => {
+      this.getChats(); 
     });
   }
 
@@ -133,7 +140,10 @@ class ContactPage extends Component{
                />
     
                   <ListItemSecondaryAction>
-                        <IconButton aria-label="Delete">
+                        <IconButton 
+                          aria-label="Delete"
+                          onClick={() => this.deleteConversation(chat.chatId) }
+                         >
                           <DeleteForeverRoundedIcon />
                         </IconButton>
                   </ListItemSecondaryAction>
