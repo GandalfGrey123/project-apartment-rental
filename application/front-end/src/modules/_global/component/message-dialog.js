@@ -24,9 +24,7 @@ class LandLoardContactDialog extends React.Component {
       this.send = this.send.bind(this)
   }
 
-
-  send = () => {  
- 
+  send = () => {   
     sendNewMessage({      
       message:this.state.newMessage,
       listingId:this.props.listingId
@@ -36,7 +34,6 @@ class LandLoardContactDialog extends React.Component {
         submitSuccess: true,
         newMessage: ''
       });
-
     })
   }
 
@@ -45,7 +42,6 @@ class LandLoardContactDialog extends React.Component {
      newMessage: value
    });
   };
-
 
 
   render() {

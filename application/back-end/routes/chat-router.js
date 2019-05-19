@@ -113,7 +113,6 @@ router.get('/notContacted/:listingId',(req,res)=>{
       }
 
       res.status(200).json({"valid":false})
-
     });
   })
 });
@@ -201,31 +200,26 @@ router.post('/new', (req,res) =>{
 
     }).then((listing)=>{
 
-        if(!listing){
-          res.status(204).json('error')
+      if(!listing){
+        res.status(204).json('error')
         return       
-        }   
+      }   
 
-        models.Chat.findOne({
-          where:{ ListingPostId: listing.id}
-        }).then((chat)=>{
-
-            models.Chat.create({                                    
-               ListingPostId:listing.id,            
-               landLordChatFk: listing.UserId,
-               lesseeChatFk: user.id,
-            }).then((chat)=>{
-               models.Message.create({
-                 UserId: user.id,              
-                 ChatId: chat.id,
-                 userEmail: user.email,
-                 message: req.body.messagePacket.message,
-               });
-             //return chat id so that front end can redirect to conversation in contact page
-              res.status(200).json({"chatId":chat.id})
-            })
-          
-        })
+      models.Chat.create({                                    
+         ListingPostId:listing.id,            
+         landLordChatFk: listing.UserId,
+         lesseeChatFk: user.id,
+      }).then((chat)=>{
+         models.Message.create({
+           UserId: user.id,              
+           ChatId: chat.id,
+           userEmail: user.email,
+           message: req.body.messagePacket.message,
+         });
+       //return chat id so that front end can redirect to conversation in contact page
+        res.status(200).json({"chatId":chat.id})
+      })
+ 
     }); 
   });
 }); 
