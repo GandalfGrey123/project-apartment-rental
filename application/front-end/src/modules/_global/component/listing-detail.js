@@ -12,6 +12,7 @@ import MapView from '../../googlemaps/maps';
 import LandloardContactDialog from '../../_global/component/message-dialog';
 import { checkSession } from '../../../api/user.actions';
 import { getListing } from '../../../api/listings.actions';
+import { validateContact } from '../../../api/message.actions';
 // import ReactImages from 'react-images'; // doesn't work for some reason
 
 /**
@@ -101,12 +102,13 @@ class ListingDetailDialog extends Component{
     }
 
     _contactLandloard = () => {
-        const { isLoggedIn, contactDialogOpen } = this.state;
+        const { isLoggedIn, contactDialogOpen ,listing } = this.state;
         if(isLoggedIn){
-            this.setState({ contactDialogOpen: !contactDialogOpen })
-        }else{
-            alert('You need to log in order to contact landloard.')
+          validateContact(listing.id ,(isValidContact)=>{
+           isValidContact? this.setState({ contactDialogOpen: !contactDialogOpen }): alert("you've already contacted this landlord")       
+          })            
         }
+        else{ alert('You need to log in order to contact landloard.') }
     }
 
     render(){

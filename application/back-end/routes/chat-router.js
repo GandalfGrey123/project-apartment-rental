@@ -90,6 +90,34 @@ router.get('/inbox',(req,res)=>{
     })
 });
 
+router.get('/notContacted/:listingId',(req,res)=>{
+
+  const token = req.headers.session;
+  models.User.findOne({
+    where:{sessionToken: token}
+  }).then((user)=>{
+    if(!user){
+     res.status(401).json('error')
+     return
+    }
+
+    models.Chat.findOne({
+      where:{
+       [Op.and]: [{ListingPostId: req.params.listingId}, {lesseeChatFk: user.id}]
+      }
+    }).then((chat)=>{
+
+      if(!chat){
+        res.status(200).json({"valid":true})
+        return
+      }
+
+      res.status(200).json({"valid":false})
+
+    });
+  })
+});
+
 
 router.get('/one/:chatId' , async (req,res)=>{
   const token = req.headers.session; 
@@ -181,9 +209,7 @@ router.post('/new', (req,res) =>{
         models.Chat.findOne({
           where:{ ListingPostId: listing.id}
         }).then((chat)=>{
-          if(chat){
-            res.status(200).json('youve already contacted this landlord');
-          }else{
+
             models.Chat.create({                                    
                ListingPostId:listing.id,            
                landLordChatFk: listing.UserId,
@@ -198,7 +224,7 @@ router.post('/new', (req,res) =>{
              //return chat id so that front end can redirect to conversation in contact page
               res.status(200).json({"chatId":chat.id})
             })
-          }
+          
         })
     }); 
   });

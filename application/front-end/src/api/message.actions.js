@@ -44,6 +44,21 @@ export const deleteChat = (id, handleResponse)=>{
    });
 };
 
+export const validateContact = (listingId, handleResponse) =>{
+  let sessionToken = JSON.parse(sessionStorage.getItem('session')).token
+
+   axios({
+      method: 'get',
+      url: `http://${api_config.environment}/messages/notContacted/${listingId}`,
+      headers:{
+       'Session': sessionToken,
+      },
+   
+   }).then((res) => {  
+       handleResponse(res.data.valid);
+   });
+};
+
 
 export const sendMessage = (messagePacket, handleResponse) => {
   let sessionToken = JSON.parse(sessionStorage.getItem('session')).token
