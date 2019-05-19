@@ -86,8 +86,7 @@ class ContactPage extends Component{
     let messagePacket ={
      'chatId': this.state.allUsersChats[this.state.currentChatIndex].chatId,
      'message': this.state.nextMessage,
-    }
-    
+    }    
     sendMessage(messagePacket, (resp)=>{                
        this.selectChat(this.state.currentChatIndex);
        this.setState({
@@ -103,6 +102,7 @@ class ContactPage extends Component{
     getChat(this.state.allUsersChats[chatIndex].chatId, (messagesObject)=>{
       let chat = this.state.allUsersChats[chatIndex];
       this.setState({
+        currentChatIndex: chatIndex,
         noChatSelected:false,
         currentChat: {
           chatInfo:{
@@ -113,6 +113,7 @@ class ContactPage extends Component{
           },
           messages: messagesObject.messages,
         }
+
       });
     })   
   } 
