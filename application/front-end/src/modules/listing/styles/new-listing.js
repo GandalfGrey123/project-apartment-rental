@@ -1,14 +1,12 @@
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    padding: 10,
-    margin: 20,
-    width: '80%',
-   	marginLeft: '10%',
+    padding: 50,
+    width: '60%',
+   	marginLeft: '15%',
+    paddingBottom: 100,
   },
-  formGroup: {
- 
-  },
+
   card: {
     maxWidth: 400,
   },
@@ -20,7 +18,12 @@ const styles = theme => ({
   gridList: {
     width: '100%',
     backgroundColor:'grey',
-    margin:20,
+
+  },
+  inputs:{
+    display:'flex',
+    alignItems: 'flex-start',
+    paddingTop: 80,
   },
    actions: {
     display: 'flex',
@@ -32,6 +35,9 @@ const styles = theme => ({
     color:'white',
   },
 
+  userNote:{
+    alignItems: 'center',
+  },
   fileInput:{
     padding: 10,
     border: 10,
@@ -42,7 +48,7 @@ const styles = theme => ({
    display: 'none'
   },
   margin:{
-    margin:20,
+    margin:0,
   }
 });
 

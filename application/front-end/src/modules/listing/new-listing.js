@@ -57,6 +57,7 @@ class NewListing extends Component{
   }; 
 
   inputIsValid=(name,value)=>{
+    console.log(this.state.form);
     if(['price','zipcode'].includes(name.toLowerCase())){
       if(/[a-zA-Z]/.test(value)){
         alert(`${name} only contains letters`);
@@ -172,6 +173,7 @@ removeImage =(imageIndex) => {
    }
    
    return(
+    <div>
     <Paper className={classes.root}>
       <Typography 
        variant="h5" 
@@ -370,36 +372,38 @@ removeImage =(imageIndex) => {
           </GridList>
 
            <Divider light />
-       
-       </FormGroup>   
-   <Grid 
-   className={classes.margin}
-   container
-   justify = "center"
-     >
-       <Button 
-              variant="contained"
-              className={classes.margin}
-              color="primary"
-              type="reset"
-              onClick={this.onResetClick}
+          <Grid 
+           className={classes.inputs}
+           container
+           justify = "center"
            >
-             RESET
-           </Button>
+    
+
+           <Grid item  md={12} lg={12} xs={12}>
            <Button
               variant="contained"
-              className={classes.margin}
+        
               color="primary"
               onClick={this.onSubmitClick}
+              fullWidth
             >
              SUBMIT
             </Button> 
-            </Grid>          
-     </Paper>
-
-
-           
+            </Grid>
+            </Grid> 
+       </FormGroup>              
+     </Paper>           
       
+        <Paper classes={classes.userNote}>
+        <Typography        
+         variant="display2"
+         align="center"          
+         >
+          Listings pay take up to 24 hours to process  
+        </Typography>
+      
+        </Paper>      
+        </div>
    );
   }
 }
