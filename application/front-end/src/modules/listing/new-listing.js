@@ -399,7 +399,7 @@ removeImage =(imageIndex) => {
          variant="display2"
          align="center"          
          >
-          Listings pay take up to 24 hours to process  
+          Listings may take up to 24 hours to process  
         </Typography>
       
         </Paper>      
