@@ -9,11 +9,6 @@ const styles = theme => ({
     width: '100%',    
     backgroundColor:'white',
   },
-
-  searchSection:{
-    padding: 15,
-    margin:15,
-  },
    menuButton: {
     marginRight: 20,
     [theme.breakpoints.up('sm')]: {

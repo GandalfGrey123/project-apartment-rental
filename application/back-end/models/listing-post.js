@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     bedrooms: DataTypes.INTEGER,
     bathrooms: DataTypes.INTEGER,
     isApproved: DataTypes.BOOLEAN,
-
+    distance: DataTypes.FLOAT
   }, {
     createdAt: 'datePosted',
     updatedAt: false

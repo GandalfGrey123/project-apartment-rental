@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
 import { getGeocodingInfo } from '../../api/google.geocoding';
 
-const API_KEY = 'AIzaSyCiI9shqkKiKx8rs57v02JoWtKfP2aSyHk';
+export const API_KEY = 'AIzaSyCiI9shqkKiKx8rs57v02JoWtKfP2aSyHk';
+
 const MAP_SIZE = {
   width: '400px',
   height: '400px',
@@ -34,7 +35,6 @@ class Maps extends Component {
   componentWillMount(){
     const { address } = this.props;
     getGeocodingInfo(API_KEY, address, (res) => {
-      console.log('response:', res.data.results[0].geometry);
       this.setState({ location: res.data.results.length > 0 ? res.data.results[0].geometry.location : {
         lat: 0,
         lng: 0

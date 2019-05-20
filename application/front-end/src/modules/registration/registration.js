@@ -135,6 +135,25 @@ class Register extends Component {
               className={classes.field}
               label="Enter password again"
             />
+            <ValidateTextField
+              type="password"
+              name="captcha"
+              autoComplete="captcha"
+              validations="minLength:5"
+              validationErrors={{
+                minLength: "Too short"
+              }}
+              required
+              className={classes.field}
+              label="Enter Image Code"
+            />
+            <div>
+              <img style={{
+                width: '150px',
+                height: '50px',
+                marginTop: 10
+              }} src={require('../../resources/captcha.jpeg')} />
+            </div>
             <FormControlLabel
               control={
                 <Checkbox

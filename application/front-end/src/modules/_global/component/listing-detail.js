@@ -14,6 +14,8 @@ import { checkSession } from '../../../api/user.actions';
 import { getListing } from '../../../api/listings.actions';
 import { validateContact } from '../../../api/message.actions';
 // import ReactImages from 'react-images'; // doesn't work for some reason
+import { getGeocodingInfo } from '../../../api/google.geocoding';
+import { API_KEY } from '../../googlemaps/maps';
 
 /**
  * A dialog which pops up to display the listing information
@@ -61,6 +63,7 @@ class ListingDetailDialog extends Component{
             imageContainer: {
                 open: false
             },
+            distance: 0,
             isLoggedIn: false,
             contactDialogOpen: false
         }
@@ -111,15 +114,41 @@ class ListingDetailDialog extends Component{
         else{ alert('You need to log in order to contact landloard.') }
     }
 
+    _calculateDistance = (address) => {
+        getGeocodingInfo(API_KEY, address, (res) => {
+            let location = res.data.results.length > 0 ? res.data.results[0].geometry.location : null;
+            if(location){
+                this.setState({ distance: this.distance(location.lat, location.lng, 37.722313, -122.478467).toFixed(2) })
+            }
+        })
+    }
+
+    distance = (lat1, lon1, lat2, lon2, unit = 'M') => {
+        var radlat1 = Math.PI * lat1/180
+        var radlat2 = Math.PI * lat2/180
+        var radlon1 = Math.PI * lon1/180
+        var radlon2 = Math.PI * lon2/180
+        var theta = lon1-lon2
+        var radtheta = Math.PI * theta/180
+        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+        dist = Math.acos(dist)
+        dist = dist * 180/Math.PI
+        dist = dist * 60 * 1.1515
+        if (unit=="K") { dist = dist * 1.609344 }
+        if (unit=="N") { dist = dist * 0.8684 }
+        return dist
+    }
+
     render(){
         
-        const { listing, contactDialogOpen } = this.state;
+        const { listing, contactDialogOpen, distance } = this.state;
         const { open, onClose, classes } = this.props;
 
         const images = listing
                 .images
                 .map((img) => ({ src: `data:image/png;base64,${img}` }));
-        
+        const address = `${listing.line1} ${listing.city} ${listing.state} ${listing.zipCode}`;
+        // this._calculateDistance(address);
         return (
             <Dialog
                 fullScreen
@@ -187,7 +216,7 @@ class ListingDetailDialog extends Component{
                                         <Grid container >
                                             <div className={classes.txtContainer} >
                                                 <Typography variant="h6" >
-                                                    {`${listing.line1} ${listing.city} ${listing.state} ${listing.zipCode}`}
+                                                    {address}
                                                 </Typography>
                                             </div>
                                         </Grid>
@@ -196,6 +225,13 @@ class ListingDetailDialog extends Component{
                                         <Grid container >
                                             <div className={classes.txtContainer} >
                                                 <Typography variant="h6" >Date Posted: {listing.datePosted}</Typography>
+                                            </div>
+                                        </Grid>
+                                    </Grid>   
+                                    <Grid item xs={12}>
+                                        <Grid container >
+                                            <div className={classes.txtContainer} >
+                                                <Typography variant="h6" >Distance to SFSU: {listing.distance} miles</Typography>
                                             </div>
                                         </Grid>
                                     </Grid>   

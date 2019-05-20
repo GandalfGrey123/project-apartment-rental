@@ -8,6 +8,7 @@ import ValidateTextField from '../registration/field-with-validation';
 import { Redirect } from 'react-router-dom';
 import {userLogin} from '../../api/user.actions';
 import qs from 'qs';
+import { Link } from 'react-router-dom';
 import SnackBar from '../_global/component/snack-bar';
 
 const styles = theme => ({
@@ -56,6 +57,7 @@ class LoginForm extends Component {
         email:'',
         password:'',
       },
+      redirectTo: null
     }
     this._handleCheck = this._handleCheck.bind(this);
   }
@@ -66,7 +68,8 @@ class LoginForm extends Component {
       // Trigger to display a snack bar
       this.setState({ message: { open: true, type: 'REGISTRATION_SUCCESS' } })
     }else if (params.authentication){
-      this.setState({ message: { open: true, type: 'AUTHENTICATION_REQUIRED' } })
+      const state = { message: { open: true, type: 'AUTHENTICATION_REQUIRED' } };
+      this.setState(state);
     }
   }
 
@@ -141,6 +144,17 @@ class LoginForm extends Component {
               color="primary"
             >
               Forgot password ?
+            </Button>
+            <Button 
+              disableFocusRipple
+              disableRipple
+              style={{ textTransform: "none" }}
+              variant="text"
+              color="primary"
+              component={Link}
+              to={'/register'}
+            >
+              Don't have an account?
             </Button>
             <div className={classes.actions}>
               <Button
