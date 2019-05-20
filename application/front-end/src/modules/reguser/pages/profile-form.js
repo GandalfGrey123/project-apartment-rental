@@ -6,7 +6,7 @@ import {
     FormGroup,
     Typography
 } from '@material-ui/core';
-import { getUserProfile } from '../../../api/user.actions';
+import {getUserProfile,updateProfile} from '../../../api/user.actions';
 
 const styles = theme => ({
     container: {
@@ -47,6 +47,13 @@ class ProfileForm extends React.Component {
         this.setState({ profile });
     };
 
+    handleSend = () =>{
+       updateProfile( this.state.profile, ()=>{
+         alert('profile has been updated!');
+         getUserProfile((res) => this.setState({ profile: res.data }));
+       });
+    }
+
     render(){
         const { profile } = this.state;
         const { classes } = this.props;
@@ -56,6 +63,20 @@ class ProfileForm extends React.Component {
                 <Typography className={classes.title} variant="h5" >Profile Info</Typography>
                 <form className={classes.container} noValidate autoComplete={"off"} >
                     <FormGroup>
+
+                        <TextField
+                            id="standard-name"
+                            label="AvatarUrl"
+                            autoFocus
+                            className={classes.textField}
+                            value={profile.avatarUrl}
+                            onChange={this.handleChange('avatarUrl')}
+                            margin="normal"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+
                         <TextField
                             id="standard-name"
                             autoFocus
@@ -104,9 +125,13 @@ class ProfileForm extends React.Component {
                             }}
                         />
                         <div>
-                            <Button variant="contained" color="primary" className={classes.button}>
+                            <Button 
+                              variant="contained" 
+                              color="primary" 
+                              onClick={this.handleSend}
+                              className={classes.button}>
                                 Update
-					</Button>
+					        </Button>
                         </div>
                     </FormGroup>
                 </form>

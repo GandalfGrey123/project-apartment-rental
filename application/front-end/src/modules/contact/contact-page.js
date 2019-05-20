@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 
 import { 
-  Grid,Paper,AppBar,Toolbar,withStyles,
+  Grid,Paper,withStyles,
   Button,TextField, Typography, 
   Icon,IconButton,
   List,ListItem,Divider,
-  ListItemIcon, ListItemText, ListItemSecondaryAction,ListItemAvatar,
+  ListItemText, ListItemSecondaryAction,ListItemAvatar,
   Avatar, 
   FormGroup,FormControl
  } from '@material-ui/core';
@@ -13,16 +13,56 @@ import {
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
 import styles from './styles/contact-page';
 
+import { getInbox, getChat, sendMessage, deleteChat } from '../../api/message.actions';
+
+
+import MessageBox from './component/message-box';
+
 class ContactPage extends Component{
 
   constructor(props){
     super(props);
     this.state = {
+      //all chat ids
       allUsersChats: [],
+      currentChatIndex:0,
       nextMessage:'',
+      userEmail:'',
+
+      currentChat:{
+        chatInfo:{
+          chatingWith: '',
+          listingTitle: '',
+          listingId: null,
+          contactsAvatar: '',
+        },
+        messages:[],
+       },
+
+       noChatSelected: true,
     };
 
-    this.handleSendMessage = this.handleSendMessage.bind(this);
+    this.getChats = this.getChats.bind(this);
+    this.selectChat = this.selectChat.bind(this);
+    this.handleSendButton = this.handleSendButton.bind(this);       
+    this.getChatMessages = this.getChatMessages.bind(this);
+    this.deleteConversation = this.deleteConversation.bind(this);
+
+  }
+
+
+  componentDidMount(){  
+    this.getChats();   
+  } 
+
+ //get data from API enpoint 
+ getChats = () => {  
+      getInbox( (chatObj)=>{              
+        this.setState({ 
+          allUsersChats: chatObj.inbox || [],
+          userEmail: chatObj.userEmail,
+         });
+      });   
   }
 
   onChangeMessage = ({target: {value}}) =>{
@@ -31,247 +71,187 @@ class ContactPage extends Component{
     });
   }
 
-
-  handleSendMessage = ()=>{    
-    this.setState({
-     nextMessage: ''
+  deleteConversation = (chatId) =>{
+    deleteChat( chatId, () => {
+      this.getChats(); 
     });
   }
 
-
-
-  chatsList = (chats) => {
-    let chatListItems = [];
-    for(let i = 0; i < 6; i +=1){
-      chatListItems.push(
-        <div>
-        <ListItem button >
-         <ListItemAvatar>
-            <Avatar alt="dm user avatar${i}" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
-         </ListItemAvatar>
-    
-          <ListItemText
-             primary={ " LandLordUsername123"}
-             secondary={" ListingPost123"}                 
-          />
-    
-          <ListItemSecondaryAction>
-                <IconButton aria-label="Delete">
-                  <DeleteForeverRoundedIcon />
-                </IconButton>
-          </ListItemSecondaryAction>
-       </ListItem>
-       <Divider light />
-       </div>
-      );
+  handleSendButton = () =>{
+    //if nothing to send dont send
+    if(this.state.nextMessage === ''){
+      return
     }
-    return chatListItems;
+
+    let messagePacket ={
+     'chatId': this.state.allUsersChats[this.state.currentChatIndex].chatId,
+     'message': this.state.nextMessage,
+    }    
+    sendMessage(messagePacket, (resp)=>{                
+       this.selectChat(this.state.currentChatIndex);
+       this.setState({
+        nextMessage: ''
+       });    
+    });
+  }
+
+  //select a chat to show
+  selectChat = (chatIndex) =>{
+    if(this.state.allUsersChats[chatIndex] == null){return;}
+
+    getChat(this.state.allUsersChats[chatIndex].chatId, (messagesObject)=>{
+      let chat = this.state.allUsersChats[chatIndex];
+      this.setState({
+        currentChatIndex: chatIndex,
+        noChatSelected:false,
+        currentChat: {
+          chatInfo:{
+           chatingWith: chat.chatingWith,
+           listingTitle: chat.listingTitle,          
+           listingId: chat.listingId,
+           contactsAvatar: chat.contactsAvatar,
+          },
+          messages: messagesObject.messages,
+        }
+
+      });
+    })   
+  } 
+
+  getChatMessages = (chatIndex) =>{
+     if(this.state.allUsersChats.length === 0){
+       return [];
+     }
+     return this.state.allUsersChats[chatIndex].messages;
   }
 
 
-  generateFakeConvo(){
-    return(
-        <React.Fragment>
-          <ListItem alignItems="flex-start">
-           <ListItemAvatar>
-             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
-           </ListItemAvatar>
-           <ListItemText
-             primary="YourUsername123 - sent 12:00pm"
-             secondary={
-               <React.Fragment>
-                 <Typography component="span"  color="textPrimary">
-                 Hello I a m contacting you about this listing #Listing1235 , is it still for rent?
-                 </Typography>
-               
-               </React.Fragment>
-             }
-           />
-          </ListItem>
-
-
-          <ListItem alignItems="flex-start">
-           <ListItemAvatar>
-             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
-           </ListItemAvatar>
-           <ListItemText
-             primary="YourUsername123 - sent 12:03pm"
-             secondary={
-               <React.Fragment>
-                 <Typography component="span"  color="textPrimary">
-                my phone number is 415 1234567890 , you can give me a call anytime!!!
-                 </Typography>
-               
-               </React.Fragment>
-             }
-           />
-          </ListItem>
-
-
-
-
-          <ListItem alignItems="flex-start">
-           <ListItemAvatar>
-             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
-           </ListItemAvatar>
-           <ListItemText
-             primary="LandLordUsername123 - sent 1:00pm"
-             secondary={
-               <React.Fragment>
-                 <Typography component="span"  color="textPrimary">
-                 Hello YourUsername123, yes the apartment is still for rent, its only $10000 per month!!!
-                 </Typography>
-               
-               </React.Fragment>
-             }
-           />
-          </ListItem>
-
-          <ListItem >
-           <ListItemAvatar>
-             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
-           </ListItemAvatar>
-           <ListItemText
-             primary="LandLordUsername123 - sent 1:02pm"
-             secondary={
-               <React.Fragment>
-                 <Typography component="span"  color="textPrimary">
-                   and this is a very long message regarding the apartment details
-                     and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details  and this is a very long message regarding the apartment details
-                       and this is a very long message regarding the apartment details
-                         and this is a very long message regarding the apartment details  and this is a very long message regarding the apartmen
-                           and this is a very long message regarding the apartment details
-
-
-                 </Typography>
-                             
-               </React.Fragment>
-             }
-           />
-          </ListItem>
-
-
-           <ListItem alignItems="flex-start">
-           <ListItemAvatar>
-             <Avatar alt="your avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" />
-           </ListItemAvatar>
-           <ListItemText
-             primary="YourUsername123 - sent 2:00pm"
-             secondary={
-               <React.Fragment>
-                 <Typography component="span"  color="textPrimary">
-                 thank you for that very long detailed messsage
-                 </Typography>
-               
-               </React.Fragment>
-             }
-           />
-          </ListItem>
-
-
-        </React.Fragment>
-    );
-  }
-
-
-
-  allMessages(classes){
-      return(
-        <React.Fragment>
-
-      <ListItem 
-        button 
-        selected = {true}
-      > 
-         <ListItemAvatar className={classes.contactAvatar}>
-            <Avatar alt="contact user's avatar" src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-512.png" />
-         </ListItemAvatar>
+  chatsList = () => {
+    if(this.state.allUsersChats.length === 0) 
+      return;
+    let chatListItems = [];
+    this.state.allUsersChats.forEach((chat, index)=>{
     
-          <ListItemText
-             primary={ "Conversation with - LandLordUsername123"}
-             secondary={"About Listing - #ListingPost123"}                 
-          />        
-       </ListItem>
+        chatListItems.push(
+           <div>
 
-         <Paper>
+             <ListItem 
+               button           
+                onClick={() => this.selectChat(index) }
+              >
+              <ListItemAvatar>
+                 <Avatar
+                   alt={`dm user avatar${index}`}
+                   src={chat.contactsAvatar} 
+                 />
+              </ListItemAvatar>
+                
+               <ListItemText
+                  primary={
+                   chat.chatingWith
+                  }
+                  secondary={
+                    `Listing - ${chat.listingTitle} `
+                  }                 
+               />
+    
+                  <ListItemSecondaryAction>
+                        <IconButton 
+                          aria-label="Delete"
+                          onClick={() => this.deleteConversation(chat.chatId) }
+                         >
+                          <DeleteForeverRoundedIcon />
+                        </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
 
-            <List className={classes.chatBox}>             
-           
-              {this.generateFakeConvo()}
-
-            </List>
-
-            <FormGroup>
-            <FormControl fullWidth className={classes.margin}>
-           
-                 <TextField
-                     id="standard-full-width"
-                     onChange={this.onChangeMessage}
-                     label="Type message"        
-                     variant="outlined"
-                     multiline="true"
-                     fullWidth 
-                    value={this.state.nextMessage}
-                   />
-                         
-            </FormControl>
-                <Button 
-                   variant="contained" 
-                   color="primary" 
-                   className={classes.button}
-                   onClick= {this.handleSendMessage}
-                 >
-                      Send 
-                   <Icon className={classes.rightIcon}>send</Icon>
-                 </Button>
-            </FormGroup>
-         </Paper>
-        </React.Fragment>
-      );
+              <Divider light />
+           </div>
+        );
+    });
+  
+   return chatListItems;
   }
+
 
 
   render() {
-    const {classes,theme} = this.props;
-    const {allUsersChats} = this.state;
-    return(
+    const {classes} = this.props;
+    const {currentChat, noChatSelected} = this.state;
 
-       <div>
-      
+
+    return(
+     <div>      
+
+
+
       <Grid container>       
 
           <Grid item xs={12} md={4} lg={4}>
-            <Typography 
-               variant="h5" 
-               gutterBottom 
-               align="center"
-               style={{padding:20}}
-            >
-              Direct Messages
-            </Typography>
-           <List className={classes.root}>
+              <Typography 
+                 variant="h5" 
+                 gutterBottom 
+                 align="center"
+                 style={{padding:20}}
+              >
+                Direct Messages
+              </Typography>
 
-               {this.chatsList(allUsersChats)}
-            </List>
+              <List className={classes.root}>
+                 {this.chatsList()}
+              </List>
           </Grid>
         
 
-         <Grid item xs={12} md={8} lg={8}>
-            <Paper 
-              className={classes.messagePaper}
-              square='true'
-              elevation='1'
-             >
+           <Grid item xs={12} md={8} lg={8}>
 
-             {this.allMessages(classes)}
-          </Paper>                   
-        </Grid>
+               <Paper 
+                 className={classes.messagePaper}
+                 elevation='1'
+                >
+                           
+                <MessageBox                
+                  defaultBox={noChatSelected}
+                  refreshHandler={()=>{ this.selectChat(this.state.currentChatIndex) }}
+                  messages={currentChat.messages}
+                  chatInfo={currentChat.chatInfo}
+                 />
 
-      </Grid>        
-      </div>       
-    );
+                </Paper>
+
+                <Paper>
+                  <FormGroup>
+                    <FormControl fullWidth className={classes.margin}>                 
+                         <TextField
+                             id="standard-full-width"
+                             onChange={this.onChangeMessage}
+                             label="Type message"        
+                             variant="outlined"
+                             multiline="true"
+                             fullWidth 
+                            value={this.state.nextMessage}
+                           />                               
+                    </FormControl>
+
+                    <Button 
+                     variant="contained" 
+                     color="primary" 
+                     className={classes.button}
+                     onClick= {this.handleSendButton}
+                     >
+                        Send 
+                    <Icon className={classes.rightIcon}>send</Icon>
+                    </Button>
+
+                  </FormGroup>
+                </Paper>                   
+
+            </Grid>
+          </Grid>        
+        </div>       
+     );
   }
 
 }
 
-export default withStyles(styles, {withTheme:true}) (ContactPage);
+export default withStyles(styles, {withTheme:true}) (ContactPage); 

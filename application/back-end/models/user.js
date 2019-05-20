@@ -8,8 +8,12 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
-
+    avatarUrl:{
+      type:DataTypes.STRING,
+      defaultValue: 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png'
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -42,9 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.ListingPost, {
     	onDelete: 'CASCADE'
     });
-
-    User.hasMany(models.Message);
-    User.hasMany(models.Chat);
+    User.hasMany(models.Message);    
   };
   return User;
 };

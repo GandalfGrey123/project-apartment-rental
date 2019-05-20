@@ -2,6 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
 
   const Message = sequelize.define('Message', {
+    userEmail: DataTypes.STRING,
     message: DataTypes.STRING
   }, {
     createdAt: 'dateSent',
@@ -12,6 +13,6 @@ module.exports = (sequelize, DataTypes) => {
     Message.belongsTo(models.User);    
     Message.belongsTo(models.Chat);
   };
-
+  
  return Message;
 };

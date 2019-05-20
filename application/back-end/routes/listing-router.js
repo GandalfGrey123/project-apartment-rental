@@ -1,5 +1,6 @@
 const express = require('express');
 var models = require('../models');
+const axios = require('axios');
 const router = express.Router();
 
 const Sequelize = require('sequelize');
@@ -9,6 +10,36 @@ const { clearListing, convertSequilizeToObject, findUserBySession } = require('.
 function clearListings(listings) {
   return listings.map((l) => clearListing(l));
 }
+
+const getGeocodingInfo = (address, onSuccess, onError) => {
+  const apiKey = 'AIzaSyCiI9shqkKiKx8rs57v02JoWtKfP2aSyHk'
+  axios
+      .get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`)
+      .then(onSuccess)
+      .catch(onError);
+}
+
+const deg2rad = (deg) => {
+  return (deg * Math.PI / 180.0);
+}
+const rad2deg = (rad) => {
+  return (rad * 180.0 / Math.PI);
+}
+
+const distance = (lat1, lon1, lat2, lon2, unit = 'M') => {
+  theta = lon1 - lon2;
+  dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+  dist = Math.acos(dist);
+  dist = rad2deg(dist);
+  dist = dist * 60 * 1.1515;
+  if (unit == 'K') {
+    dist = dist * 1.609344;
+  } else if (unit == 'N') {
+    dist = dist * 0.8684;
+  }
+  return dist;
+}
+
 /*    
   newest, bedrooms, cheapest
 */
@@ -29,8 +60,6 @@ _buildSearchQuery = async (req) => {
     types = types.map((value) => value.id);
     searchQuery['HousingTypeId'] = types;
   }
-
-  console.log('Query: ', query);
 
   if(query.approved){
     searchQuery['isApproved'] = {
@@ -81,6 +110,8 @@ _buildSearchQuery = async (req) => {
       order.push([ 'bedrooms' ])
     }else if(query.sortBy === 'cheapest'){
       order.push([ 'price' ])
+    }else if(query.sortBy === 'distance'){
+      order.push([ 'distance' ])
     }
   }
 
@@ -188,10 +219,24 @@ router.post('/new', async (req, res) => {
         if(imagesToInsert.length > 0){
           models.ListingImage.bulkCreate(imagesToInsert)
         }
+        const listing = req.body;
+        const address = `${listing.line1} ${listing.city} ${listing.state} ${listing.zipCode}`;
+        getGeocodingInfo(address, (res) => {
+          const results = res.data.results;
+          console.log('Test', results);
+          if(results.length > 0){
+            createdListing.update({
+              distance: distance(37.722313, -122.478467, results[0].geometry.location.lat, results[0].geometry.location.lng).toFixed(2)
+            })
+          }
+          res.status = 204;
+          res.send();
+        }, () => {
+          res.status = 204;
+          res.send();
+        })
       });
     })
-  res.status = 204;
-  res.send();
 });
 
 module.exports = router;

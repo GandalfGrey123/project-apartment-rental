@@ -3,15 +3,17 @@ import {
   Drawer, withStyles, CssBaseline,
   TextField, InputAdornment,
   Grid, Paper, Toolbar, Typography,
-  Hidden, IconButton, Button,
+  Hidden, IconButton, Button
 } from '@material-ui/core';
 import {
   SearchOutlined as SearchIcon,
   ViewListOutlined as ViewListIcon,
   ViewColumnOutlined as ViewColumnIcon,
   Menu as MenuIcon,
-  SortOutlined as SortIcon
+  SortOutlined as SortIcon,
+  Add as AddIcon
 } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
 import ListingCard from '../_global/component/listing-card';
 import MenuPopUp from '../_global/component/appbar-menu';
 import ListingDetail from '../_global/component/listing-detail';
@@ -34,6 +36,10 @@ const SORT_ACTIONS = [
   {
     id: 'bedrooms',
     label: 'Bedrooms'
+  },
+  {
+    id: 'distance',
+    label: 'SFSU Distance'
   }
 ];
 
@@ -97,14 +103,14 @@ class HomePage extends Component {
     this.getListings();
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const params = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
-    if(params.refresh){
+    if (params.refresh) {
       // work-arround in order for a profile icon to show up after successfull
       // login
       window.history.pushState({}, document.title, "/");
       window.location.reload();
-    }else if(params.logout){
+    } else if (params.logout) {
       sessionStorage.removeItem('session');
       window.history.pushState({}, document.title, "/");
       window.location.reload();
@@ -175,7 +181,7 @@ class HomePage extends Component {
 
   handleSortTxt = key => {
     const { searchTxt, query } = this.state;
-    this.setState({ sortBy: key }, () => this.getListings({
+    this.setState({ sortBy: key, sortMenuVisible: false }, () => this.getListings({
       ...query,
       text: searchTxt,
       sortBy: key
@@ -246,6 +252,7 @@ class HomePage extends Component {
                 <Toolbar className={classes.searchSection}>
                   <TextField
                     label="Listing Search"
+                    inputProps={{maxLength: 40}}
                     className={classes.searchTextField}
                     name="listingSearch"
                     value={searchTxt}
@@ -270,7 +277,8 @@ class HomePage extends Component {
                 </Button>
                   <div>
                     <IconButton
-                      aria-label="Grid-View"
+                      aria-label="Sort"
+                      label={'Sort'}
                       className={classes.iconButton}
                       onClick={this._toggleSortMenu}
                     >
@@ -284,7 +292,7 @@ class HomePage extends Component {
                       onItemClick={(itemId) => this.handleSortTxt(itemId)}
                     />
                   </div>
-                  <IconButton
+                  {/* <IconButton
                     aria-label="Grid-View"
                     className={classes.iconButton}
                     onClick={() => this.setState({ columnView: !columnView })}
@@ -293,13 +301,24 @@ class HomePage extends Component {
                       <ViewColumnIcon fontSize="large" /> :
                       <ViewListIcon fontSize="large" />
                     }
-                  </IconButton>
+                  </IconButton> */}
+                  <Button 
+                    variant="contained"
+                    color="primary"
+                    style={{ width: '250px' }}
+                    className={classes.rightIcon}
+                    component={Link}
+                    to={'/profile/listings/new'}
+                  >
+                    New Listing
+                    <AddIcon className={classes.rightIcon} />
+                  </Button>
                 </Toolbar>
               </Hidden>
             </Grid>
             {
               listings.length > 0 ?
-              this.displayListings(listings, columnView) :
+                this.displayListings(listings, columnView) :
                 <Grid
                   container
                   alignItems={'center'}

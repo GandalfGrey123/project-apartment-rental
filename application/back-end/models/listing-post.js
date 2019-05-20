@@ -13,19 +13,18 @@ module.exports = (sequelize, DataTypes) => {
     bedrooms: DataTypes.INTEGER,
     bathrooms: DataTypes.INTEGER,
     isApproved: DataTypes.BOOLEAN,
-
+    distance: DataTypes.FLOAT
   }, {
     createdAt: 'datePosted',
     updatedAt: false
   });
   ListingPost.associate = function(models) {
-  
-    ListingPost.belongsTo(models.User);  
+    ListingPost.belongsTo(models.User);
     ListingPost.belongsTo(models.HousingType);
     ListingPost.hasMany(models.ListingImage, {
       onDelete: 'CASCADE'
     });
-
+    ListingPost.hasMany(models.Chat);
   };
   return ListingPost;
 };

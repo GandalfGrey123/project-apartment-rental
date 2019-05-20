@@ -5,7 +5,7 @@ const { generateSessionToken,
 	findUserBySession, convertSequilizeToObject } = require('../utils/index');
 
 router.post('/login', (req, res) => {
-
+	
 	models.User.findOne({
 		where: {
 			email: req.body.email,
@@ -56,6 +56,23 @@ router.get('/profile', async (req, res) => {
 		user = convertSequilizeToObject(user);
 		delete user['password']
 		res.json(user);
+	}else{
+		res.status(401).send();
+	}
+})
+
+//update user profile data
+router.post('/profile', async (req, res) => {	
+    let user = await findUserBySession(req);
+	if(user){
+		user.update({
+		  email:req.body.profileInfo.email,
+		  avatarUrl:req.body.profileInfo.avatarUrl,
+		  firstName:req.body.profileInfo.firstName,
+		  lastName:req.body.profileInfo.lastName,
+		}).then(() => {
+		 res.status(200).send()
+		});
 	}else{
 		res.status(401).send();
 	}

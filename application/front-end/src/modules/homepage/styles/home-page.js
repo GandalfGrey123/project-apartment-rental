@@ -1,7 +1,4 @@
-const drawerWidth = 240;
-
 const styles = theme => ({
-
  
   main:{
       ...theme.mixins.gutters(),   
@@ -11,11 +8,6 @@ const styles = theme => ({
   searchTextField:{
     width: '100%',    
     backgroundColor:'white',
-  },
-
-  searchSection:{
-    padding: 15,
-    margin:15,
   },
    menuButton: {
     marginRight: 20,

@@ -2,3 +2,7 @@
 .DS_Store
 node_modules/
 
+application/back-end/config/chat.test.js
+application/back-end/config/user.seed.js
+application/back-end/config/config.json
+application/back-end/config/config.json
