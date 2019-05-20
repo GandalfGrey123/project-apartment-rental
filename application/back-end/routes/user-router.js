@@ -5,7 +5,7 @@ const { generateSessionToken,
 	findUserBySession, convertSequilizeToObject } = require('../utils/index');
 
 router.post('/login', (req, res) => {
-
+	
 	models.User.findOne({
 		where: {
 			email: req.body.email,
