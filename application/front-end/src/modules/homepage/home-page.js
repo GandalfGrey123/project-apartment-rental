@@ -246,7 +246,7 @@ class HomePage extends Component {
                 className={classes.title}
                 variant={'title'}
               >
-                Welcome to GaterRooms
+                Welcome to GatorRooms. Where SFSU students find and list housing rentals.
               </Typography>
               <Hidden xsDown implementation="css">
                 <Toolbar className={classes.searchSection}>

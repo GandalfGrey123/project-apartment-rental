@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+//add google analytics
+import ReactGA from 'react-ga';
 //import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
@@ -24,6 +26,17 @@ import LoginForm from './modules/login/login-form';
 import ProfileDashboard from './modules/reguser/dashboard';
 import ContactPage from './modules/contact/contact-page'; 
 import { checkSession } from './api/user.actions';
+//initialize google analytics
+ReactGA.initialize('UA-138451224-1');
+ReactGA.pageview('/homepage/home-page');
+ReactGA.pageview('/about/about-page');
+ReactGA.pageview('/listing/new-listing');
+ReactGA.pageview('/registration/registration');
+ReactGA.pageview('/login/login-form');
+ReactGA.pageview('/reguser/dashboard');
+ReactGA.pageview('/contact/contact-page');
+ReactGA.pageview('/googlemaps/maps');
+ReactGA.pageview(window.location.pathname + window.location.search);
 
 const styles = {
   root: {
