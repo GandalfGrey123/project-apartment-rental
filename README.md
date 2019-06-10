@@ -7,6 +7,6 @@ This application was built with NodeJS Express, MySQL and ReactJS with MaterialU
 
 
 
-![alt react](https://cdn2.iconfinder.com/data/icons/designer-skills/128/react-512.png) 
-![alt node](https://cdn4.iconfinder.com/data/icons/logos-3/456/nodejs-new-pantone-black-512.png) 
-![alt mysql](https://cdn4.iconfinder.com/data/icons/logos-3/426/mysql-512.png)
+![alt react](https://cdn2.iconfinder.com/data/icons/designer-skills/128/react-512.png | height=90) 
+![alt node](https://cdn4.iconfinder.com/data/icons/logos-3/456/nodejs-new-pantone-black-512.png | height=90) 
+![alt mysql](https://cdn4.iconfinder.com/data/icons/logos-3/426/mysql-512.png | height=90)
