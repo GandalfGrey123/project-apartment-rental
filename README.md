@@ -23,8 +23,10 @@ This application was built with NodeJS Express, MySQL and ReactJS with Material 
 
 
 ### Dev Enivronment
-On our aws Linux server we setup NodeJS   
+On our aws Linux server we setup 
 
+ - NodeJS v 10.16.0  
+ - MySQL v 5.7 
 
 
 ### Authentication 
