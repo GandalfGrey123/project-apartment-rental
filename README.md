@@ -29,10 +29,10 @@ On our aws Linux server we setup
  - MySQL v 5.7 
  
  
- 
- ### Backend 
- 
- We used ExpressJS and the Express router to build our REST API for the front-end actions.
+### Backend 
+
+We used ExpressJS and the Express router to build our REST API for the front-end actions.
+
  
  ### FrontEnd
   
