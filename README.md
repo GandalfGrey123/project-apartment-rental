@@ -33,12 +33,11 @@ On our aws Linux server we setup
 
 Our application follows the general Express React project structure. We seperated our code into to files `backend` and `frontend` located in the `application`
 
-`
+```
 ├── application                   
 │   ├── frontend         
 │   ├── backend
-
-`
+```
  
  
 ### Backend 
