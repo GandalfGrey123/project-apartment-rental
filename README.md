@@ -27,6 +27,16 @@ On our aws Linux server we setup
 
  - NodeJS v 10.16.0  
  - MySQL v 5.7 
+ 
+ 
+ 
+ ### Backend 
+ 
+ We used ExpressJS and the Express router to build our REST API for the front-end actions.
+ 
+ ### FrontEnd
+  
+For front end acitons, we built our own HTTP request API for endpoint calls which we imported and used directly in our React Components. 
 
 
 ### User Authentication 
