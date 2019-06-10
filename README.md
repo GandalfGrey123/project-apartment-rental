@@ -29,6 +29,17 @@ On our aws Linux server we setup
  - MySQL v 5.7 
  
  
+### Application File Structure
+
+Our application follows the general Express React project structure. We seperated our code into to files `backend` and `frontend` located in the `application`
+
+├── application                   
+│   ├── frontend         
+│   ├── backend
+
+
+ 
+ 
 ### Backend 
 
 We used ExpressJS and the Express router to build our REST API for the front-end actions.
