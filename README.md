@@ -6,6 +6,13 @@ After signing up, using the direct chat messaging system users can easily contac
 
 #### Website features
 * ##### Direct Message Chat
+* ##### Account Ceredential security
+* ##### Google Maps Distance Calculation
+* ##### Multiple File Uploaders
+* ##### Avatar and Profile Customization
+
+
+
 
 
 ## Application Stack
