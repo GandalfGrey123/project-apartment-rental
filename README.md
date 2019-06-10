@@ -39,11 +39,11 @@ Our application follows the general Express React project structure. We seperate
 │   ├── backend
 ```
  
+<br>
  
- 
-##### back-end folder
+#### back-end folder
 
-our backend essential folders were `models`, `utils` and `routes` 
+the backend essential folders were `models`, `utils` and `routes` 
 
 the route folder:
   used to organized all of our URI routes for the Express REST API
@@ -63,6 +63,32 @@ the utils folder:
 │   │   ├── routes
 │   │   ├── .
 ```
+
+
+<br>
+ 
+#### front-end folder
+
+the root frontend folder is `src` , `src` contains all the front end project folders
+the essential frontend folders are `api` and `modules`
+
+* the api folder:
+ for our front end event handlers and actions we built a api with the Javascript `axios` api for HTTP requests.
+  
+* the modules folder:
+  we stored all our React components in the modules folder. Each component should have its own folder which is the name of the class. Styles for the custom React Component subclass were stored in the same folder and exported.
+ 
+
+```
+├── application                   
+│   ├── frontend
+│   │   ├── src
+│   │   │   ├── api 
+│   │   │   ├── modules  
+│   │   │   ├── .
+│   ├── backend
+```
+  
   
   
 --- 
