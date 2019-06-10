@@ -39,6 +39,18 @@ Our application follows the general Express React project structure. We seperate
 │   ├── backend
 ```
  
+```
+├── application                   
+│   ├── frontend         
+│   ├── backend
+│   │   ├── models
+│   │   ├── utils
+│   │   ├── .
+│   │   ├── .
+```
+  
+ 
+ 
  
 ### Backend 
 
