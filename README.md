@@ -39,13 +39,26 @@ Our application follows the general Express React project structure. We seperate
 │   ├── backend
 ```
  
+ 
+ 
+our backend essential folders were `models`, `utils` and `routes` 
+
+the route folder:
+  used to organized all of our URI routes for the Express REST API
+  
+the models folder:
+  we use this to house our `Sequelize` ORM models and associations.
+ 
+the utils folder:
+  this consists of all the backend utility functions. This folder contains methods like `generateToken(..)` which was our   custom token generator for authentication.
+
 ```
 ├── application                   
 │   ├── frontend         
 │   ├── backend
 │   │   ├── models
 │   │   ├── utils
-│   │   ├── .
+│   │   ├── routes
 │   │   ├── .
 ```
   
