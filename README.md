@@ -22,6 +22,11 @@ This application was built with NodeJS Express, MySQL and ReactJS with Material 
 <img src="https://cdn2.iconfinder.com/data/icons/designer-skills/128/react-512.png" height="90"> <img src="https://cdn4.iconfinder.com/data/icons/logos-3/456/nodejs-new-pantone-black-512.png" height="90"> <img src="https://cdn4.iconfinder.com/data/icons/logos-3/426/mysql-512.png" height="90"> <img src="https://cdn2.iconfinder.com/data/icons/amazon-aws-stencils/100/Non-Service_Specific_copy__AWS_Cloud-512.png" height="90">
 
 
+### Dev Enivronment
+On our aws Linux server we setup NodeJS   
+
+
+
 ### Authentication 
 
 We used local storage and session tokens to authenticate user actions and views.
