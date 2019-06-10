@@ -1,5 +1,11 @@
 # GatorRooms
 
+### easy sign up
+
+### user dashboard
+
+### admin protection 
+
 This is an apartment rental website for SFSU students to use during school semeseter to find affordable close distance apartment units close to campus. After signing up, using the direct chat messaging system users can easily contact the landlord of the property they are interested in.
 
 
