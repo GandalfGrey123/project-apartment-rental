@@ -41,6 +41,8 @@ Our application follows the general Express React project structure. We seperate
  
  
  
+##### back-end folder
+
 our backend essential folders were `models`, `utils` and `routes` 
 
 the route folder:
@@ -62,7 +64,8 @@ the utils folder:
 │   │   ├── .
 ```
   
- 
+  
+--- 
  
  
 ### Backend 
