@@ -29,8 +29,9 @@ On our aws Linux server we setup
  - MySQL v 5.7 
 
 
-### Authentication 
+### User Authentication 
 
 We used local storage and session tokens to authenticate user actions and views.
 
 We setup backend utilities for generating session token using JavaScript's built in class and random number generator `Math.Random()`. 
+
