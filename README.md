@@ -45,10 +45,10 @@ Our application follows the general Express React project structure. We seperate
 
 the backend essential folders were `models`, `utils` and `routes` 
 
-the route folder:
+* the route folder:
   used to organized all of our URI routes for the Express REST API
   
-the models folder:
+* the models folder:
   we use this to house our `Sequelize` ORM models and associations.
  
 the utils folder:
@@ -109,4 +109,13 @@ For front end acitons, we built our own HTTP request API for endpoint calls whic
 We used local storage and session tokens to authenticate user actions and views.
 
 We setup backend utilities for generating session token using JavaScript's built in class and random number generator `Math.Random()`. 
+
+
+
+
+### Homepage Listing Sorting
+
+`Listings` are stored in the database with an assocition to `HousingTypes`. We used string query with our endpoints to query the database for keyword data, sorted data or filtered data. The homepage should display all available apartments to the user with query options. We defined a query builder method named `_buildSearchQuery(..)` that is used by the `../backend/routes/listing-router.js`router which would return the dataset requested by the user.
+
+
 
